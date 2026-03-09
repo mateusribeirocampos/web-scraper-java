@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>4.0.3</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.campos</groupId>
+	<artifactId>webscraper</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>webscraper</name>
+	<description>Plataforma de scraping dmvn e vagas Java Junior / Spring Boot e concursos publicos brasileiros</description>
+
+	<properties>
+		<java.version>21</java.version>
+		<spring-cloud.version>2025.1.0</spring-cloud.version>
+
+		<!-- Dependencias NAO gerenciadas pelo Spring Boot BOM: versoes explicitas obrigatorias -->
+		<jsoup.version>1.18.3</jsoup.version>
+		<okhttp.version>4.12.0</okhttp.version>
+		<playwright.version>1.49.0</playwright.version>
+		<wiremock.version>3.10.0</wiremock.version>
+		<!-- Testcontainers: Spring Boot 4.x nao gerencia esta versao no BOM.  -->
+		<!-- Adicionamos o testcontainers-bom no dependencyManagement abaixo.  -->
+		<testcontainers.version>1.20.4</testcontainers.version>
+	</properties>
+
+	<dependencies>
+
+		<!-- ================================================================ -->
+		<!-- Spring Boot Core                                                 -->
+		<!-- ================================================================ -->
+
+		<!-- Web MVC: REST Controllers -->
+		<!-- CORRECAO: nao existe spring-boot-starter-webmvc. Correto: spring-boot-starter-web -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<!-- JPA + Hibernate -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<!-- Bean Validation (jakarta.validation) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+		<!-- Actuator: /health, /metrics, /info -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<!-- Dev Tools: live reload + habilita H2 console automaticamente em dev -->
+		<!-- Nao empacotado no JAR de producao (optional + scope runtime) -->
+		<!-- CORRECAO: nao existe spring-boot-h2console. Use spring-boot-devtools. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- ================================================================ -->
+		<!-- Flyway (migrations de banco de dados)                            -->
+		<!-- CORRECAO: nao existe spring-boot-starter-flyway. Spring Boot    -->
+		<!-- auto-configura Flyway quando flyway-core esta no classpath.     -->
+		<!-- ================================================================ -->
+
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
+
+		<!-- Suporte especifico ao dialeto PostgreSQL no Flyway -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-database-postgresql</artifactId>
+		</dependency>
+
+		<!-- ================================================================ -->
+		<!-- Resiliencia: Resilience4j via Spring Cloud                       -->
+		<!-- Inclui transitivamente: CircuitBreaker, Retry, RateLimiter,     -->
+		<!-- Bulkhead e TimeLimiter                                           -->
+		<!-- ================================================================ -->
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+		</dependency>
+
+		<!-- ================================================================ -->
+		<!-- Web Scraping                                                     -->
+		<!-- ================================================================ -->
+
+		<!-- jsoup: parsing HTML estatico, seletores CSS, manipulacao de DOM -->
+		<!-- CORRECAO: spring-ai-jsoup-document-reader e para alimentar LLMs -->
+		<!-- com HTML via Spring AI — NAO e para scraping de sites.          -->
+		<!-- A dependencia correta para scraping e org.jsoup:jsoup.           -->
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>${jsoup.version}</version>
+		</dependency>
+
+		<!-- OkHttp: cliente HTTP para fetch de paginas e consumo de APIs    -->
+		<!-- Nao gerenciado pelo Spring Boot BOM: versao explicita necessaria -->
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>${okhttp.version}</version>
+		</dependency>
+
+		<!-- Playwright for Java: fallback para sites dinamicos (Tipo C)     -->
+		<!-- Usar APENAS para sites comprovadamente JS-heavy (ver ADR002)    -->
+		<dependency>
+			<groupId>com.microsoft.playwright</groupId>
+			<artifactId>playwright</artifactId>
+			<version>${playwright.version}</version>
+		</dependency>
+
+		<!-- ================================================================ -->
+		<!-- Reducao de boilerplate                                           -->
+		<!-- ================================================================ -->
+
+		<!-- Lombok: @Getter, @Setter, @Builder, @RequiredArgsConstructor    -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- ================================================================ -->
+		<!-- Banco de Dados                                                   -->
+		<!-- ================================================================ -->
+
+		<!-- PostgreSQL: banco de producao -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- H2: banco em memoria para testes unitarios rapidos (sem Docker) -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- ================================================================ -->
+		<!-- Testes                                                           -->
+		<!-- CORRECAO: nao existem starters de teste individuais por modulo. -->
+		<!-- O correto e um unico spring-boot-starter-test que inclui:       -->
+		<!-- JUnit 5, Mockito, AssertJ, MockMvc, Spring Test, JsonPath.      -->
+		<!-- ================================================================ -->
+
+		<!-- Starter principal de testes -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Integracao Spring Boot com Testcontainers (@ServiceConnection)  -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-testcontainers</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Testcontainers: suporte JUnit 5 (@Testcontainers, @Container)  -->
+		<!-- CORRECAO: artifactId correto e "junit-jupiter"                  -->
+		<!-- (era "testcontainers-junit-jupiter" — artifact inexistente)     -->
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Testcontainers: modulo PostgreSQL (PostgreSQLContainer)         -->
+		<!-- CORRECAO: artifactId correto e "postgresql"                     -->
+		<!-- (era "testcontainers-postgresql" — artifact inexistente)        -->
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- WireMock: mock de HTTP externo nos testes de adaptadores        -->
+		<!-- (Indeed API, DOU API, qualquer fonte HTTP externa)              -->
+		<dependency>
+			<groupId>org.wiremock.integrations</groupId>
+			<artifactId>wiremock-spring-boot</artifactId>
+			<version>${wiremock.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- BOM do Spring Cloud: gerencia versoes de resilience4j, etc. -->
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<!-- BOM do Testcontainers: necessario no Spring Boot 4.x        -->
+			<!-- (Spring Boot 3.x geria as versoes; 4.x nao inclui mais)     -->
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>testcontainers-bom</artifactId>
+				<version>${testcontainers.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<!-- Exclui Lombok do JAR final de producao -->
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
