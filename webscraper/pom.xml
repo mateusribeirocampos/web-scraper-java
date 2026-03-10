@@ -71,13 +71,15 @@
 
 		<!-- ================================================================ -->
 		<!-- Flyway (migrations de banco de dados)                            -->
-		<!-- CORRECAO: nao existe spring-boot-starter-flyway. Spring Boot    -->
-		<!-- auto-configura Flyway quando flyway-core esta no classpath.     -->
+		<!-- Spring Boot 4.x extraiu o suporte a Flyway para um modulo      -->
+		<!-- proprio. O starter correto e spring-boot-starter-flyway, que   -->
+		<!-- inclui flyway-core + FlywayAutoConfiguration.                  -->
+		<!-- flyway-database-postgresql e necessario para suporte ao PG.    -->
 		<!-- ================================================================ -->
 
 		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-flyway</artifactId>
 		</dependency>
 
 		<!-- Suporte especifico ao dialeto PostgreSQL no Flyway -->

@@ -386,4 +386,82 @@ class DomainEnumsTest {
             assertThatCode(() -> ContestStatus.valueOf("CANCELLED")).doesNotThrowAnyException();
         }
     }
+
+    // =========================================================================
+    // DedupStatus
+    // =========================================================================
+
+    @Nested
+    @DisplayName("DedupStatus")
+    class DedupStatusTests {
+
+        @Test
+        @DisplayName("deve ter exatamente 3 status de deduplicação")
+        void shouldHaveThreeDedupStatuses() {
+            assertThat(DedupStatus.values()).hasSize(3);
+        }
+
+        @Test
+        @DisplayName("NEW deve ser primeiro — vaga nova é o caso mais frequente")
+        void newShouldBeFirst() {
+            assertThat(DedupStatus.values()[0]).isEqualTo(DedupStatus.NEW);
+        }
+
+        @Test
+        @DisplayName("deve conter DUPLICATE — fingerprint idêntico já existe na base")
+        void shouldContainDuplicate() {
+            assertThatCode(() -> DedupStatus.valueOf("DUPLICATE")).doesNotThrowAnyException();
+        }
+
+        @Test
+        @DisplayName("deve conter UPDATED — mesma vaga com campo mutável alterado")
+        void shouldContainUpdated() {
+            assertThatCode(() -> DedupStatus.valueOf("UPDATED")).doesNotThrowAnyException();
+        }
+    }
+
+    // =========================================================================
+    // CrawlExecutionStatus
+    // =========================================================================
+
+    @Nested
+    @DisplayName("CrawlExecutionStatus")
+    class CrawlExecutionStatusTests {
+
+        @Test
+        @DisplayName("deve ter exatamente 5 status de execução")
+        void shouldHaveFiveExecutionStatuses() {
+            assertThat(CrawlExecutionStatus.values()).hasSize(5);
+        }
+
+        @Test
+        @DisplayName("PENDING deve ser primeiro — estado inicial de toda execução")
+        void pendingShouldBeFirst() {
+            assertThat(CrawlExecutionStatus.values()[0]).isEqualTo(CrawlExecutionStatus.PENDING);
+        }
+
+        @Test
+        @DisplayName("deve conter RUNNING — execução em andamento")
+        void shouldContainRunning() {
+            assertThatCode(() -> CrawlExecutionStatus.valueOf("RUNNING")).doesNotThrowAnyException();
+        }
+
+        @Test
+        @DisplayName("deve conter SUCCEEDED — execução concluída com sucesso")
+        void shouldContainSucceeded() {
+            assertThatCode(() -> CrawlExecutionStatus.valueOf("SUCCEEDED")).doesNotThrowAnyException();
+        }
+
+        @Test
+        @DisplayName("deve conter FAILED — falhou, mas ainda dentro da política de retry")
+        void shouldContainFailed() {
+            assertThatCode(() -> CrawlExecutionStatus.valueOf("FAILED")).doesNotThrowAnyException();
+        }
+
+        @Test
+        @DisplayName("deve conter DEAD_LETTER — esgotou retentativas, movida para dead-letter")
+        void shouldContainDeadLetter() {
+            assertThatCode(() -> CrawlExecutionStatus.valueOf("DEAD_LETTER")).doesNotThrowAnyException();
+        }
+    }
 }
