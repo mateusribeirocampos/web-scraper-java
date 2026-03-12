@@ -54,8 +54,10 @@ da implementação.
 
 **Estratégia de aquisição de dados (por prioridade):**
 1. API oficial (Indeed MCP Connector, DOU API gov) — fonte primária, menor risco, zero scraping.
-2. Scraping HTML estático via jsoup — para fontes classificadas como permitidas após revisão legal.
-3. Playwright for Java — fallback dinâmico exclusivo para sites Tipo C comprovados.
+2. APIs/boards públicos de ATS (Greenhouse, Lever, Ashby) — expansão segura para PMEs e startups.
+3. Páginas de carreira próprias com `JobPosting` estruturado e `robots.txt` aprovado.
+4. Scraping HTML estático via jsoup — para fontes classificadas como permitidas após revisão legal.
+5. Playwright for Java — fallback dinâmico exclusivo para sites Tipo C comprovados.
 
 **Fontes de dados brasileiras analisadas:**
 
@@ -63,6 +65,7 @@ da implementação.
 |---|---|---|
 | Indeed Brasil | API oficial | MCP Connector — **primeira integração a implementar** |
 | DOU (in.gov.br) | API pública gov | API gov — concursos federais |
+| Greenhouse / Lever / Ashby | API/board público | Expansão segura para empresas pequenas e médias |
 | PCI Concursos | HTML estático (Tipo A) | jsoup após revisão de robots.txt |
 | LinkedIn | Tipo D, ToS proíbe | Excluído da fase 1 |
 | Catho / Glassdoor | ToS proíbe | Excluídos da fase 1 |

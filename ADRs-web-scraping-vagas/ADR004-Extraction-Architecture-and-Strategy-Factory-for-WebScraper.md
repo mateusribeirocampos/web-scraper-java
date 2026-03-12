@@ -50,8 +50,10 @@ JobPostingPersistenceService
 ExecutionLog / Metrics / Events
 ```
 
-**Nota:** Fontes API-first (Indeed via MCP Connector, DOU API) seguem o mesmo fluxo, mas
-`JobFetcher` é um `ApiClient` em vez de um HTTP scraper. Isso mantém o pipeline uniforme.
+**Nota:** Fontes API-first (Indeed via MCP Connector, DOU API, ATS públicos como Greenhouse,
+Lever e Ashby) seguem o mesmo fluxo, mas `JobFetcher` é um `ApiClient` em vez de um HTTP scraper.
+Isso mantém o pipeline uniforme e permite escalar a cobertura de PMEs sem multiplicar scrapers
+HTML frágeis por empresa.
 
 ---
 
@@ -108,6 +110,9 @@ Implementações concretas previstas:
 - `PlaywrightJobFetcher` — para sites dinâmicos (Type C) via Playwright for Java.
 - `IndeedApiClient` — para Indeed via MCP Connector / REST API oficial.
 - `DouApiClient` — para Diário Oficial da União via API gov.
+- `GreenhouseJobBoardClient` — para boards públicos hospedados no Greenhouse.
+- `LeverPostingsClient` — para boards públicos hospedados no Lever.
+- `AshbyJobBoardClient` — para boards públicos hospedados no Ashby.
 
 #### `JobNormalizer`
 
@@ -131,10 +136,18 @@ public interface JobNormalizer<T extends RawJobRecord> {
 |---|---|---|---|
 | `IndeedApiJobScraperStrategy` | Tipo E | Indeed MCP/API | Consome API oficial do Indeed. Primeira strategy a ser implementada. |
 | `DouApiContestScraperStrategy` | Tipo E | DOU API Gov | Consome API do Diário Oficial para editais de concurso. |
+| `GreenhouseJobBoardStrategy` | Tipo E | Greenhouse Job Board API | Integra boards públicos de empresas pequenas e médias via provider padronizado. |
+| `LeverPostingsStrategy` | Tipo E | Lever Postings API | Integra boards públicos de empresas com ATS Lever. |
+| `AshbyJobBoardStrategy` | Tipo E | Ashby Public Job Posting API | Integra boards públicos de startups e PMEs com ATS Ashby. |
 | `StaticListingJobScraperStrategy` | Tipo A | PCI Concursos, Vagas.com | Parsing HTML estático via jsoup de páginas de listagem. |
 | `StaticDetailJobScraperStrategy` | Tipo A/B | Gupy portal público | Parsing HTML de página de detalhe de vaga. |
 | `DynamicBrowserJobScraperStrategy` | Tipo C | Sites JS-heavy | Playwright como fallback — apenas para sites comprovadamente Tipo C. |
 | `AuthenticatedPortalJobScraperStrategy` | Tipo D | Sites com login | Somente após aprovação legal e integração com credential vault. |
+
+**Regra adicional:** para o setor privado, uma strategy por provider ATS deve ser preferida a uma
+strategy por empresa sempre que o provider disponibilizar job board público estável. A strategy por
+empresa só entra quando a empresa expõe portal próprio sem provider reutilizável e com onboarding
+legal aprovado.
 
 ---
 

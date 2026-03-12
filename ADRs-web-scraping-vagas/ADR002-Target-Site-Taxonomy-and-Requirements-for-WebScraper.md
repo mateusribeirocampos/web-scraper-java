@@ -90,9 +90,34 @@ integrações via MCP connectors oficiais.
 | **Programaticamente** (programaticamente.com.br) | A | ✅ A verificar | ⚠️ Verificar ToS | ❌ | ⚠️ **Candidato a Type A** | Site focado em vagas tech no Brasil. Verificar robots.txt e ToS. Alta relevância para Java Junior. |
 | **Codante.io Jobs API** (docs.apis.codante.io/jobs-api) | E | ✅ | ✅ API pública para estudo/prototipação | ✅ REST sem autenticação | ✅ **Usar em dev/test** | Ideal para desenvolvimento local, testes de integração e prototipação do pipeline. Não é produção. |
 
+#### 2.1.1 Expansão segura para empresas pequenas e médias
+
+Para ampliar a cobertura além de concursos e grandes boards generalistas, o projeto passa a
+priorizar uma família adicional de fontes privadas com risco legal e técnico menor:
+
+- boards públicos de ATS com endpoint oficial/documentado de vagas publicadas
+- páginas de carreira mantidas pela própria empresa com `JobPosting` estruturado e acesso
+  permitido por `robots.txt`
+- APIs públicas ou feeds expostos para vagas publicadas, sem autenticação de candidato
+
+Essas fontes são particularmente relevantes para empresas pequenas e médias, startups e software
+houses que publicam vagas via plataformas padronizadas em vez de manter um portal próprio robusto.
+
+| Fonte / Família | Tipo | Sinal de permissão | API/endpoint público | Decisão | Estratégia |
+|---|---|---|---|---|---|
+| **Greenhouse Job Board** | E | ✅ Job Board API pública para vagas publicadas | ✅ `boards-api.greenhouse.io/v1/boards/{board_token}/jobs` | ✅ **Priorizar após Indeed** | Integrar como provider API-first para boards de empresas com foco em Java/TI. |
+| **Lever Postings** | E | ✅ Postings API pública para vagas publicadas | ✅ `api.lever.co/v0/postings/{site}` | ✅ **Priorizar após Greenhouse** | Integrar como provider API-first para empresas menores com job board Lever. |
+| **Ashby Job Board API** | E | ✅ Posting API pública para vagas publicadas | ✅ `api.ashbyhq.com/posting-api/job-board/{job_board_name}` | ✅ **Priorizar após Lever** | Integrar como provider API-first para startups e PMEs que usam Ashby. |
+| **Páginas de carreira próprias da empresa** | A/E | ⚠️ Requer revisão por domínio | ⚠️ Varia por empresa | ✅ **Permitido sob onboarding formal** | Usar apenas quando `robots.txt` permitir e houver sinais fortes como `schema.org/JobPosting` e sitemap acessível. |
+| **Boards/agregadores sem API pública e sem permissão explícita** | A/B/C | ⚠️ Alto risco | ❌ | ❌ **Não priorizar** | Exigir revisão legal explícita antes de qualquer story de scraping. |
+
 **Resumo de decisão para Setor Privado:**
 
 - Indeed: integrar via MCP Connector (API oficial) — **prioridade máxima**.
+- Greenhouse, Lever e Ashby: próximos candidatos prioritários para ampliar vagas de PMEs com
+  abordagem API-first.
+- Páginas de carreira próprias: permitidas apenas com `robots.txt` revisado e sinais claros de
+  publicação estruturada.
 - LinkedIn: aguardar acesso a Partner API ou excluir da fase 1.
 - Catho, Glassdoor: excluídos da fase 1 sem permissão explícita.
 - Vagas.com, Programaticamente: revisar antes de implementar.
@@ -135,6 +160,7 @@ Antes de ativar qualquer site em produção, os seguintes campos devem ser preen
 □ Categoria legal: DADOS_PUBLICOS / API_OFICIAL / SCRAPING_PERMITIDO / SCRAPING_PROIBIDO
 □ Contato/equipe responsável registrado
 □ Status de autenticação requerida documentado
+□ Existência de `schema.org/JobPosting`, sitemap ou endpoint público documentada quando aplicável
 ```
 
 Nenhum scraper pode ser ativado em produção sem este checklist completo.
@@ -182,12 +208,16 @@ Nenhum scraper pode ser ativado em produção sem este checklist completo.
 - Fatia de backlog mais limpa e controle de risco legal.
 - Proteção reputacional e legal do projeto.
 - Prioridade ao Indeed MCP já disponível no ambiente reduz esforço imediato.
+- ATSs públicos reduzem o custo de onboarding para dezenas de PMEs sem precisar criar um scraper
+  específico por empresa logo no início.
 
 ### Desafios
 
 - Alguns sites podem mudar de Tipo A para Tipo C sem aviso.
 - Selector drift exige manutenção contínua.
 - APIs oficiais podem ter limites de acesso ou requerer aprovação formal.
+- Mesmo em páginas públicas da empresa, `robots.txt` e ToS continuam mandatórios antes de ativar
+  qualquer coleta.
 
 ## Next Steps
 
@@ -207,3 +237,8 @@ Nenhum scraper pode ser ativado em produção sem este checklist completo.
 - [Diário Oficial da União — Dados Abertos](https://www.in.gov.br/dados-abertos)
 - [Portal da Transparência — API](https://transparencia.gov.br/api-de-dados)
 - [Codante.io Jobs API](https://docs.apis.codante.io/jobs-api) — para desenvolvimento e testes
+- [Greenhouse Job Board API](https://developers.greenhouse.io/job-board.html)
+- [Lever Postings API](https://github.com/lever/postings-api)
+- [Ashby Public Job Posting API](https://developers.ashbyhq.com/docs/public-job-posting-api)
+- [Google Search Central — JobPosting structured data](https://developers.google.com/search/docs/appearance/structured-data/job-posting)
+- [Google Search Central — robots.txt](https://developers.google.com/search/docs/crawling-indexing/robots/intro)

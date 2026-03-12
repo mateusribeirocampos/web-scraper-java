@@ -20,6 +20,12 @@ deliverables granulares. O plano torna o TDD explícito em cada feature, identif
 integrações API-first a serem implementadas (Indeed MCP e DOU API) e progride de forma
 incremental até os scrapers HTML estáticos e o fallback dinâmico.
 
+Após a conclusão das primeiras fatias Indeed e DOU, o roadmap passa a explicitar também a
+expansão para vagas de empresas pequenas e médias por meio de providers ATS públicos
+(Greenhouse/Lever/Ashby) e páginas de carreira próprias com onboarding legal aprovado. O projeto
+não deve ficar limitado a concursos nem depender cedo de boards generalistas com risco jurídico
+mais alto.
+
 ---
 
 ## XP Delivery Rules
@@ -230,25 +236,36 @@ Exemplo de fixture de resposta JSON do Indeed MCP:
 
 ---
 
-### Iteration 9 — Scraper HTML estático: Vagas Setor Privado (Vagas.com ou Programaticamente)
+### Iteration 9 — Expansão do setor privado para PMEs via ATS público (Greenhouse first)
 
-#### Story 9.1 — Revisão legal e robots.txt do site escolhido
-- Verificar robots.txt e ToS.
-- Preencher checklist de onboarding.
-- Somente prosseguir se `legalStatus = APPROVED`.
+#### Story 9.1 — Onboarding legal e seleção do primeiro board PME
+- Selecionar empresas-alvo com foco em Java / backend / plataforma / TI.
+- Priorizar boards públicos em Greenhouse; manter Lever e Ashby no backlog imediato.
+- Registrar `robots.txt`, termos e endpoint público utilizado.
+- **TDD:** teste de metadata / onboarding validation primeiro.
 
-#### Story 9.2 — Capturar fixture HTML do site
-- Salvar HTML de página de listagem com filtro "Java Júnior".
-- Identificar seletores para: título, empresa, localização, salário, data, URL.
-- **TDD:** fixture parser test primeiro.
+#### Story 9.2 — Implementar `GreenhouseJobBoardClient`
+- Consumir `boards-api.greenhouse.io`.
+- Buscar vagas publicadas do board escolhido.
+- **TDD:** testes com fixture JSON do Job Board API primeiro.
 
-#### Story 9.3 — Implementar `SelectorBundle` versionado
-- `vagas_com_v1` ou `programaticamente_v1`.
-- **TDD:** testes de seletores primeiro.
+#### Story 9.3 — Implementar `GreenhouseJobNormalizer`
+- Mapear payload do Greenhouse para `JobPostingEntity`.
+- Cobrir `title`, `company`, `location`, `canonicalUrl`, `publishedAt`, `description`.
+- **TDD:** testes de normalização primeiro.
 
-#### Story 9.4 — Implementar strategy estática para o site
-- Parsing jsoup, paginação, normalização para `JobPostingEntity`.
-- **TDD:** testes de extração com fixture HTML primeiro.
+#### Story 9.4 — Implementar `GreenhouseJobScraperStrategy`
+- Integrar client + normalizer.
+- **TDD:** testes de strategy primeiro.
+
+#### Story 9.5 — Persistir vagas PME via Greenhouse
+- Executar fluxo completo: command → strategy → normalize → persist.
+- **TDD:** integration test da fatia completa primeiro.
+
+#### Story 9.6 — Generalizar provider ATS para `LeverPostingsClient`
+- Repetir o mesmo padrão em um segundo provider ATS.
+- Validar se a abstração do provider permanece estável.
+- **TDD:** contract test do provider e testes com fixture JSON primeiro.
 
 ---
 
