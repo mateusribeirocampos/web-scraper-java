@@ -37,3 +37,4 @@ Exemplos:
 | 2.4 — PublicContestPostingEntity + Deduplicação + Migration V005 | [STORY-2.4-public-contest-posting-entity.md](STORY-2.4-public-contest-posting-entity.md) | ✅ Concluída |
 | 3.1 — Contrato JobScraperStrategy | [STORY-3.1-job-scraper-strategy-contract.md](STORY-3.1-job-scraper-strategy-contract.md) | ✅ Concluída |
 | 3.2 — JobScraperFactory | [STORY-3.2-job-scraper-factory.md](STORY-3.2-job-scraper-factory.md) | ✅ Concluída |
+| 3.3 — JobFetcher | [STORY-3.3-job-fetcher.md](STORY-3.3-job-fetcher.md) | ✅ Concluída |
