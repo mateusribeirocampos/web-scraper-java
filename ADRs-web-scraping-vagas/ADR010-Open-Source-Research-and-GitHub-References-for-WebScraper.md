@@ -204,6 +204,26 @@ inspeção manual do site e acelera a implementação do `PciConcursosScraperStr
 *Decisão de uso:* Referência de estrutura HTML do PCI Concursos. Os seletores CSS precisam ser
 verificados e validados com fixtures HTML reais antes de uso em produção (per ADR007).
 
+**Atualização de implementação (Story 8.1):**
+
+- fixture HTML local salva em `webscraper/src/test/resources/fixtures/pci/pci-concursos-listing.html`
+- output esperado do parse salvo em
+  `webscraper/src/test/resources/fixtures/pci/pci-concursos-listing-expected.json`
+- preview observável implementado em `PciConcursosParsePreview`
+- seletores provisórios congelados na fixture:
+  - `article.ca`
+  - `.ca-link`
+  - `.ca-orgao`
+  - `.ca-cargo`
+  - `.ca-vagas`
+  - `.ca-escolaridade`
+  - `.ca-salario`
+  - `.ca-inscricoes`
+  - `.ca-detalhes`
+
+Esses seletores ainda não representam um `SelectorBundle` de produção. A extração formal para
+bundle versionado fica na Story 8.2.
+
 ---
 
 #### 3.2 `Vinimartinsc/concursosPublicosAPI`

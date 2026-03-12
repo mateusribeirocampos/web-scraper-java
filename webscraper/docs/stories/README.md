@@ -53,3 +53,4 @@ Exemplos:
 | 7.1 — Política de retry | [STORY-7.1-fetch-retry-policy.md](STORY-7.1-fetch-retry-policy.md) | ✅ Concluída |
 | 7.2 — Rate limiting | [STORY-7.2-fetch-rate-limiting.md](STORY-7.2-fetch-rate-limiting.md) | ✅ Concluída |
 | 7.3 — Circuit breaker e dead-letter | [STORY-7.3-circuit-breaker-and-dead-letter.md](STORY-7.3-circuit-breaker-and-dead-letter.md) | ✅ Concluída |
+| 8.1 — Fixture HTML do PCI Concursos | [STORY-8.1-pci-concursos-html-fixture.md](STORY-8.1-pci-concursos-html-fixture.md) | ✅ Concluída |

@@ -1,0 +1,29 @@
+{
+  "sourceUrl": "https://www.pciconcursos.com.br/concursos/tecnologia-da-informacao",
+  "selectorBundleVersion": "pci_concursos_v1",
+  "itemsFound": 2,
+  "items": [
+    {
+      "contestName": "Prefeitura de Curitiba abre processo seletivo para Desenvolvedor Java",
+      "organizer": "Prefeitura de Curitiba",
+      "positionTitle": "Desenvolvedor Java",
+      "numberOfVacancies": 5,
+      "educationLevel": "SUPERIOR",
+      "salaryDescription": "R$ 8.500,00",
+      "registrationStartDate": "2026-03-15",
+      "registrationEndDate": "2026-04-10",
+      "detailUrl": "https://www.pciconcursos.com.br/concurso/prefeitura-de-curitiba-pr-abre-processo-seletivo-para-desenvolvedor-java/edital"
+    },
+    {
+      "contestName": "Fundacao Digital SP lanca edital para Analista de Infraestrutura",
+      "organizer": "Fundacao Digital SP",
+      "positionTitle": "Analista de Infraestrutura",
+      "numberOfVacancies": 12,
+      "educationLevel": "TECNICO",
+      "salaryDescription": "R$ 6.200,50",
+      "registrationStartDate": "2026-03-20",
+      "registrationEndDate": "2026-04-05",
+      "detailUrl": "https://www.pciconcursos.com.br/concurso/fundacao-digital-sp-lanca-edital-para-analista-de-infraestrutura/edital"
+    }
+  ]
+}
