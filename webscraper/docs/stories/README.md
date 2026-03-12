@@ -48,3 +48,4 @@ Exemplos:
 | 5.4 — Persistir concursos do DOU | [STORY-5.4-dou-contest-import-use-case.md](STORY-5.4-dou-contest-import-use-case.md) | ✅ Concluída |
 | 6.1 — Trigger por agendador | [STORY-6.1-crawl-job-scheduler.md](STORY-6.1-crawl-job-scheduler.md) | ✅ Concluída |
 | 6.2 — Endpoint de execução manual | [STORY-6.2-manual-crawl-job-execution-endpoint.md](STORY-6.2-manual-crawl-job-execution-endpoint.md) | ✅ Concluída |
+| 6.3 — Log de execução | [STORY-6.3-crawl-execution-lifecycle.md](STORY-6.3-crawl-execution-lifecycle.md) | ✅ Concluída |
