@@ -1,8 +1,5 @@
 package com.campos.webscraper.shared;
 
-import com.campos.webscraper.infrastructure.http.HttpJobFetcher;
-import com.campos.webscraper.infrastructure.http.JobFetcher;
-import com.campos.webscraper.infrastructure.http.RetryableJobFetcher;
 import io.github.resilience4j.retry.Retry;
 import io.github.resilience4j.retry.RetryConfig;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,10 +25,5 @@ public class FetchRetryConfiguration {
                 .retryExceptions(RetryableFetchException.class)
                 .failAfterMaxAttempts(false)
                 .build());
-    }
-
-    @Bean
-    public JobFetcher jobFetcher(Retry jobFetcherRetry) {
-        return new RetryableJobFetcher(new HttpJobFetcher(), jobFetcherRetry);
     }
 }

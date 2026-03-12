@@ -51,3 +51,4 @@ Exemplos:
 | 6.3 — Log de execução | [STORY-6.3-crawl-execution-lifecycle.md](STORY-6.3-crawl-execution-lifecycle.md) | ✅ Concluída |
 | 6.4 — Endpoints de listagem por data | [STORY-6.4-query-endpoints-for-postings-and-contests.md](STORY-6.4-query-endpoints-for-postings-and-contests.md) | ✅ Concluída |
 | 7.1 — Política de retry | [STORY-7.1-fetch-retry-policy.md](STORY-7.1-fetch-retry-policy.md) | ✅ Concluída |
+| 7.2 — Rate limiting | [STORY-7.2-fetch-rate-limiting.md](STORY-7.2-fetch-rate-limiting.md) | ✅ Concluída |

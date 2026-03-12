@@ -44,6 +44,8 @@ class FetchRequestTest {
         assertThat(request.headers()).isEmpty();
         assertThat(request.timeoutMs()).isEqualTo(10_000);
         assertThat(request.followRedirects()).isTrue();
+        assertThat(request.siteKey()).isNull();
+        assertThat(request.rateLimitKey()).isEqualTo("br.indeed.com");
     }
 
     @Test
@@ -55,6 +57,16 @@ class FetchRequestTest {
         assertThat(request.headers()).containsEntry("User-Agent", "Mozilla/5.0");
         assertThat(request.timeoutMs()).isEqualTo(10_000);
         assertThat(request.followRedirects()).isTrue();
+        assertThat(request.siteKey()).isNull();
+    }
+
+    @Test
+    @DisplayName("of(url, siteKey) deve preservar chave lógica do site")
+    void factoryOfWithSiteKeyShouldApplyIt() {
+        FetchRequest request = FetchRequest.of(VALID_URL, "indeed-br");
+
+        assertThat(request.siteKey()).isEqualTo("indeed-br");
+        assertThat(request.rateLimitKey()).isEqualTo("indeed-br");
     }
 
     // -------------------------------------------------------------------------
@@ -65,12 +77,13 @@ class FetchRequestTest {
     @DisplayName("deve criar FetchRequest com todos os campos válidos")
     void shouldCreateWithAllValidFields() {
         Map<String, String> headers = Map.of("Accept", "application/json");
-        FetchRequest request = new FetchRequest(VALID_URL, headers, 5_000, false);
+        FetchRequest request = new FetchRequest(VALID_URL, headers, 5_000, false, "indeed-br");
 
         assertThat(request.url()).isEqualTo(VALID_URL);
         assertThat(request.headers()).containsEntry("Accept", "application/json");
         assertThat(request.timeoutMs()).isEqualTo(5_000);
         assertThat(request.followRedirects()).isFalse();
+        assertThat(request.siteKey()).isEqualTo("indeed-br");
     }
 
     // -------------------------------------------------------------------------
@@ -80,7 +93,7 @@ class FetchRequestTest {
     @Test
     @DisplayName("deve lançar NullPointerException quando url for null")
     void shouldThrowWhenUrlIsNull() {
-        assertThatThrownBy(() -> new FetchRequest(null, Map.of(), 10_000, true))
+        assertThatThrownBy(() -> new FetchRequest(null, Map.of(), 10_000, true, null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessageContaining("url");
     }
@@ -88,7 +101,7 @@ class FetchRequestTest {
     @Test
     @DisplayName("deve lançar IllegalArgumentException quando url for blank")
     void shouldThrowWhenUrlIsBlank() {
-        assertThatThrownBy(() -> new FetchRequest("   ", Map.of(), 10_000, true))
+        assertThatThrownBy(() -> new FetchRequest("   ", Map.of(), 10_000, true, null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("url");
     }
@@ -96,7 +109,7 @@ class FetchRequestTest {
     @Test
     @DisplayName("deve lançar IllegalArgumentException quando url for string vazia")
     void shouldThrowWhenUrlIsEmpty() {
-        assertThatThrownBy(() -> new FetchRequest("", Map.of(), 10_000, true))
+        assertThatThrownBy(() -> new FetchRequest("", Map.of(), 10_000, true, null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("url");
     }
@@ -108,7 +121,7 @@ class FetchRequestTest {
     @Test
     @DisplayName("deve lançar IllegalArgumentException quando timeoutMs for zero")
     void shouldThrowWhenTimeoutIsZero() {
-        assertThatThrownBy(() -> new FetchRequest(VALID_URL, Map.of(), 0, true))
+        assertThatThrownBy(() -> new FetchRequest(VALID_URL, Map.of(), 0, true, null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("timeoutMs");
     }
@@ -116,7 +129,7 @@ class FetchRequestTest {
     @Test
     @DisplayName("deve lançar IllegalArgumentException quando timeoutMs for negativo")
     void shouldThrowWhenTimeoutIsNegative() {
-        assertThatThrownBy(() -> new FetchRequest(VALID_URL, Map.of(), -1, true))
+        assertThatThrownBy(() -> new FetchRequest(VALID_URL, Map.of(), -1, true, null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("timeoutMs");
     }
@@ -128,7 +141,7 @@ class FetchRequestTest {
     @Test
     @DisplayName("headers null deve ser normalizado para mapa vazio")
     void nullHeadersShouldBeNormalizedToEmptyMap() {
-        FetchRequest request = new FetchRequest(VALID_URL, null, 10_000, true);
+        FetchRequest request = new FetchRequest(VALID_URL, null, 10_000, true, null);
 
         assertThat(request.headers()).isEmpty();
     }

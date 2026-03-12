@@ -64,7 +64,8 @@ class HttpJobFetcherTest {
                 baseUrl() + "/redirect",
                 null,
                 10_000,
-                false
+                false,
+                null
         ));
 
         assertThat(page.statusCode()).isEqualTo(302);
