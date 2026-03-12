@@ -1,0 +1,25 @@
+{
+  "items": [
+    {
+      "id": "dou-1",
+      "title": "Analista de TI - Desenvolvimento de Sistemas",
+      "summary": "Concurso federal para analista de tecnologia da informacao",
+      "publishedAt": "2026-03-10",
+      "detailUrl": "https://www.in.gov.br/web/dou/-/edital-1"
+    },
+    {
+      "id": "dou-2",
+      "title": "Desenvolvedor Backend Java",
+      "summary": "Processo seletivo com foco em tecnologia da informacao",
+      "publishedAt": "2026-03-11",
+      "detailUrl": "https://www.in.gov.br/web/dou/-/edital-2"
+    },
+    {
+      "id": "dou-3",
+      "title": "Assistente Administrativo",
+      "summary": "Concurso para area administrativa",
+      "publishedAt": "2026-03-11",
+      "detailUrl": "https://www.in.gov.br/web/dou/-/edital-3"
+    }
+  ]
+}

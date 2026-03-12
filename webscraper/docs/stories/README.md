@@ -38,3 +38,8 @@ Exemplos:
 | 3.1 — Contrato JobScraperStrategy | [STORY-3.1-job-scraper-strategy-contract.md](STORY-3.1-job-scraper-strategy-contract.md) | ✅ Concluída |
 | 3.2 — JobScraperFactory | [STORY-3.2-job-scraper-factory.md](STORY-3.2-job-scraper-factory.md) | ✅ Concluída |
 | 3.3 — JobFetcher | [STORY-3.3-job-fetcher.md](STORY-3.3-job-fetcher.md) | ✅ Concluída |
+| 4.1 — IndeedApiClient | [STORY-4.1-indeed-api-client.md](STORY-4.1-indeed-api-client.md) | ✅ Concluída |
+| 4.2 — IndeedJobNormalizer | [STORY-4.2-indeed-job-normalizer.md](STORY-4.2-indeed-job-normalizer.md) | ✅ Concluída |
+| 4.3 — IndeedApiJobScraperStrategy | [STORY-4.3-indeed-api-job-scraper-strategy.md](STORY-4.3-indeed-api-job-scraper-strategy.md) | ✅ Concluída |
+| 4.4 — Persistir vagas do Indeed | [STORY-4.4-indeed-job-import-use-case.md](STORY-4.4-indeed-job-import-use-case.md) | ✅ Concluída |
+| 5.1 — DouApiClient | [STORY-5.1-dou-api-client.md](STORY-5.1-dou-api-client.md) | ✅ Concluída |
