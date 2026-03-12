@@ -5,6 +5,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.text.Normalizer;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -18,23 +19,43 @@ import java.util.regex.Pattern;
  */
 public class PciConcursosFixtureParser {
 
-    static final String SELECTOR_BUNDLE_VERSION = "pci_concursos_v1";
+    private static final List<String> REQUIRED_SELECTOR_FIELDS = Arrays.asList(
+            "contestCard",
+            "contestName",
+            "organizer",
+            "positionTitle",
+            "numberOfVacancies",
+            "educationLevel",
+            "salaryRange",
+            "registrationDeadline",
+            "detailUrl"
+    );
     private static final Pattern REGISTRATION_PERIOD_PATTERN =
             Pattern.compile("(\\d{4}-\\d{2}-\\d{2}).*?(\\d{4}-\\d{2}-\\d{2})");
     private static final Pattern VACANCIES_PATTERN = Pattern.compile("(\\d[\\d.\\s]*)");
+    private final SelectorBundle selectorBundle;
+
+    public PciConcursosFixtureParser() {
+        this(PciConcursosSelectorBundles.v1());
+    }
+
+    public PciConcursosFixtureParser(SelectorBundle selectorBundle) {
+        this.selectorBundle = Objects.requireNonNull(selectorBundle, "selectorBundle must not be null");
+        this.selectorBundle.requireSelectors(REQUIRED_SELECTOR_FIELDS);
+    }
 
     public PciConcursosParsePreview parse(String html, String sourceUrl) {
         Objects.requireNonNull(html, "html must not be null");
         Objects.requireNonNull(sourceUrl, "sourceUrl must not be null");
 
         Document document = Jsoup.parse(html, sourceUrl);
-        List<PciConcursosPreviewItem> items = document.select("article.ca").stream()
+        List<PciConcursosPreviewItem> items = document.select(selector("contestCard")).stream()
                 .map(this::toPreviewItem)
                 .toList();
 
         return new PciConcursosParsePreview(
                 sourceUrl,
-                SELECTOR_BUNDLE_VERSION,
+                selectorBundle.selectorBundleVersion(),
                 items.size(),
                 items
         );
@@ -42,15 +63,15 @@ public class PciConcursosFixtureParser {
 
     private PciConcursosPreviewItem toPreviewItem(Element card) {
         return new PciConcursosPreviewItem(
-                text(card, ".ca-link"),
-                text(card, ".ca-orgao"),
-                text(card, ".ca-cargo"),
-                extractVacancies(text(card, ".ca-vagas")),
-                normalizeEducationLevel(text(card, ".ca-escolaridade")),
-                text(card, ".ca-salario"),
-                extractRegistrationDate(text(card, ".ca-inscricoes"), 1),
-                extractRegistrationDate(text(card, ".ca-inscricoes"), 2),
-                absoluteHref(card, ".ca-detalhes")
+                text(card, selector("contestName")),
+                text(card, selector("organizer")),
+                text(card, selector("positionTitle")),
+                extractVacancies(text(card, selector("numberOfVacancies"))),
+                normalizeEducationLevel(text(card, selector("educationLevel"))),
+                text(card, selector("salaryRange")),
+                extractRegistrationDate(text(card, selector("registrationDeadline")), 1),
+                extractRegistrationDate(text(card, selector("registrationDeadline")), 2),
+                absoluteHref(card, selector("detailUrl"))
         );
     }
 
@@ -104,5 +125,9 @@ public class PciConcursosFixtureParser {
     private String absoluteHref(Element root, String cssQuery) {
         Element element = root.selectFirst(cssQuery);
         return element == null ? null : element.absUrl("href");
+    }
+
+    private String selector(String field) {
+        return selectorBundle.selector(field);
     }
 }

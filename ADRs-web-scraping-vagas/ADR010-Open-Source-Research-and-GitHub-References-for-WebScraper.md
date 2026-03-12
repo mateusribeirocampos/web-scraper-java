@@ -224,6 +224,14 @@ verificados e validados com fixtures HTML reais antes de uso em produção (per 
 Esses seletores ainda não representam um `SelectorBundle` de produção. A extração formal para
 bundle versionado fica na Story 8.2.
 
+**Atualização de implementação (Story 8.2):**
+
+- `SelectorBundle` implementado em
+  `webscraper/src/main/java/com/campos/webscraper/infrastructure/parser/SelectorBundle.java`
+- bundle `pci_concursos_v1` implementado em
+  `webscraper/src/main/java/com/campos/webscraper/infrastructure/parser/PciConcursosSelectorBundles.java`
+- o parser do PCI agora consome o bundle versionado em vez de seletores inline
+
 ---
 
 #### 3.2 `Vinimartinsc/concursosPublicosAPI`

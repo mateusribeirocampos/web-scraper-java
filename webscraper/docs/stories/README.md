@@ -54,3 +54,4 @@ Exemplos:
 | 7.2 — Rate limiting | [STORY-7.2-fetch-rate-limiting.md](STORY-7.2-fetch-rate-limiting.md) | ✅ Concluída |
 | 7.3 — Circuit breaker e dead-letter | [STORY-7.3-circuit-breaker-and-dead-letter.md](STORY-7.3-circuit-breaker-and-dead-letter.md) | ✅ Concluída |
 | 8.1 — Fixture HTML do PCI Concursos | [STORY-8.1-pci-concursos-html-fixture.md](STORY-8.1-pci-concursos-html-fixture.md) | ✅ Concluída |
+| 8.2 — SelectorBundle do PCI Concursos | [STORY-8.2-pci-concursos-selector-bundle.md](STORY-8.2-pci-concursos-selector-bundle.md) | ✅ Concluída |
