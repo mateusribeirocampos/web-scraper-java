@@ -2,6 +2,7 @@ package com.campos.webscraper.infrastructure.http;
 
 import com.campos.webscraper.shared.FetchRequest;
 import com.campos.webscraper.shared.FetchedPage;
+import com.campos.webscraper.shared.RetryableFetchException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import org.junit.jupiter.api.AfterEach;
@@ -15,6 +16,7 @@ import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Unit tests for HttpJobFetcher using a mocked local HTTP transport.
@@ -81,6 +83,16 @@ class HttpJobFetcherTest {
         assertThat(page.statusCode()).isEqualTo(200);
         assertThat(page.htmlContent()).contains("final");
         assertThat(page.isSuccess()).isTrue();
+    }
+
+    @Test
+    @DisplayName("should throw retryable exception for transient transport failure")
+    void shouldThrowRetryableExceptionForTransientTransportFailure() {
+        JobFetcher fetcher = new HttpJobFetcher();
+
+        assertThatThrownBy(() -> fetcher.fetch(FetchRequest.of("http://localhost:1/unreachable")))
+                .isInstanceOf(RetryableFetchException.class)
+                .hasMessageContaining("Transient fetch failure");
     }
 
     private void startRedirectServer() throws IOException {

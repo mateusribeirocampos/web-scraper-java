@@ -2,6 +2,7 @@ package com.campos.webscraper.infrastructure.http;
 
 import com.campos.webscraper.shared.FetchRequest;
 import com.campos.webscraper.shared.FetchedPage;
+import com.campos.webscraper.shared.RetryableFetchException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -49,13 +50,7 @@ public class HttpJobFetcher implements JobFetcher {
                     LocalDateTime.now()
             );
         } catch (IOException exception) {
-            return new FetchedPage(
-                    request.url(),
-                    "",
-                    599,
-                    null,
-                    LocalDateTime.now()
-            );
+            throw new RetryableFetchException("Transient fetch failure for URL: " + request.url(), exception);
         }
     }
 }
