@@ -43,3 +43,4 @@ Exemplos:
 | 4.3 — IndeedApiJobScraperStrategy | [STORY-4.3-indeed-api-job-scraper-strategy.md](STORY-4.3-indeed-api-job-scraper-strategy.md) | ✅ Concluída |
 | 4.4 — Persistir vagas do Indeed | [STORY-4.4-indeed-job-import-use-case.md](STORY-4.4-indeed-job-import-use-case.md) | ✅ Concluída |
 | 5.1 — DouApiClient | [STORY-5.1-dou-api-client.md](STORY-5.1-dou-api-client.md) | ✅ Concluída |
+| 5.2 — DouContestNormalizer | [STORY-5.2-dou-contest-normalizer.md](STORY-5.2-dou-contest-normalizer.md) | ✅ Concluída |
