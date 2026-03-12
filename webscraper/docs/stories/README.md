@@ -46,3 +46,4 @@ Exemplos:
 | 5.2 — DouContestNormalizer | [STORY-5.2-dou-contest-normalizer.md](STORY-5.2-dou-contest-normalizer.md) | ✅ Concluída |
 | 5.3 — DouApiContestScraperStrategy | [STORY-5.3-dou-api-contest-scraper-strategy.md](STORY-5.3-dou-api-contest-scraper-strategy.md) | ✅ Concluída |
 | 5.4 — Persistir concursos do DOU | [STORY-5.4-dou-contest-import-use-case.md](STORY-5.4-dou-contest-import-use-case.md) | ✅ Concluída |
+| 6.1 — Trigger por agendador | [STORY-6.1-crawl-job-scheduler.md](STORY-6.1-crawl-job-scheduler.md) | ✅ Concluída |

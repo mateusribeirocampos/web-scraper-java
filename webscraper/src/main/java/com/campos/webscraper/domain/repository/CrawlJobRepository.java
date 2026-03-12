@@ -5,6 +5,7 @@ import com.campos.webscraper.domain.model.TargetSiteEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.time.Instant;
 
 /**
  * Repository for CrawlJobEntity.
@@ -15,4 +16,7 @@ public interface CrawlJobRepository extends JpaRepository<CrawlJobEntity, Long> 
 
     /** Returns all crawl jobs for a given target site (ordered by scheduled_at DESC by DB index). */
     List<CrawlJobEntity> findByTargetSite(TargetSiteEntity targetSite);
+
+    /** Returns enabled jobs due for execution ordered by the oldest scheduled time first. */
+    List<CrawlJobEntity> findByTargetSiteEnabledTrueAndScheduledAtLessThanEqualOrderByScheduledAtAsc(Instant scheduledAt);
 }
