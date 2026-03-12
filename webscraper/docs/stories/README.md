@@ -32,3 +32,6 @@ Exemplos:
 |---|---|---|
 | 1.2 — Enums e Value Objects | [STORY-1.2-enums-value-objects.md](STORY-1.2-enums-value-objects.md) | ✅ Concluída |
 | 2.1 — TargetSiteEntity + Migration V001 | [STORY-2.1-target-site-entity.md](STORY-2.1-target-site-entity.md) | ✅ Concluída |
+| 2.2 — CrawlJobEntity + CrawlExecutionEntity + Migration V002 | [STORY-2.2-crawl-job-execution-entity.md](STORY-2.2-crawl-job-execution-entity.md) | ✅ Concluída |
+| 2.3 — JobPostingEntity + Deduplicação + Migration V004 | [STORY-2.3-job-posting-entity.md](STORY-2.3-job-posting-entity.md) | ✅ Concluída |
+| 2.4 — PublicContestPostingEntity + Deduplicação + Migration V005 | [STORY-2.4-public-contest-posting-entity.md](STORY-2.4-public-contest-posting-entity.md) | ✅ Concluída |
