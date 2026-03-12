@@ -49,3 +49,4 @@ Exemplos:
 | 6.1 — Trigger por agendador | [STORY-6.1-crawl-job-scheduler.md](STORY-6.1-crawl-job-scheduler.md) | ✅ Concluída |
 | 6.2 — Endpoint de execução manual | [STORY-6.2-manual-crawl-job-execution-endpoint.md](STORY-6.2-manual-crawl-job-execution-endpoint.md) | ✅ Concluída |
 | 6.3 — Log de execução | [STORY-6.3-crawl-execution-lifecycle.md](STORY-6.3-crawl-execution-lifecycle.md) | ✅ Concluída |
+| 6.4 — Endpoints de listagem por data | [STORY-6.4-query-endpoints-for-postings-and-contests.md](STORY-6.4-query-endpoints-for-postings-and-contests.md) | ✅ Concluída |

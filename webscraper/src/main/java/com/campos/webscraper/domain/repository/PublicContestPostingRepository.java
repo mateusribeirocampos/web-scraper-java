@@ -25,4 +25,9 @@ public interface PublicContestPostingRepository extends JpaRepository<PublicCont
             ContestStatus contestStatus,
             LocalDate registrationEndDate
     );
+
+    /**
+     * Returns contests by status ordered by nearest registration end date first.
+     */
+    List<PublicContestPostingEntity> findByContestStatusOrderByRegistrationEndDateAsc(ContestStatus contestStatus);
 }
