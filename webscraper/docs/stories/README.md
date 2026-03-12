@@ -45,3 +45,4 @@ Exemplos:
 | 5.1 — DouApiClient | [STORY-5.1-dou-api-client.md](STORY-5.1-dou-api-client.md) | ✅ Concluída |
 | 5.2 — DouContestNormalizer | [STORY-5.2-dou-contest-normalizer.md](STORY-5.2-dou-contest-normalizer.md) | ✅ Concluída |
 | 5.3 — DouApiContestScraperStrategy | [STORY-5.3-dou-api-contest-scraper-strategy.md](STORY-5.3-dou-api-contest-scraper-strategy.md) | ✅ Concluída |
+| 5.4 — Persistir concursos do DOU | [STORY-5.4-dou-contest-import-use-case.md](STORY-5.4-dou-contest-import-use-case.md) | ✅ Concluída |
