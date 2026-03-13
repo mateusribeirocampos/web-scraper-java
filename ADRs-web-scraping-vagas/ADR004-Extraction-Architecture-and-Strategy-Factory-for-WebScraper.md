@@ -136,7 +136,7 @@ public interface JobNormalizer<T extends RawJobRecord> {
 |---|---|---|---|
 | `IndeedApiJobScraperStrategy` | Tipo E | Indeed MCP/API | Consome API oficial do Indeed. Primeira strategy a ser implementada. |
 | `DouApiContestScraperStrategy` | Tipo E | DOU API Gov | Consome API do Diário Oficial para editais de concurso. |
-| `GreenhouseJobBoardStrategy` | Tipo E | Greenhouse Job Board API | Integra boards públicos de empresas pequenas e médias via provider padronizado. |
+| `GreenhouseJobScraperStrategy` | Tipo E | Greenhouse Job Board API | Integra boards públicos de empresas pequenas e médias via provider padronizado. Implementada para `greenhouse_bitso`. |
 | `LeverPostingsStrategy` | Tipo E | Lever Postings API | Integra boards públicos de empresas com ATS Lever. |
 | `AshbyJobBoardStrategy` | Tipo E | Ashby Public Job Posting API | Integra boards públicos de startups e PMEs com ATS Ashby. |
 | `StaticListingJobScraperStrategy` | Tipo A | PCI Concursos, Vagas.com | Parsing HTML estático via jsoup de páginas de listagem. |
@@ -326,8 +326,10 @@ Antes de implementar qualquer strategy concreta, a seguinte sequência de testes
 
 1. Implementar testes de contrato para resolução da factory.
 2. Criar a primeira strategy API-first (IndeedApiJobScraperStrategy) a partir de fixture de resposta JSON.
-3. Criar a primeira strategy estática (PciConcursosScraperStrategy) a partir de fixture HTML.
-4. Adicionar strategy de browser somente após cenário falhando provar necessidade.
+3. Repetir o padrão API-first em novos providers reutilizáveis (`DouApiContestScraperStrategy`,
+   `GreenhouseJobScraperStrategy`).
+4. Criar a primeira strategy estática (PciConcursosScraperStrategy) a partir de fixture HTML.
+5. Adicionar strategy de browser somente após cenário falhando provar necessidade.
 
 ## References
 

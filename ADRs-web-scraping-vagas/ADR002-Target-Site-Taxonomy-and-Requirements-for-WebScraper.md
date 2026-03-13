@@ -118,6 +118,9 @@ houses que publicam vagas via plataformas padronizadas em vez de manter um porta
   abordagem API-first.
 - Primeiro board Greenhouse selecionado em 2026-03-13: **Bitso** (`board_token = bitso`) —
   endpoint público validado e board com aderência atual ao foco Java/backend.
+- Estado atual do provider Greenhouse em 2026-03-13: onboarding (`9.1`), client (`9.2`),
+  normalizer (`9.3`) e strategy (`9.4`) implementados para `greenhouse_bitso`; a persistência
+  ponta a ponta permanece planejada para a `9.5`.
 - Páginas de carreira próprias: permitidas apenas com `robots.txt` revisado e sinais claros de
   publicação estruturada.
 - LinkedIn: aguardar acesso a Partner API ou excluir da fase 1.
@@ -183,6 +186,8 @@ Nenhum scraper pode ser ativado em produção sem este checklist completo.
 - Suportar atualizações de parser/versão por site.
 - Disponibilizar vagas filtradas por data de publicação (`publishedAt`).
 - Integrar fontes via API oficial (Indeed MCP, DOU API) como adaptadores de primeira classe.
+- Permitir verificação manual de aceite por pesquisa/intenção do usuário antes de promover uma
+  nova família de fonte.
 
 ### 5. Requisitos Não-Funcionais
 
@@ -194,6 +199,9 @@ Nenhum scraper pode ser ativado em produção sem este checklist completo.
 - **Auditabilidade:** versões de seletores e decisões de parser devem ser historicizadas.
 - **Testabilidade:** regras de extração validadas via fixtures antes do deploy.
 - **Conformidade legal:** robots.txt, ToS e status de aprovação registrados mesmo quando o scraping é tecnicamente viável.
+- **Aceitação funcional:** cada família de fonte deve ter um cenário manual reproduzível de busca
+  do usuário, mesmo quando a query ainda estiver embutida em um `CrawlJob` configurado e não
+  exposta como input livre na API pública.
 
 ### 6. Fora de Escopo da Fase Inicial
 
@@ -230,6 +238,10 @@ Nenhum scraper pode ser ativado em produção sem este checklist completo.
 3. Implementar adaptador DOU API como segunda integração para concursos federais.
 4. Criar testes com fixtures por classe de site antes de codificar a extração em produção.
 5. Preencher o checklist de onboarding para cada site antes de ativar em produção.
+6. Executar teste manual de aceite por fonte usando uma pesquisa representativa do usuário, por
+   exemplo:
+   - vagas privadas: `desenvolvedor de software em java spring boot`
+   - concursos: `concurso analista de ti` ou `concurso desenvolvedor java`
 
 ## References
 

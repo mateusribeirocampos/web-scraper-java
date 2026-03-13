@@ -6,7 +6,7 @@ Mandatory TDD workflow and quality gates for the WebScraper platform.
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 
@@ -82,6 +82,26 @@ Validate:
 - browser automation adapter contracts,
 - serialization and persistence boundaries.
 
+#### Manual user acceptance tests
+
+Validate:
+
+- that a configured source can actually be executed by the running application,
+- that the resulting records become visible in the query endpoints,
+- that the returned items still match a user-recognizable search intent.
+
+Mandatory examples for acceptance rehearsal:
+
+- private-sector jobs: `desenvolvedor de software em java spring boot`
+- public contests: `concurso analista de ti` or `concurso desenvolvedor java`
+
+Important scope note:
+
+- when the platform still does not expose free-text search as a public input, the acceptance test
+  must be exercised through a configured `CrawlJob` or source URL that encodes the same intent;
+- once user-defined search input is implemented, this same scenario becomes an end-to-end product
+  acceptance test rather than only an operator acceptance test.
+
 ### 3. Tooling
 
 - JUnit 5
@@ -101,6 +121,7 @@ A pull request must not be merged unless all of the following pass:
 - formatting/linting,
 - coverage threshold,
 - mutation or fixture stability checks where applicable.
+- manual acceptance checklist updated when the story introduces or materially changes a source family.
 
 ### 5. Coverage Policy
 
@@ -166,3 +187,8 @@ class CrawlExecutionRepositoryIT {
 1. Create the initial test pyramid structure.
 2. Add sample HTML fixtures for the first target site.
 3. Block feature development unless the first failing tests exist.
+4. Standardize a manual acceptance checklist for:
+   - running a crawl job manually,
+   - confirming execution success,
+   - querying persisted results,
+   - checking whether the returned items satisfy the expected user search intent.

@@ -35,6 +35,32 @@ mais alto.
 - Pair-review ou code review estruturado para regras de parser.
 - Integração contínua obrigatória antes de merge.
 - Refatoração faz parte do critério de pronto, não é cleanup opcional.
+- Toda nova família de fonte deve fechar também um teste manual de aceite orientado ao usuário.
+
+### Manual User Acceptance Rule
+
+Além dos testes automatizados, cada nova integração de fonte deve prever um cenário manual
+reproduzível de verificação funcional no sistema rodando.
+
+Formato mínimo do cenário:
+
+1. Disparar o job manualmente.
+2. Confirmar que a execução concluiu com sucesso.
+3. Consultar os endpoints de leitura do sistema.
+4. Verificar se os itens retornados correspondem à intenção de busca do usuário.
+
+Consultas de referência:
+
+- vagas privadas: `desenvolvedor de software em java spring boot`
+- concursos: `concurso analista de ti` ou `concurso desenvolvedor java`
+
+Observação importante:
+
+- enquanto a plataforma ainda não expuser busca customizada como input público, esse teste manual
+  pode ser executado com um `CrawlJob` pré-configurado ou uma URL/endpoint de origem que já
+  represente a pesquisa desejada;
+- quando a busca customizada virar feature do produto, esse mesmo cenário passa a ser requisito
+  explícito de aceite end-to-end.
 
 ---
 
@@ -267,6 +293,8 @@ Exemplo de fixture de resposta JSON do Indeed MCP:
 #### Story 9.5 — Persistir vagas PME via Greenhouse
 - Executar fluxo completo: command → strategy → normalize → persist.
 - **TDD:** integration test da fatia completa primeiro.
+- **Aceite manual obrigatório:** executar um job Greenhouse alinhado ao foco do usuário e validar
+  retorno em listagem por data para uma pesquisa como `desenvolvedor de software em java spring boot`.
 
 #### Story 9.6 — Generalizar provider ATS para `LeverPostingsClient`
 - Repetir o mesmo padrão em um segundo provider ATS.
@@ -340,6 +368,7 @@ Uma story está pronta apenas quando:
 6. Fixtures e versionamento atualizados quando comportamento de extração mudou.
 7. Implicações operacionais documentadas quando relevante.
 8. Checklist de onboarding preenchido para qualquer novo site adicionado.
+9. Cenário manual de aceite do usuário executado e documentado para a família de fonte alterada.
 
 ---
 

@@ -79,6 +79,11 @@ e ordenação cronológica.
 Spring Boot. Rate limit obrigatório por site. Retry, rate limiting, circuit breaker por fonte e
 dead-letter já foram implementados; fila assíncrona dedicada ainda permanece planejada.
 
+**Teste de aceite do usuário:** além do TDD e dos testes automatizados, toda nova família de fonte
+deve fechar com um cenário manual reproduzível de execução e leitura dos resultados, usando uma
+intenção de busca reconhecível pelo usuário final, como `desenvolvedor de software em java spring boot`
+ou `concurso analista de ti`.
+
 **Estilo arquitetural:** Backend em camadas com contratos explícitos de extrator, strategies por
 site, factory de resolução, scheduler/orquestrador e persistência separada da lógica de scraping.
 
@@ -93,7 +98,7 @@ CI quality gates e rollout controlado por família de scraper.
 |---|---|
 | Linguagem de produção | Java 21 — definido e confirmado |
 | API-first como prioridade | Definido |
-| Contratos de scraper | Implementados para Indeed, DOU e PCI Concursos |
+| Contratos de scraper | Implementados para Indeed, DOU, PCI Concursos e Greenhouse Bitso |
 | Modelo JPA de domínio de vagas | Implementado |
 | Política de TDD | Mandatória |
 | Retry e rate limiting | Implementados |
@@ -105,6 +110,7 @@ CI quality gates e rollout controlado por família de scraper.
 | Tarefas XP detalhadas | Definidas — 12 iterations |
 | Pesquisa open source | Realizada e documentada |
 | PCI Concursos | Implementado tecnicamente; produção ainda pendente de checklist legal completo |
+| Greenhouse Bitso | Onboarding, client, normalizer e strategy implementados; persistência ponta a ponta pendente na 9.5 |
 
 ---
 
