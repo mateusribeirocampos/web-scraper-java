@@ -63,3 +63,4 @@ Exemplos:
 | 9.4 — GreenhouseJobScraperStrategy | [STORY-9.4-greenhouse-job-scraper-strategy.md](STORY-9.4-greenhouse-job-scraper-strategy.md) | ✅ Concluída |
 | 9.5 — Persistir vagas PME via Greenhouse | [STORY-9.5-greenhouse-job-import-use-case.md](STORY-9.5-greenhouse-job-import-use-case.md) | ✅ Concluída |
 | 9.6 — Generalizar provider ATS para Lever | [STORY-9.6-lever-postings-client.md](STORY-9.6-lever-postings-client.md) | ✅ Concluída |
+| 10.1 — Abstração de fila | [STORY-10.1-crawl-job-queue-abstraction.md](STORY-10.1-crawl-job-queue-abstraction.md) | ✅ Concluída |
