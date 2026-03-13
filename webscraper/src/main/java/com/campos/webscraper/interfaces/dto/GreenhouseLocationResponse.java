@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record GreenhouseLocationResponse(
-        String name
+        String name,
+        String country
 ) {
 }
