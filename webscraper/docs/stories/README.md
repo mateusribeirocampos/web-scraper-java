@@ -56,3 +56,4 @@ Exemplos:
 | 8.1 — Fixture HTML do PCI Concursos | [STORY-8.1-pci-concursos-html-fixture.md](STORY-8.1-pci-concursos-html-fixture.md) | ✅ Concluída |
 | 8.2 — SelectorBundle do PCI Concursos | [STORY-8.2-pci-concursos-selector-bundle.md](STORY-8.2-pci-concursos-selector-bundle.md) | ✅ Concluída |
 | 8.3 — PciConcursosScraperStrategy | [STORY-8.3-pci-concursos-scraper-strategy.md](STORY-8.3-pci-concursos-scraper-strategy.md) | ✅ Concluída |
+| 8.4 — Onboarding legal do PCI Concursos | [STORY-8.4-pci-concursos-legal-onboarding.md](STORY-8.4-pci-concursos-legal-onboarding.md) | ✅ Concluída |
