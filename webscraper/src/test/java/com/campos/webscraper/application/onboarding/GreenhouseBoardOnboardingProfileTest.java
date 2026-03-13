@@ -32,15 +32,15 @@ class GreenhouseBoardOnboardingProfileTest {
     }
 
     @Test
-    @DisplayName("should keep the selected Bitso Greenhouse board pending until a scraper strategy exists")
-    void shouldKeepTheSelectedBitsoGreenhouseBoardPendingUntilAScraperStrategyExists() {
+    @DisplayName("should approve the selected Bitso Greenhouse board when strategy support is available")
+    void shouldApproveTheSelectedBitsoGreenhouseBoardWhenStrategySupportIsAvailable() {
         GreenhouseBoardOnboardingProfile profile = GreenhouseBoardOnboardingProfiles.bitso();
 
         TargetSiteOnboardingDecision decision = validator.assess(profile.targetSite(), profile.checklist());
 
-        assertThat(decision.productionReady()).isFalse();
-        assertThat(decision.targetSite().getLegalStatus()).isEqualTo(LegalStatus.PENDING_REVIEW);
-        assertThat(decision.targetSite().isEnabled()).isFalse();
-        assertThat(decision.blockingReasons()).contains("scraper strategy not implemented for target site");
+        assertThat(decision.productionReady()).isTrue();
+        assertThat(decision.targetSite().getLegalStatus()).isEqualTo(LegalStatus.APPROVED);
+        assertThat(decision.targetSite().isEnabled()).isTrue();
+        assertThat(decision.blockingReasons()).isEmpty();
     }
 }

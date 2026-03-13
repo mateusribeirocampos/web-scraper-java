@@ -60,3 +60,4 @@ Exemplos:
 | 9.1 — Onboarding legal e seleção do primeiro board PME | [STORY-9.1-greenhouse-board-onboarding.md](STORY-9.1-greenhouse-board-onboarding.md) | ✅ Concluída |
 | 9.2 — GreenhouseJobBoardClient | [STORY-9.2-greenhouse-job-board-client.md](STORY-9.2-greenhouse-job-board-client.md) | ✅ Concluída |
 | 9.3 — GreenhouseJobNormalizer | [STORY-9.3-greenhouse-job-normalizer.md](STORY-9.3-greenhouse-job-normalizer.md) | ✅ Concluída |
+| 9.4 — GreenhouseJobScraperStrategy | [STORY-9.4-greenhouse-job-scraper-strategy.md](STORY-9.4-greenhouse-job-scraper-strategy.md) | ✅ Concluída |

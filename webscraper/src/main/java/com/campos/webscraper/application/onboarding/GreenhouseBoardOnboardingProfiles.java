@@ -41,7 +41,7 @@ public final class GreenhouseBoardOnboardingProfiles {
                 true,
                 true,
                 apiUrl,
-                false,
+                true,
                 "Selecionado para expandir vagas PME com foco atual em Java/backend via ATS publico.",
                 "Greenhouse public board API: 60 rpm conservative profile",
                 OnboardingLegalCategory.API_OFICIAL,
