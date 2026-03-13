@@ -5,6 +5,7 @@ import com.campos.webscraper.domain.model.JobPostingEntity;
 import com.campos.webscraper.interfaces.dto.IndeedApiResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import java.util.Objects;
 /**
  * Maps Indeed MCP payloads into the canonical job posting entity shape used by the project.
  */
+@Component
 public class IndeedJobNormalizer {
 
     private static final String DEFAULT_TECH_STACK = "Java,Spring Boot";

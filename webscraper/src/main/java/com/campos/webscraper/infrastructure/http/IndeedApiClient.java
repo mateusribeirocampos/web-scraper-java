@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.springframework.stereotype.Component;
 import okhttp3.ResponseBody;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.util.Objects;
 /**
  * HTTP client for the Indeed MCP connector.
  */
+@Component
 public class IndeedApiClient {
 
     private final OkHttpClient httpClient;

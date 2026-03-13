@@ -18,5 +18,5 @@ public interface CrawlJobRepository extends JpaRepository<CrawlJobEntity, Long> 
     List<CrawlJobEntity> findByTargetSite(TargetSiteEntity targetSite);
 
     /** Returns enabled jobs due for execution ordered by the oldest scheduled time first. */
-    List<CrawlJobEntity> findByTargetSiteEnabledTrueAndScheduledAtLessThanEqualOrderByScheduledAtAsc(Instant scheduledAt);
+    List<CrawlJobEntity> findByTargetSiteEnabledTrueAndSchedulerManagedTrueAndScheduledAtLessThanEqualOrderByScheduledAtAsc(Instant scheduledAt);
 }

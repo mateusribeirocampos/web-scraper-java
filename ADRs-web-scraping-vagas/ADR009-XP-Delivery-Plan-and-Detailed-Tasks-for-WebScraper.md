@@ -333,11 +333,41 @@ Exemplo de fixture de resposta JSON do Indeed MCP:
 
 #### Story 10.2 — Worker de execução
 - Consumer resolve strategy e persiste output.
+- Enquanto a fila for apenas em memória, o scheduler atua somente como producer e **não** faz
+  handoff atômico/desarme do job no banco.
+- Duplicações de handoff nessa fase devem ser absorvidas pela Story 10.3 (idempotência), e não por
+  uma falsa garantia de durabilidade da fila em memória.
 - **TDD:** testes de worker end-to-end primeiro.
 
 #### Story 10.3 — Idempotência e prevenção de duplicatas
 - Garantir que eventos repetidos não dupliquem registros.
+- Cobrir explicitamente duplicatas vindas do handoff `scheduler -> in-memory queue`.
+- Introduzir um `in-flight claim registry` em memória para impedir reenfileiramento do mesmo job
+  recorrente dentro do mesmo processo, sem fingir durabilidade.
+- Preparar o sistema para futura adoção de handoff durável (`outbox` ou fila persistida) sem mudar
+  o contrato funcional dos imports.
 - **TDD:** testes de execução duplicada primeiro.
+
+#### Gate arquitetural antes das próximas stories funcionais
+
+Antes de seguir o roadmap funcional com segurança, o projeto precisa fechar uma story técnica de
+**handoff durável** entre scheduler e worker.
+
+Decisão explícita:
+
+- `InMemoryCrawlJobQueue` + `InFlightCrawlJobRegistry` é apenas mitigação local por processo
+- isso reduz duplicatas e looping dentro da instância atual, mas **não** resolve durabilidade após
+  restart/crash
+- a próxima evolução arquitetural necessária é uma destas opções:
+  - fila persistida em tabela no Postgres
+  - outbox pattern no Postgres
+  - broker externo durável
+
+Recomendação atual do projeto:
+
+- priorizar **fila persistida/outbox no Postgres** antes de avançar outras stories funcionais
+- só depois reconsiderar remoção de mitigadores em memória
+- tratar qualquer continuação sem esse passo como evolução com risco operacional conhecido
 
 ---
 

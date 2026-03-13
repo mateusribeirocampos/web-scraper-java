@@ -43,7 +43,7 @@ public class CircuitBreakingCrawlJobDispatcher implements CrawlJobDispatcher {
     }
 
     @Override
-    public void dispatch(CrawlJobEntity crawlJob) {
+    public CrawlExecutionStatus dispatch(CrawlJobEntity crawlJob) {
         Objects.requireNonNull(crawlJob, "crawlJob must not be null");
 
         Instant now = Instant.now(clock);
@@ -59,7 +59,7 @@ public class CircuitBreakingCrawlJobDispatcher implements CrawlJobDispatcher {
 
         CircuitBreaker circuitBreaker = circuitBreakerRegistry.circuitBreaker(resolveCircuitBreakerKey(crawlJob));
         Supplier<CrawlExecutionOutcome> protectedRun =
-                CircuitBreaker.decorateSupplier(circuitBreaker, () -> crawlJobExecutionRunner.run(crawlJob));
+                CircuitBreaker.decorateSupplier(circuitBreaker, () -> crawlJobExecutionRunner.run(crawlJob, runningExecution));
 
         try {
             CrawlExecutionOutcome outcome = protectedRun.get();
@@ -75,6 +75,7 @@ public class CircuitBreakingCrawlJobDispatcher implements CrawlJobDispatcher {
                     .errorMessage(null)
                     .createdAt(runningExecution.getCreatedAt())
                     .build());
+            return CrawlExecutionStatus.SUCCEEDED;
         } catch (CallNotPermittedException exception) {
             deadLetterQueue.route(crawlJob, CIRCUIT_OPEN_REASON);
             crawlExecutionRepository.save(CrawlExecutionEntity.builder()
@@ -89,6 +90,7 @@ public class CircuitBreakingCrawlJobDispatcher implements CrawlJobDispatcher {
                     .errorMessage(CIRCUIT_OPEN_REASON)
                     .createdAt(runningExecution.getCreatedAt())
                     .build());
+            return CrawlExecutionStatus.DEAD_LETTER;
         } catch (RuntimeException exception) {
             crawlExecutionRepository.save(CrawlExecutionEntity.builder()
                     .id(runningExecution.getId())
@@ -102,6 +104,7 @@ public class CircuitBreakingCrawlJobDispatcher implements CrawlJobDispatcher {
                     .errorMessage(exception.getMessage())
                     .createdAt(runningExecution.getCreatedAt())
                     .build());
+            return CrawlExecutionStatus.FAILED;
         }
     }
 

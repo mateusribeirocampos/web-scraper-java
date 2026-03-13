@@ -15,6 +15,11 @@ public interface CrawlJobQueue {
     EnqueuedCrawlJob enqueue(CrawlJobEntity crawlJob, CrawlJobQueueName queueName);
 
     /**
+     * Re-enqueues a previously materialized message into the requested queue.
+     */
+    EnqueuedCrawlJob enqueue(EnqueuedCrawlJob crawlJob, CrawlJobQueueName queueName);
+
+    /**
      * Consumes the next available crawl job from the requested queue, if any.
      */
     Optional<EnqueuedCrawlJob> consume(CrawlJobQueueName queueName);

@@ -1,6 +1,7 @@
 package com.campos.webscraper.application.usecase;
 
 import com.campos.webscraper.application.orchestrator.CrawlJobDispatcher;
+import com.campos.webscraper.domain.enums.CrawlExecutionStatus;
 import com.campos.webscraper.domain.enums.ExtractionMode;
 import com.campos.webscraper.domain.enums.JobCategory;
 import com.campos.webscraper.domain.enums.LegalStatus;
@@ -45,6 +46,7 @@ class ExecuteCrawlJobManuallyUseCaseTest {
         CrawlJobEntity crawlJob = buildJob(42L);
 
         when(crawlJobRepository.findById(42L)).thenReturn(Optional.of(crawlJob));
+        when(crawlJobDispatcher.dispatch(crawlJob)).thenReturn(CrawlExecutionStatus.SUCCEEDED);
 
         ExecuteCrawlJobManuallyUseCase useCase =
                 new ExecuteCrawlJobManuallyUseCase(crawlJobRepository, crawlJobDispatcher);

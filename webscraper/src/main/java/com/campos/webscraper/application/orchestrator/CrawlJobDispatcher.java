@@ -1,5 +1,6 @@
 package com.campos.webscraper.application.orchestrator;
 
+import com.campos.webscraper.domain.enums.CrawlExecutionStatus;
 import com.campos.webscraper.domain.model.CrawlJobEntity;
 
 /**
@@ -10,5 +11,5 @@ public interface CrawlJobDispatcher {
     /**
      * Dispatches the given crawl job for execution.
      */
-    void dispatch(CrawlJobEntity crawlJob);
+    CrawlExecutionStatus dispatch(CrawlJobEntity crawlJob);
 }

@@ -1,6 +1,6 @@
 package com.campos.webscraper.application.usecase;
 
-import com.campos.webscraper.application.strategy.DouApiContestScraperStrategy;
+import com.campos.webscraper.application.strategy.PciConcursosScraperStrategy;
 import com.campos.webscraper.domain.enums.ContestStatus;
 import com.campos.webscraper.domain.enums.DedupStatus;
 import com.campos.webscraper.domain.enums.EducationLevel;
@@ -18,19 +18,19 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * End-to-end use case for importing DOU contests through the strategy and persisting them.
+ * End-to-end use case for importing PCI Concursos postings through the static scraper strategy.
  */
 @Component
-public class DouContestImportUseCase {
+public class PciConcursosImportUseCase {
 
     private final PublicContestPostingRepository publicContestPostingRepository;
-    private final DouApiContestScraperStrategy strategy;
+    private final PciConcursosScraperStrategy strategy;
     private final ContestPostingFingerprintCalculator fingerprintCalculator;
     private final IdempotentPublicContestPersistenceService idempotentPersistenceService;
 
-    public DouContestImportUseCase(
+    public PciConcursosImportUseCase(
             PublicContestPostingRepository publicContestPostingRepository,
-            DouApiContestScraperStrategy strategy
+            PciConcursosScraperStrategy strategy
     ) {
         this(
                 publicContestPostingRepository,
@@ -40,9 +40,9 @@ public class DouContestImportUseCase {
         );
     }
 
-    public DouContestImportUseCase(
+    public PciConcursosImportUseCase(
             PublicContestPostingRepository publicContestPostingRepository,
-            DouApiContestScraperStrategy strategy,
+            PciConcursosScraperStrategy strategy,
             ContestPostingFingerprintCalculator fingerprintCalculator,
             IdempotentPublicContestPersistenceService idempotentPersistenceService
     ) {
@@ -61,9 +61,6 @@ public class DouContestImportUseCase {
         );
     }
 
-    /**
-     * Executes the full DOU import slice and persists the normalized contest postings.
-     */
     public List<PublicContestPostingEntity> execute(
             TargetSiteEntity targetSite,
             CrawlExecutionEntity crawlExecution,

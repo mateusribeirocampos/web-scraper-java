@@ -94,14 +94,43 @@ class CrawlJobQueueTest {
                 90L,
                 1090L,
                 "indeed-br",
+                "https://br.indeed.com/jobs?q=java",
                 ExtractionMode.API,
                 JobCategory.PRIVATE_SECTOR,
                 Instant.parse("2026-03-13T18:00:00Z"),
                 CrawlJobQueueName.DEAD_LETTER_JOBS,
+                Instant.parse("2026-03-13T18:01:00Z"),
+                0,
                 Instant.parse("2026-03-13T18:01:00Z")
         );
 
         assertThat(router.route(deadLetterMessage)).isEqualTo(CrawlJobQueueName.DEAD_LETTER_JOBS);
+    }
+
+    @Test
+    @DisplayName("should requeue an existing envelope into a different queue without losing its payload")
+    void shouldRequeueAnExistingEnvelopeIntoADifferentQueueWithoutLosingItsPayload() {
+        InMemoryCrawlJobQueue queue = new InMemoryCrawlJobQueue();
+        EnqueuedCrawlJob message = new EnqueuedCrawlJob(
+                90L,
+                1090L,
+                "indeed-br",
+                "https://br.indeed.com/jobs?q=java",
+                ExtractionMode.API,
+                JobCategory.PRIVATE_SECTOR,
+                Instant.parse("2026-03-13T18:00:00Z"),
+                CrawlJobQueueName.API_JOBS,
+                Instant.parse("2026-03-13T18:01:00Z"),
+                0,
+                Instant.parse("2026-03-13T18:01:00Z")
+        );
+
+        queue.enqueue(message, CrawlJobQueueName.DEAD_LETTER_JOBS);
+
+        EnqueuedCrawlJob consumed = queue.consume(CrawlJobQueueName.DEAD_LETTER_JOBS).orElseThrow();
+        assertThat(consumed.queueName()).isEqualTo(CrawlJobQueueName.DEAD_LETTER_JOBS);
+        assertThat(consumed.targetUrl()).isEqualTo("https://br.indeed.com/jobs?q=java");
+        assertThat(consumed.crawlJobId()).isEqualTo(90L);
     }
 
     @Test
@@ -159,6 +188,46 @@ class CrawlJobQueueTest {
 
         assertThat(consumedIds).hasSize(totalJobs);
         assertThat(new ArrayList<>(consumedIds)).doesNotHaveDuplicates();
+        assertThat(queue.consume(CrawlJobQueueName.API_JOBS)).isEmpty();
+    }
+
+    @Test
+    @DisplayName("should consume a ready message behind a delayed head without starving the queue")
+    void shouldConsumeAReadyMessageBehindADelayedHeadWithoutStarvingTheQueue() {
+        InMemoryCrawlJobQueue queue = new InMemoryCrawlJobQueue(
+                Clock.fixed(Instant.parse("2026-03-13T18:00:00Z"), ZoneOffset.UTC)
+        );
+        EnqueuedCrawlJob delayed = new EnqueuedCrawlJob(
+                1L,
+                1001L,
+                "indeed-br",
+                "https://br.indeed.com/jobs?q=java",
+                ExtractionMode.API,
+                JobCategory.PRIVATE_SECTOR,
+                Instant.parse("2026-03-13T18:00:00Z"),
+                CrawlJobQueueName.API_JOBS,
+                Instant.parse("2026-03-13T18:00:00Z"),
+                1,
+                Instant.parse("2026-03-13T18:05:00Z")
+        );
+        EnqueuedCrawlJob ready = new EnqueuedCrawlJob(
+                2L,
+                1002L,
+                "greenhouse_bitso",
+                "https://boards-api.greenhouse.io/v1/boards/bitso/jobs?content=true",
+                ExtractionMode.API,
+                JobCategory.PRIVATE_SECTOR,
+                Instant.parse("2026-03-13T18:00:00Z"),
+                CrawlJobQueueName.API_JOBS,
+                Instant.parse("2026-03-13T17:59:50Z"),
+                0,
+                Instant.parse("2026-03-13T17:59:50Z")
+        );
+
+        queue.enqueue(delayed, CrawlJobQueueName.API_JOBS);
+        queue.enqueue(ready, CrawlJobQueueName.API_JOBS);
+
+        assertThat(queue.consume(CrawlJobQueueName.API_JOBS)).contains(ready);
         assertThat(queue.consume(CrawlJobQueueName.API_JOBS)).isEmpty();
     }
 

@@ -15,6 +15,7 @@ import com.campos.webscraper.infrastructure.parser.PciConcursosParsePreview;
 import com.campos.webscraper.infrastructure.parser.PciConcursosPreviewItem;
 import com.campos.webscraper.shared.FetchRequest;
 import com.campos.webscraper.shared.FetchedPage;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,6 +26,7 @@ import java.util.Set;
 /**
  * Static HTML strategy for PCI Concursos listing pages.
  */
+@Component
 public class PciConcursosScraperStrategy implements JobScraperStrategy<PublicContestPostingEntity> {
 
     private final JobFetcher jobFetcher;

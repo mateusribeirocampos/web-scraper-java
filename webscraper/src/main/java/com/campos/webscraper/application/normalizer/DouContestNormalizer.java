@@ -6,6 +6,7 @@ import com.campos.webscraper.domain.model.PublicContestPostingEntity;
 import com.campos.webscraper.interfaces.dto.DouApiItemResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import java.util.Objects;
 /**
  * Maps DOU API items into the canonical public contest entity shape used by the project.
  */
+@Component
 public class DouContestNormalizer {
 
     private final ObjectMapper objectMapper;

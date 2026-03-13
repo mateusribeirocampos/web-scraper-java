@@ -9,6 +9,7 @@ import com.campos.webscraper.domain.model.ScrapeCommand;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
 import com.campos.webscraper.domain.repository.JobPostingRepository;
 import com.campos.webscraper.shared.JobPostingFingerprintCalculator;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
@@ -16,24 +17,36 @@ import java.util.Objects;
 /**
  * End-to-end use case for importing Indeed jobs through the strategy and persisting them.
  */
+@Component
 public class IndeedJobImportUseCase {
 
     private final JobPostingRepository jobPostingRepository;
     private final IndeedApiJobScraperStrategy strategy;
     private final JobPostingFingerprintCalculator fingerprintCalculator;
+    private final IdempotentJobPostingPersistenceService idempotentPersistenceService;
 
     public IndeedJobImportUseCase(JobPostingRepository jobPostingRepository, IndeedApiJobScraperStrategy strategy) {
-        this(jobPostingRepository, strategy, new JobPostingFingerprintCalculator());
+        this(
+                jobPostingRepository,
+                strategy,
+                new JobPostingFingerprintCalculator(),
+                new IdempotentJobPostingPersistenceService(jobPostingRepository)
+        );
     }
 
     public IndeedJobImportUseCase(
             JobPostingRepository jobPostingRepository,
             IndeedApiJobScraperStrategy strategy,
-            JobPostingFingerprintCalculator fingerprintCalculator
+            JobPostingFingerprintCalculator fingerprintCalculator,
+            IdempotentJobPostingPersistenceService idempotentPersistenceService
     ) {
         this.jobPostingRepository = Objects.requireNonNull(jobPostingRepository, "jobPostingRepository must not be null");
         this.strategy = Objects.requireNonNull(strategy, "strategy must not be null");
         this.fingerprintCalculator = Objects.requireNonNull(fingerprintCalculator, "fingerprintCalculator must not be null");
+        this.idempotentPersistenceService = Objects.requireNonNull(
+                idempotentPersistenceService,
+                "idempotentPersistenceService must not be null"
+        );
     }
 
     /**
@@ -54,7 +67,7 @@ public class IndeedJobImportUseCase {
                 .map(item -> enrich(item, targetSite, crawlExecution))
                 .toList();
 
-        return jobPostingRepository.saveAll(enriched);
+        return idempotentPersistenceService.persist(enriched);
     }
 
     private JobPostingEntity enrich(

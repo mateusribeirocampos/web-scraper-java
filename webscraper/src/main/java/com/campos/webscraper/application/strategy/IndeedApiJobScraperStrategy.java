@@ -11,6 +11,7 @@ import com.campos.webscraper.domain.model.ScrapeResult;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
 import com.campos.webscraper.infrastructure.http.IndeedApiClient;
 import com.campos.webscraper.interfaces.dto.IndeedApiResponse;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +19,7 @@ import java.util.Objects;
 /**
  * API-first strategy for Indeed MCP integration.
  */
+@Component
 public class IndeedApiJobScraperStrategy implements JobScraperStrategy<JobPostingEntity> {
 
     private final IndeedApiClient indeedApiClient;

@@ -7,6 +7,7 @@ import com.campos.webscraper.domain.model.PublicContestPostingEntity;
 import com.campos.webscraper.infrastructure.parser.PciConcursosPreviewItem;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.text.Normalizer;
@@ -21,6 +22,7 @@ import java.util.regex.Pattern;
 /**
  * Maps PCI Concursos preview items into the canonical public contest entity shape used by the project.
  */
+@Component
 public class PciConcursosContestNormalizer {
 
     private static final Pattern MONEY_VALUE_PATTERN =

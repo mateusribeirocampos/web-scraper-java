@@ -11,6 +11,7 @@ import com.campos.webscraper.domain.model.ScrapeResult;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
 import com.campos.webscraper.infrastructure.http.DouApiClient;
 import com.campos.webscraper.interfaces.dto.DouApiItemResponse;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +19,7 @@ import java.util.Objects;
 /**
  * API-first strategy for the DOU contest integration.
  */
+@Component
 public class DouApiContestScraperStrategy implements JobScraperStrategy<PublicContestPostingEntity> {
 
     private final DouApiClient douApiClient;

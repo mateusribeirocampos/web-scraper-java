@@ -101,7 +101,7 @@ class CircuitBreakingCrawlJobDispatcherTest {
 
         ArgumentCaptor<CrawlExecutionEntity> executionCaptor = ArgumentCaptor.forClass(CrawlExecutionEntity.class);
         verify(crawlExecutionRepository, times(2)).save(executionCaptor.capture());
-        verify(crawlJobExecutionRunner, never()).run(crawlJob);
+        verify(crawlJobExecutionRunner, never()).run(org.mockito.ArgumentMatchers.eq(crawlJob), any());
         verify(deadLetterQueue).route(crawlJob, "Circuit breaker open for crawl job execution");
 
         CrawlExecutionEntity finalExecution = executionCaptor.getAllValues().get(1);
@@ -136,7 +136,8 @@ class CircuitBreakingCrawlJobDispatcherTest {
                     }
                     return entity;
                 });
-        when(crawlJobExecutionRunner.run(crawlJob)).thenThrow(new IllegalStateException("temporary upstream error"));
+        when(crawlJobExecutionRunner.run(org.mockito.ArgumentMatchers.eq(crawlJob), any()))
+                .thenThrow(new IllegalStateException("temporary upstream error"));
 
         CircuitBreakerRegistry registry = CircuitBreakerRegistry.ofDefaults();
 
@@ -186,7 +187,8 @@ class CircuitBreakingCrawlJobDispatcherTest {
                     }
                     return entity;
                 });
-        when(crawlJobExecutionRunner.run(healthyJob)).thenReturn(new CrawlExecutionOutcome(3, 7));
+        when(crawlJobExecutionRunner.run(org.mockito.ArgumentMatchers.eq(healthyJob), any()))
+                .thenReturn(new CrawlExecutionOutcome(3, 7));
 
         CircuitBreakerConfig config = CircuitBreakerConfig.custom()
                 .slidingWindowSize(2)
@@ -209,7 +211,7 @@ class CircuitBreakingCrawlJobDispatcherTest {
         dispatcher.dispatch(healthyJob);
 
         verify(deadLetterQueue).route(failingJob, "Circuit breaker open for crawl job execution");
-        verify(crawlJobExecutionRunner).run(healthyJob);
+        verify(crawlJobExecutionRunner).run(org.mockito.ArgumentMatchers.eq(healthyJob), any());
     }
 
     private static CrawlJobEntity buildJob(Long id) {

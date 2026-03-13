@@ -3,6 +3,7 @@ package com.campos.webscraper.infrastructure.parser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.springframework.stereotype.Component;
 
 import java.text.Normalizer;
 import java.util.Arrays;
@@ -17,6 +18,7 @@ import java.util.regex.Pattern;
  * <p>This parser intentionally keeps selectors inline. Story 8.2 will extract them into a
  * dedicated SelectorBundle.
  */
+@Component
 public class PciConcursosFixtureParser {
 
     private static final List<String> REQUIRED_SELECTOR_FIELDS = Arrays.asList(

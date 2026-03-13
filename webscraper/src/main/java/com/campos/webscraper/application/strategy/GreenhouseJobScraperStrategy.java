@@ -11,6 +11,7 @@ import com.campos.webscraper.domain.model.ScrapeResult;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
 import com.campos.webscraper.infrastructure.http.GreenhouseJobBoardClient;
 import com.campos.webscraper.interfaces.dto.GreenhouseJobBoardItemResponse;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +19,7 @@ import java.util.Objects;
 /**
  * API-first strategy for Greenhouse public job boards.
  */
+@Component
 public class GreenhouseJobScraperStrategy implements JobScraperStrategy<JobPostingEntity> {
 
     private final GreenhouseJobBoardClient greenhouseJobBoardClient;

@@ -5,6 +5,7 @@ import com.campos.webscraper.domain.model.JobPostingEntity;
 import com.campos.webscraper.interfaces.dto.GreenhouseJobBoardItemResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
 /**
  * Maps Greenhouse Job Board payloads into the canonical private-sector job posting shape.
  */
+@Component
 public class GreenhouseJobNormalizer {
 
     private static final Pattern INTERN_PATTERN = Pattern.compile("\\b(intern|internship)\\b");

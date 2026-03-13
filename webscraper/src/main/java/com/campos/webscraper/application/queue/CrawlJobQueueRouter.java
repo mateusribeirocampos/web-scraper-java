@@ -3,12 +3,14 @@ package com.campos.webscraper.application.queue;
 import com.campos.webscraper.domain.enums.ExtractionMode;
 import com.campos.webscraper.domain.enums.JobCategory;
 import com.campos.webscraper.domain.model.CrawlJobEntity;
+import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
 /**
  * Resolves the appropriate queue name for a crawl job based on explicit metadata.
  */
+@Component
 public class CrawlJobQueueRouter {
 
     public CrawlJobQueueName route(CrawlJobEntity crawlJob) {

@@ -64,3 +64,5 @@ Exemplos:
 | 9.5 — Persistir vagas PME via Greenhouse | [STORY-9.5-greenhouse-job-import-use-case.md](STORY-9.5-greenhouse-job-import-use-case.md) | ✅ Concluída |
 | 9.6 — Generalizar provider ATS para Lever | [STORY-9.6-lever-postings-client.md](STORY-9.6-lever-postings-client.md) | ✅ Concluída |
 | 10.1 — Abstração de fila | [STORY-10.1-crawl-job-queue-abstraction.md](STORY-10.1-crawl-job-queue-abstraction.md) | ✅ Concluída |
+| 10.2 — Worker de execução | [STORY-10.2-crawl-job-worker.md](STORY-10.2-crawl-job-worker.md) | ✅ Concluída |
+| 10.3 — Idempotência e prevenção de duplicatas | [STORY-10.3-idempotency-and-duplicate-prevention.md](STORY-10.3-idempotency-and-duplicate-prevention.md) | 🚧 Em andamento |

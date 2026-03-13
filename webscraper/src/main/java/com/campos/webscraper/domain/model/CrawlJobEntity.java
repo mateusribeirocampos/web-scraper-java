@@ -61,6 +61,10 @@ public class CrawlJobEntity {
     @Column(length = 30)
     private JobCategory jobCategory;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean schedulerManaged = true;
+
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
 }
