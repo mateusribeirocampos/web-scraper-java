@@ -62,6 +62,27 @@ Observação importante:
 - quando a busca customizada virar feature do produto, esse mesmo cenário passa a ser requisito
   explícito de aceite end-to-end.
 
+### Current Project Usage For User Validation
+
+No estado atual do projeto em 2026-03-13, o uso manual para validar scraping funciona assim:
+
+1. Configurar um `CrawlJob` cuja fonte represente a busca desejada.
+2. Disparar:
+   - `POST /api/v1/crawl-jobs/{jobId}/execute`
+3. Acompanhar a execução persistida.
+4. Consultar a saída persistida:
+   - `GET /api/v1/job-postings?since=YYYY-MM-DD&category=PRIVATE_SECTOR&seniority=...`
+   - `GET /api/v1/public-contests?...`
+5. Confirmar se os resultados correspondem à intenção do usuário.
+
+Exemplos de intenção já adotados como referência:
+
+- `desenvolvedor de software em java spring boot`
+- `concurso analista de ti`
+
+Portanto, o projeto já suporta validação funcional real pelo usuário, mas ainda não expõe busca
+livre customizada como parâmetro público de produto. Isso continua como evolução futura.
+
 ---
 
 ## Detailed Tasks by Iteration

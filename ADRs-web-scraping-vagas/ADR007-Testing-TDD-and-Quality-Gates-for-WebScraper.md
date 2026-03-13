@@ -102,6 +102,26 @@ Important scope note:
 - once user-defined search input is implemented, this same scenario becomes an end-to-end product
   acceptance test rather than only an operator acceptance test.
 
+#### Current user test flow in the project
+
+As of 2026-03-13, the practical acceptance flow for the user is:
+
+1. Prepare or reuse a `CrawlJob` whose configured source already represents the desired search
+   intent.
+2. Trigger manual execution with:
+   - `POST /api/v1/crawl-jobs/{jobId}/execute`
+3. Wait for the crawl execution lifecycle to finish successfully.
+4. Query persisted records with:
+   - `GET /api/v1/job-postings?since=YYYY-MM-DD&category=PRIVATE_SECTOR&seniority=...`
+   - `GET /api/v1/public-contests?...`
+5. Verify whether the returned items match the expected user intent, such as:
+   - `desenvolvedor de software em java spring boot`
+   - `concurso analista de ti`
+
+This means the project already supports user-oriented acceptance verification, but the search
+intent is still encoded in the configured source/job rather than accepted as arbitrary free text at
+runtime.
+
 ### 3. Tooling
 
 - JUnit 5

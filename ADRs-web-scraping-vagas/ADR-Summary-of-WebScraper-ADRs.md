@@ -41,7 +41,7 @@ da implementação.
 | ADR004 | Arquitetura de Extração e Strategy/Factory | Accepted |
 | ADR005 | Modelo de Domínio JPA e Persistência | Accepted |
 | ADR006 | Resiliência, Rate Limiting e Processamento Assíncrono | Proposed |
-| ADR007 | TDD e Quality Gates | Proposed |
+| ADR007 | TDD e Quality Gates | Accepted |
 | ADR008 | Observabilidade, Segurança e Governança | Proposed |
 | ADR009 | Plano de Entrega XP com Tarefas Detalhadas | Accepted |
 | ADR010 | Pesquisa Open Source e Projetos GitHub | Accepted |
@@ -110,7 +110,27 @@ CI quality gates e rollout controlado por família de scraper.
 | Tarefas XP detalhadas | Definidas — 12 iterations |
 | Pesquisa open source | Realizada e documentada |
 | PCI Concursos | Implementado tecnicamente; produção ainda pendente de checklist legal completo |
-| Greenhouse Bitso | Onboarding, client, normalizer e strategy implementados; persistência ponta a ponta pendente na 9.5 |
+| Greenhouse Bitso | Onboarding, client, normalizer, strategy e persistência ponta a ponta implementados |
+
+---
+
+## Uso Atual do Projeto Para Teste do Usuário
+
+No estado atual, o usuário já consegue validar o comportamento do scraper no sistema rodando,
+mesmo sem busca livre exposta como input público:
+
+1. executar manualmente um `CrawlJob` com `POST /api/v1/crawl-jobs/{jobId}/execute`
+2. aguardar a conclusão da execução
+3. consultar os dados persistidos nos endpoints de leitura
+4. comparar os resultados com a intenção da busca desejada
+
+Consultas de referência documentadas:
+
+- `desenvolvedor de software em java spring boot`
+- `concurso analista de ti`
+
+Hoje essa intenção ainda precisa estar refletida na configuração do job/fonte. A busca livre
+customizada continua como evolução funcional futura.
 
 ---
 
