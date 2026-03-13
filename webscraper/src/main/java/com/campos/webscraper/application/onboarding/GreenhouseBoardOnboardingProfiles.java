@@ -17,7 +17,7 @@ public final class GreenhouseBoardOnboardingProfiles {
     }
 
     public static GreenhouseBoardOnboardingProfile bitso() {
-        String apiUrl = "https://boards-api.greenhouse.io/v1/boards/bitso/jobs";
+        String apiUrl = "https://boards-api.greenhouse.io/v1/boards/bitso/jobs?content=true";
 
         TargetSiteEntity targetSite = TargetSiteEntity.builder()
                 .siteCode("greenhouse_bitso")

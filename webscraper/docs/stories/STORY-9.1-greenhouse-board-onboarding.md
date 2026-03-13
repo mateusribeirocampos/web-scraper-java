@@ -47,7 +47,7 @@ Foi implementado:
 Board selecionado:
 
 - `board_token = bitso`
-- `jobsApiUrl = https://boards-api.greenhouse.io/v1/boards/bitso/jobs`
+- `jobsApiUrl = https://boards-api.greenhouse.io/v1/boards/bitso/jobs?content=true`
 - `siteCode = greenhouse_bitso`
 - `siteType = TYPE_E`
 - `extractionMode = API`
@@ -65,6 +65,7 @@ Resultado entregue:
 - o board `bitso` ficou materializado como perfil reutilizável para a 9.2
 - o validator mantém esse perfil em `PENDING_REVIEW` enquanto a strategy ainda não existir na
   factory
+- o endpoint curado do board já sai com `content=true`, preservando a descrição HTML para a 9.2/9.3
 - a seleção não depende de pesquisa solta em ADR/doc; agora existe uma representação executável em
   código
 

@@ -1,0 +1,39 @@
+{
+  "jobs": [
+    {
+      "id": 6120911003,
+      "title": "Senior Java Engineer",
+      "absolute_url": "https://bitso.com/jobs/6120911003?gh_jid=6120911003",
+      "company_name": "Bitso",
+      "updated_at": "2026-03-10T20:08:43-04:00",
+      "metadata": null,
+      "departments": [
+        {
+          "id": 1,
+          "name": "Engineering"
+        }
+      ],
+      "location": {
+        "name": "Latin America",
+        "country": "Remote"
+      },
+      "first_published": "2024-09-13T11:35:49-04:00",
+      "content": "<p>Join Bitso to build reliable Java services for crypto and payments.</p>"
+    },
+    {
+      "id": 7655700003,
+      "title": "Senior Security Operations (SecOps) Engineer",
+      "absolute_url": "https://bitso.com/jobs/7655700003?gh_jid=7655700003",
+      "company_name": "Bitso",
+      "updated_at": "2026-03-11T18:46:19-04:00",
+      "metadata": {
+        "team": "security"
+      },
+      "location": {
+        "name": "Latin America"
+      },
+      "first_published": "2026-03-06T11:09:26-05:00",
+      "content": "<p>Security engineering role for cloud and incident response operations.</p>"
+    }
+  ]
+}

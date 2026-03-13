@@ -22,7 +22,7 @@ class GreenhouseBoardOnboardingProfileTest {
         GreenhouseBoardOnboardingProfile profile = GreenhouseBoardOnboardingProfiles.bitso();
 
         assertThat(profile.boardToken()).isEqualTo("bitso");
-        assertThat(profile.jobsApiUrl()).isEqualTo("https://boards-api.greenhouse.io/v1/boards/bitso/jobs");
+        assertThat(profile.jobsApiUrl()).isEqualTo("https://boards-api.greenhouse.io/v1/boards/bitso/jobs?content=true");
         assertThat(profile.targetSite().getSiteCode()).isEqualTo("greenhouse_bitso");
         assertThat(profile.targetSite().getSiteType()).isEqualTo(SiteType.TYPE_E);
         assertThat(profile.targetSite().getExtractionMode()).isEqualTo(ExtractionMode.API);

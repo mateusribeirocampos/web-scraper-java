@@ -58,3 +58,4 @@ Exemplos:
 | 8.3 — PciConcursosScraperStrategy | [STORY-8.3-pci-concursos-scraper-strategy.md](STORY-8.3-pci-concursos-scraper-strategy.md) | ✅ Concluída |
 | 8.4 — Onboarding legal do PCI Concursos | [STORY-8.4-pci-concursos-legal-onboarding.md](STORY-8.4-pci-concursos-legal-onboarding.md) | ✅ Concluída |
 | 9.1 — Onboarding legal e seleção do primeiro board PME | [STORY-9.1-greenhouse-board-onboarding.md](STORY-9.1-greenhouse-board-onboarding.md) | ✅ Concluída |
+| 9.2 — GreenhouseJobBoardClient | [STORY-9.2-greenhouse-job-board-client.md](STORY-9.2-greenhouse-job-board-client.md) | ✅ Concluída |
