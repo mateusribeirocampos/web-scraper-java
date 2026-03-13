@@ -1,0 +1,28 @@
+[
+  {
+    "id": "lever-1",
+    "text": "Senior Java Engineer",
+    "hostedUrl": "https://jobs.example.com/lever-1",
+    "applyUrl": "https://jobs.example.com/lever-1/apply",
+    "categories": {
+      "team": "Engineering",
+      "location": "Sao Paulo",
+      "commitment": "Full-time"
+    },
+    "description": "<p>Build Java services for payments and backend platforms.</p>",
+    "workplaceType": "remote"
+  },
+  {
+    "id": "lever-2",
+    "text": "Backend Platform Engineer",
+    "hostedUrl": "https://jobs.example.com/lever-2",
+    "applyUrl": "https://jobs.example.com/lever-2/apply",
+    "categories": {
+      "team": "Platform",
+      "location": "Remote - LATAM",
+      "commitment": "Full-time"
+    },
+    "description": "<p>Distributed systems and cloud infrastructure.</p>",
+    "lists": []
+  }
+]

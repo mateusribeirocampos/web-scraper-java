@@ -62,3 +62,4 @@ Exemplos:
 | 9.3 — GreenhouseJobNormalizer | [STORY-9.3-greenhouse-job-normalizer.md](STORY-9.3-greenhouse-job-normalizer.md) | ✅ Concluída |
 | 9.4 — GreenhouseJobScraperStrategy | [STORY-9.4-greenhouse-job-scraper-strategy.md](STORY-9.4-greenhouse-job-scraper-strategy.md) | ✅ Concluída |
 | 9.5 — Persistir vagas PME via Greenhouse | [STORY-9.5-greenhouse-job-import-use-case.md](STORY-9.5-greenhouse-job-import-use-case.md) | ✅ Concluída |
+| 9.6 — Generalizar provider ATS para Lever | [STORY-9.6-lever-postings-client.md](STORY-9.6-lever-postings-client.md) | ✅ Concluída |

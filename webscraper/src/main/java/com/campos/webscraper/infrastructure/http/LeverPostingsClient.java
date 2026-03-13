@@ -1,7 +1,6 @@
 package com.campos.webscraper.infrastructure.http;
 
-import com.campos.webscraper.interfaces.dto.GreenhouseJobBoardItemResponse;
-import com.campos.webscraper.interfaces.dto.GreenhouseJobBoardResponse;
+import com.campos.webscraper.interfaces.dto.LeverPostingResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -13,31 +12,28 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * HTTP client for the public Greenhouse Job Board API.
+ * HTTP client for Lever public postings endpoints.
  */
-public class GreenhouseJobBoardClient implements AtsJobProviderClient<GreenhouseJobBoardItemResponse> {
+public class LeverPostingsClient implements AtsJobProviderClient<LeverPostingResponse> {
 
     private final OkHttpClient httpClient;
     private final ObjectMapper objectMapper;
 
-    public GreenhouseJobBoardClient() {
+    public LeverPostingsClient() {
         this(new OkHttpClient(), new ObjectMapper());
     }
 
-    public GreenhouseJobBoardClient(OkHttpClient httpClient) {
+    public LeverPostingsClient(OkHttpClient httpClient) {
         this(httpClient, new ObjectMapper());
     }
 
-    public GreenhouseJobBoardClient(OkHttpClient httpClient, ObjectMapper objectMapper) {
+    public LeverPostingsClient(OkHttpClient httpClient, ObjectMapper objectMapper) {
         this.httpClient = Objects.requireNonNull(httpClient, "httpClient must not be null");
         this.objectMapper = Objects.requireNonNull(objectMapper, "objectMapper must not be null");
     }
 
-    /**
-     * Fetches published jobs from a public Greenhouse board endpoint.
-     */
     @Override
-    public List<GreenhouseJobBoardItemResponse> fetchPublishedJobs(String url) {
+    public List<LeverPostingResponse> fetchPublishedJobs(String url) {
         Objects.requireNonNull(url, "url must not be null");
 
         Request request = new Request.Builder()
@@ -47,22 +43,22 @@ public class GreenhouseJobBoardClient implements AtsJobProviderClient<Greenhouse
 
         try (Response response = httpClient.newCall(request).execute()) {
             if (!response.isSuccessful()) {
-                throw new IllegalStateException("Greenhouse Job Board request failed with status " + response.code());
+                throw new IllegalStateException("Lever postings request failed with status " + response.code());
             }
 
             ResponseBody body = response.body();
             if (body == null) {
-                throw new IllegalStateException("Greenhouse Job Board response body is missing");
+                throw new IllegalStateException("Lever postings response body is missing");
             }
 
-            GreenhouseJobBoardResponse payload = objectMapper.readValue(body.string(), GreenhouseJobBoardResponse.class);
-            if (payload.jobs() == null) {
+            LeverPostingResponse[] payload = objectMapper.readValue(body.string(), LeverPostingResponse[].class);
+            if (payload == null) {
                 return List.of();
             }
 
-            return payload.jobs();
+            return List.of(payload);
         } catch (IOException exception) {
-            throw new IllegalStateException("Greenhouse Job Board request failed: " + exception.getMessage(), exception);
+            throw new IllegalStateException("Lever postings request failed: " + exception.getMessage(), exception);
         }
     }
 }
