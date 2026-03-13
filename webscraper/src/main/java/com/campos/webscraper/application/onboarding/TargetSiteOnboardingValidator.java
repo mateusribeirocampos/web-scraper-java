@@ -28,6 +28,19 @@ public class TargetSiteOnboardingValidator {
         requireNonBlank(checklist.owner(), "owner/contact not documented", blockingReasons);
         requireNonBlank(checklist.authenticationStatus(), "authentication status not documented", blockingReasons);
         requireNonBlank(checklist.discoveryEvidence(), "discovery evidence not documented", blockingReasons);
+        requireTrue(
+                checklist.strategySupportVerified(),
+                "scraper strategy not implemented for target site",
+                blockingReasons
+        );
+
+        if (checklist.legalCategory() == OnboardingLegalCategory.API_OFICIAL) {
+            requireNonBlank(
+                    checklist.officialApiEndpointUrl(),
+                    "official API endpoint not documented",
+                    blockingReasons
+            );
+        }
 
         boolean apiExtraction = targetSite.getExtractionMode() == ExtractionMode.API;
         boolean apiSiteType = targetSite.getSiteType() == SiteType.TYPE_E;

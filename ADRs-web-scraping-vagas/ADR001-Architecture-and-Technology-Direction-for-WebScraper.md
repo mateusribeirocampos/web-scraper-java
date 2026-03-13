@@ -57,7 +57,7 @@ O projeto deve suportar:
 | Cache / fila / coordenação | Redis | Estado de job, chaves de deduplicação, contadores de rate-limiter |
 | Resiliência | Resilience4j | Retry, RateLimiter, Bulkhead e CircuitBreaker nativos no Spring Boot |
 | Execução assíncrona | Spring Scheduling + @Async | Desacoplar trigger de crawl da execução do parser e da persistência |
-| Testes | JUnit 5 + Mockito + Testcontainers + WireMock | TDD completo: unitário, integração e adaptadores |
+| Testes | JUnit 5 + Mockito + Testcontainers + WireMock ou transporte mockado equivalente | TDD completo: unitário, integração e adaptadores |
 | Integrações API oficiais | Indeed MCP Connector / REST clients | Consumir fontes com API oficial sem necessidade de scraping |
 
 ### 2. Estilo Arquitetural

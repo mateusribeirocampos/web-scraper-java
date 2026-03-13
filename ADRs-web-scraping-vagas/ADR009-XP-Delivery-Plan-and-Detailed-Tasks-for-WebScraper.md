@@ -108,7 +108,7 @@ mais alto.
 
 #### Story 3.3 — Criar abstração `JobFetcher`
 - Contrato de interface `JobFetcher` com implementação `HttpJobFetcher` (OkHttp).
-- **TDD:** testes com transporte mockado (WireMock) primeiro.
+- **TDD:** testes com transporte mockado (`WireMock` ou servidor HTTP equivalente) primeiro.
 
 ---
 
@@ -119,7 +119,7 @@ Esta é a integração de maior valor e menor risco técnico. Deve ser a **prime
 #### Story 4.1 — Implementar `IndeedApiClient`
 - Client HTTP para o Indeed MCP connector.
 - Serialização/deserialização da resposta JSON.
-- **TDD:** testes com WireMock/fixture de resposta JSON primeiro.
+- **TDD:** testes com transporte mockado/fixture de resposta JSON primeiro.
 
 Exemplo de fixture de resposta JSON do Indeed MCP:
 ```json
@@ -153,7 +153,7 @@ Exemplo de fixture de resposta JSON do Indeed MCP:
 #### Story 5.1 — Implementar `DouApiClient`
 - Client REST para API do Diário Oficial da União (in.gov.br/dados-abertos).
 - Filtrar por palavras-chave: "Analista de TI", "Desenvolvedor", "Tecnologia da Informação".
-- **TDD:** testes com WireMock + fixture JSON do DOU primeiro.
+- **TDD:** testes com transporte mockado + fixture JSON do DOU primeiro.
 
 #### Story 5.2 — Implementar `DouContestNormalizer`
 - Mapear resposta DOU → `PublicContestPosting` com `governmentLevel = FEDERAL`,
@@ -239,9 +239,15 @@ Exemplo de fixture de resposta JSON do Indeed MCP:
 ### Iteration 9 — Expansão do setor privado para PMEs via ATS público (Greenhouse first)
 
 #### Story 9.1 — Onboarding legal e seleção do primeiro board PME
+- Reutilizar `TargetSiteOnboardingValidator` e `SiteOnboardingChecklist` criados na Story 8.4,
+  sem criar lógica paralela de compliance.
+- Fechar o onboarding de um `TargetSiteEntity` PME específico, não apenas produzir pesquisa
+  documental genérica.
 - Selecionar empresas-alvo com foco em Java / backend / plataforma / TI.
 - Priorizar boards públicos em Greenhouse; manter Lever e Ashby no backlog imediato.
-- Registrar `robots.txt`, termos e endpoint público utilizado.
+- Primeiro board recomendado: `bitso` em Greenhouse, por aderência atual ao foco Java/backend no
+  board público e disponibilidade de Job Board API oficial em 2026-03-13.
+- Registrar `robots.txt`, termos e endpoint público utilizado para o board escolhido.
 - **TDD:** teste de metadata / onboarding validation primeiro.
 
 #### Story 9.2 — Implementar `GreenhouseJobBoardClient`
@@ -292,7 +298,8 @@ Exemplo de fixture de resposta JSON do Indeed MCP:
 
 #### Story 11.1 — Contrato do adaptador Playwright
 - Criar `PlaywrightJobFetcher` como implementação de `JobFetcher`.
-- **TDD:** contract test com comportamento de página controlado (WireMock + HTML fake) primeiro.
+- **TDD:** contract test com comportamento de página controlado (`WireMock` ou transporte
+  equivalente + HTML fake) primeiro.
 
 #### Story 11.2 — Strategy para site dinâmico
 - Usar browser fetch somente para sites Tipo C classificados.
@@ -311,6 +318,7 @@ Exemplo de fixture de resposta JSON do Indeed MCP:
 - **TDD:** testes de emissão de métricas/logs primeiro.
 
 #### Story 12.2 — Checklist de habilitação de site em produção
+- Estender o checklist/validator introduzido na Story 8.4, sem duplicar regras paralelas.
 - Bloquear ativação sem campos de compliance preenchidos.
 - **TDD:** testes de validação primeiro.
 

@@ -20,14 +20,15 @@ No scraper, parser, mapper, persistence adapter, scheduler, retry policy, rate-l
 | ADR | Scope | Status |
 |---|---|---|
 | ADR001 | Architecture and technology direction | Proposed |
-| ADR002 | Target-site taxonomy and requirements | Proposed |
-| ADR003 | Java and Python scraping stack evaluation | Proposed |
-| ADR004 | Extraction architecture with Strategy/Factory | Proposed |
-| ADR005 | Persistence and JPA domain model | Proposed |
+| ADR002 | Target-site taxonomy and requirements | Accepted |
+| ADR003 | Java and Python scraping stack evaluation | Accepted |
+| ADR004 | Extraction architecture with Strategy/Factory | Accepted |
+| ADR005 | Persistence and JPA domain model | Accepted |
 | ADR006 | Resilience, rate limiting, retries and async processing | Proposed |
 | ADR007 | Testing, TDD and quality gates | Proposed |
 | ADR008 | Observability, security and operational governance | Proposed |
-| ADR009 | XP delivery plan and detailed tasks | Proposed |
+| ADR009 | XP delivery plan and detailed tasks | Accepted |
+| ADR010 | Open-source research and GitHub references | Accepted |
 
 ## Key Highlights
 
@@ -38,19 +39,21 @@ No scraper, parser, mapper, persistence adapter, scheduler, retry policy, rate-l
 - Resilience baseline: **Resilience4j** Retry, RateLimiter, Bulkhead, and CircuitBreaker patterns integrated with Spring Boot configuration. 
 - Architecture style: layered backend with explicit extractor contracts, parser strategies, per-site factories, scheduler/orchestrator, queue-driven execution, and persistence separated from scraping logic.
 - Delivery model: XP/TDD-first, with feature branches, acceptance criteria, red-green-refactor discipline, CI quality gates, and controlled rollout per scraper family.
+- Current project state: Indeed, DOU, PCI parser/strategy, scheduler/manual execution, retry, rate limiting, circuit breaker, dead-letter, and legal onboarding validator are already implemented; queue-based async and health summary remain planned.
 
 ## Technical Compliance Snapshot
 
 | Item | Current Direction |
 |---|---|
-| Java platform | Defined |
-| Scraper contracts | Defined |
-| JPA model | Defined |
+| Java platform | Implemented |
+| Scraper contracts | Implemented |
+| JPA model | Implemented |
 | TDD policy | Mandatory |
-| Retry/rate limiting | Defined |
-| Async processing | Defined |
-| Observability | Defined |
-| Security/robots governance | Defined |
+| Retry/rate limiting | Implemented |
+| Circuit breaker/dead-letter | Implemented |
+| Async processing | Planned |
+| Observability | Planned |
+| Security/robots governance | Partially implemented |
 | Detailed XP tasks | Defined |
 
 ## Naming Convention

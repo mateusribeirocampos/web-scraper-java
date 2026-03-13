@@ -76,10 +76,11 @@ da implementação.
 e ordenação cronológica.
 
 **Resiliência:** Resilience4j com Retry, RateLimiter, Bulkhead e CircuitBreaker integrados ao
-Spring Boot. Rate limit obrigatório por site — perfil "sem limite" proibido em produção.
+Spring Boot. Rate limit obrigatório por site. Retry, rate limiting, circuit breaker por fonte e
+dead-letter já foram implementados; fila assíncrona dedicada ainda permanece planejada.
 
 **Estilo arquitetural:** Backend em camadas com contratos explícitos de extrator, strategies por
-site, factory de resolução, orquestrador + fila, e persistência separada da lógica de scraping.
+site, factory de resolução, scheduler/orquestrador e persistência separada da lógica de scraping.
 
 **Modelo de entrega:** XP/TDD-first, com stories por iteration, red-green-refactor mandatório,
 CI quality gates e rollout controlado por família de scraper.
@@ -92,15 +93,18 @@ CI quality gates e rollout controlado por família de scraper.
 |---|---|
 | Linguagem de produção | Java 21 — definido e confirmado |
 | API-first como prioridade | Definido |
-| Contratos de scraper | Definidos |
-| Modelo JPA de domínio de vagas | Definido |
+| Contratos de scraper | Implementados para Indeed, DOU e PCI Concursos |
+| Modelo JPA de domínio de vagas | Implementado |
 | Política de TDD | Mandatória |
-| Retry e rate limiting | Definidos |
-| Processamento assíncrono | Definido |
-| Observabilidade | Definida |
-| Governança legal (robots.txt, ToS) | Definida — checklist obrigatório |
+| Retry e rate limiting | Implementados |
+| Circuit breaker e dead-letter | Implementados |
+| Scheduler e trigger manual | Implementados |
+| Processamento assíncrono por fila | Planejado |
+| Observabilidade | Planejada |
+| Governança legal (robots.txt, ToS) | Implementada para o gate de onboarding; expansão planejada |
 | Tarefas XP detalhadas | Definidas — 12 iterations |
 | Pesquisa open source | Realizada e documentada |
+| PCI Concursos | Implementado tecnicamente; produção ainda pendente de checklist legal completo |
 
 ---
 

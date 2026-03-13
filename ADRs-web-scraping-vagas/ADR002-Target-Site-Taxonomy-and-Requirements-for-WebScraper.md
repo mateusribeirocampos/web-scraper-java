@@ -116,6 +116,8 @@ houses que publicam vagas via plataformas padronizadas em vez de manter um porta
 - Indeed: integrar via MCP Connector (API oficial) — **prioridade máxima**.
 - Greenhouse, Lever e Ashby: próximos candidatos prioritários para ampliar vagas de PMEs com
   abordagem API-first.
+- Primeiro board Greenhouse selecionado em 2026-03-13: **Bitso** (`board_token = bitso`) —
+  endpoint público validado e board com aderência atual ao foco Java/backend.
 - Páginas de carreira próprias: permitidas apenas com `robots.txt` revisado e sinais claros de
   publicação estruturada.
 - LinkedIn: aguardar acesso a Partner API ou excluir da fase 1.
@@ -155,6 +157,8 @@ Antes de ativar qualquer site em produção, os seguintes campos devem ser preen
 □ URL do robots.txt revisada e resultado documentado
 □ ToS revisado e status documentado (PERMITIDO / PROIBIDO / AVALIANDO)
 □ API oficial verificada e, se disponível, preferida ao scraping
+□ Endpoint oficial da API/documentação pública registrado quando a categoria for `API_OFICIAL`
+□ Strategy/factory registrada para o `siteCode` antes de qualquer ativação em produção
 □ Justificativa de negócio registrada
 □ Perfil de rate-limit definido (jamais "sem limite")
 □ Categoria legal: DADOS_PUBLICOS / API_OFICIAL / SCRAPING_PERMITIDO / SCRAPING_PROIBIDO

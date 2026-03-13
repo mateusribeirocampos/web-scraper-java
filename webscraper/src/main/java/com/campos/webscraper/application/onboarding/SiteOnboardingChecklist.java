@@ -13,6 +13,8 @@ public record SiteOnboardingChecklist(
         boolean termsReviewed,
         boolean termsAllowScraping,
         boolean officialApiChecked,
+        String officialApiEndpointUrl,
+        boolean strategySupportVerified,
         String businessJustification,
         String rateLimitProfile,
         OnboardingLegalCategory legalCategory,

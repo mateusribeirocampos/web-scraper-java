@@ -47,8 +47,7 @@ Regras entregues:
 
 - checklist incompleto => `legalStatus = PENDING_REVIEW` e `enabled = false`
 - robots/ToS proibitivos => `legalStatus = SCRAPING_PROIBIDO` e `enabled = false`
-- checklist completo e permissivo => `legalStatus = APPROVED`
-- um site só permanece `enabled = true` quando já estava habilitado e o onboarding fecha como aprovado
+- checklist completo e permissivo => `legalStatus = APPROVED` e `enabled = true`
 - regras de proibição de scraping agora só valem para categorias que realmente dependem de scraping
   HTML; fontes `API_OFICIAL` e `DADOS_PUBLICOS` não são reprovadas por `robots`/ToS de scraping
 - quando existe proibição explícita revisada, `SCRAPING_PROIBIDO` tem precedência sobre checklist
@@ -70,6 +69,8 @@ Regras entregues:
   de HTML
 - mismatch entre checklist `API_OFICIAL` e metadata HTML coerente também fica `PENDING_REVIEW`,
   sem cair indevidamente em `SCRAPING_PROIBIDO`
+- o validator criado aqui passa a ser a base direta da Story 9.1 para onboarding de boards Greenhouse
+  e deve ser estendido, não duplicado, na Story 12.2
 
 ### REFACTOR
 

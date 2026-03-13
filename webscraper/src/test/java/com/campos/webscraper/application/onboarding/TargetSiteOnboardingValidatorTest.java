@@ -32,6 +32,8 @@ class TargetSiteOnboardingValidatorTest {
                 false,
                 false,
                 true,
+                "",
+                true,
                 "Fonte relevante para concursos de tecnologia e Java.",
                 "1 request every 5 seconds",
                 OnboardingLegalCategory.SCRAPING_PERMITIDO,
@@ -60,6 +62,8 @@ class TargetSiteOnboardingValidatorTest {
                 "https://example.org/terms",
                 true,
                 false,
+                true,
+                "",
                 true,
                 "Fonte relevante para concursos de tecnologia e Java.",
                 "1 request every 5 seconds",
@@ -90,6 +94,8 @@ class TargetSiteOnboardingValidatorTest {
                 false,
                 true,
                 "",
+                true,
+                "",
                 "",
                 OnboardingLegalCategory.SCRAPING_PROIBIDO,
                 "",
@@ -117,6 +123,8 @@ class TargetSiteOnboardingValidatorTest {
                 "https://example.org/terms",
                 true,
                 true,
+                true,
+                "",
                 true,
                 "Fonte relevante para concursos de tecnologia e Java.",
                 "1 request every 5 seconds",
@@ -147,6 +155,8 @@ class TargetSiteOnboardingValidatorTest {
                 true,
                 true,
                 true,
+                "https://api.example.gov/jobs",
+                true,
                 "Consumir API oficial governamental.",
                 "API quota 60 rpm",
                 OnboardingLegalCategory.API_OFICIAL,
@@ -174,6 +184,8 @@ class TargetSiteOnboardingValidatorTest {
                 "",
                 false,
                 false,
+                true,
+                "",
                 true,
                 "Consumir API oficial governamental.",
                 "API quota 60 rpm",
@@ -204,6 +216,8 @@ class TargetSiteOnboardingValidatorTest {
                 true,
                 true,
                 true,
+                "https://api.example.gov/jobs",
+                true,
                 "Consumir API oficial governamental.",
                 "API quota 60 rpm",
                 OnboardingLegalCategory.API_OFICIAL,
@@ -220,6 +234,37 @@ class TargetSiteOnboardingValidatorTest {
     }
 
     @Test
+    @DisplayName("should keep api official onboarding pending when official endpoint is not documented")
+    void shouldKeepApiOfficialOnboardingPendingWhenOfficialEndpointIsNotDocumented() {
+        TargetSiteEntity apiSite = buildApiTargetSite(false, LegalStatus.PENDING_REVIEW);
+
+        SiteOnboardingChecklist checklist = new SiteOnboardingChecklist(
+                "https://api.example.gov/robots.txt",
+                true,
+                false,
+                "",
+                true,
+                true,
+                true,
+                "",
+                true,
+                "Consumir API oficial governamental.",
+                "API quota 60 rpm",
+                OnboardingLegalCategory.API_OFICIAL,
+                "platform-team@local",
+                "API_TOKEN",
+                "Base legal documented by official API docs."
+        );
+
+        TargetSiteOnboardingDecision decision = validator.assess(apiSite, checklist);
+
+        assertThat(decision.productionReady()).isFalse();
+        assertThat(decision.targetSite().getLegalStatus()).isEqualTo(LegalStatus.PENDING_REVIEW);
+        assertThat(decision.targetSite().isEnabled()).isFalse();
+        assertThat(decision.blockingReasons()).contains("official API endpoint not documented");
+    }
+
+    @Test
     @DisplayName("should prohibit api onboarding when reviewed terms deny automated access")
     void shouldProhibitApiOnboardingWhenReviewedTermsDenyAutomatedAccess() {
         TargetSiteEntity apiSite = buildApiTargetSite(false, LegalStatus.PENDING_REVIEW);
@@ -231,6 +276,8 @@ class TargetSiteOnboardingValidatorTest {
                 "https://api.example.gov/terms",
                 true,
                 false,
+                true,
+                "https://api.example.gov/jobs",
                 true,
                 "Consumir API oficial governamental.",
                 "API quota 60 rpm",
@@ -260,6 +307,8 @@ class TargetSiteOnboardingValidatorTest {
                 "https://api.example.gov/terms",
                 true,
                 true,
+                true,
+                "https://api.example.gov/jobs",
                 true,
                 "Consumir API oficial governamental.",
                 "API quota 60 rpm",
@@ -291,6 +340,8 @@ class TargetSiteOnboardingValidatorTest {
                 true,
                 true,
                 true,
+                "https://api.example.gov/jobs",
+                true,
                 "Consumir API oficial governamental.",
                 "API quota 60 rpm",
                 OnboardingLegalCategory.API_OFICIAL,
@@ -321,6 +372,8 @@ class TargetSiteOnboardingValidatorTest {
                 true,
                 false,
                 true,
+                "",
+                true,
                 "Coleta de pagina governamental com dados publicos.",
                 "1 request every 10 seconds",
                 OnboardingLegalCategory.DADOS_PUBLICOS,
@@ -349,6 +402,8 @@ class TargetSiteOnboardingValidatorTest {
                 "https://api.example.gov/terms",
                 true,
                 true,
+                true,
+                "https://api.example.gov/jobs",
                 true,
                 "Consumir API oficial governamental.",
                 "API quota 60 rpm",
@@ -392,6 +447,8 @@ class TargetSiteOnboardingValidatorTest {
                 true,
                 true,
                 true,
+                "https://api.example.gov/jobs",
+                true,
                 "Consumir API oficial governamental.",
                 "API quota 60 rpm",
                 OnboardingLegalCategory.API_OFICIAL,
@@ -434,6 +491,8 @@ class TargetSiteOnboardingValidatorTest {
                 "",
                 true,
                 true,
+                true,
+                "https://api.example.gov/jobs",
                 true,
                 "Consumir API oficial governamental.",
                 "API quota 60 rpm",

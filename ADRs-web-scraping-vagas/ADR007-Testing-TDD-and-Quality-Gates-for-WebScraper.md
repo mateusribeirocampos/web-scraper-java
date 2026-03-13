@@ -78,7 +78,7 @@ Validate:
 
 Validate:
 
-- external HTTP client behavior against WireMock,
+- external HTTP client behavior against WireMock or equivalent mocked transport server,
 - browser automation adapter contracts,
 - serialization and persistence boundaries.
 
@@ -88,7 +88,7 @@ Validate:
 - Mockito
 - AssertJ
 - Testcontainers
-- WireMock
+- WireMock or equivalent mocked transport server
 - JaCoCo
 
 ### 4. Quality Gates
