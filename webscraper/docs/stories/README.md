@@ -61,3 +61,4 @@ Exemplos:
 | 9.2 — GreenhouseJobBoardClient | [STORY-9.2-greenhouse-job-board-client.md](STORY-9.2-greenhouse-job-board-client.md) | ✅ Concluída |
 | 9.3 — GreenhouseJobNormalizer | [STORY-9.3-greenhouse-job-normalizer.md](STORY-9.3-greenhouse-job-normalizer.md) | ✅ Concluída |
 | 9.4 — GreenhouseJobScraperStrategy | [STORY-9.4-greenhouse-job-scraper-strategy.md](STORY-9.4-greenhouse-job-scraper-strategy.md) | ✅ Concluída |
+| 9.5 — Persistir vagas PME via Greenhouse | [STORY-9.5-greenhouse-job-import-use-case.md](STORY-9.5-greenhouse-job-import-use-case.md) | ✅ Concluída |

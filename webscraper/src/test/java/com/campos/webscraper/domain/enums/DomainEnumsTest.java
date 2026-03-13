@@ -177,9 +177,15 @@ class DomainEnumsTest {
     class JobContractTypeTests {
 
         @Test
-        @DisplayName("deve ter exatamente 5 tipos de contrato")
-        void shouldHaveFiveContractTypes() {
-            assertThat(JobContractType.values()).hasSize(5);
+        @DisplayName("deve ter exatamente 6 tipos de contrato")
+        void shouldHaveSixContractTypes() {
+            assertThat(JobContractType.values()).hasSize(6);
+        }
+
+        @Test
+        @DisplayName("deve conter UNKNOWN")
+        void shouldContainUnknown() {
+            assertThatCode(() -> JobContractType.valueOf("UNKNOWN")).doesNotThrowAnyException();
         }
 
         @Test

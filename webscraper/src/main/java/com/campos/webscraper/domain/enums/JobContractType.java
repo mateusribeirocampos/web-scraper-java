@@ -8,6 +8,9 @@ package com.campos.webscraper.domain.enums;
  */
 public enum JobContractType {
 
+    /** Regime contratual não inferido com confiança a partir da fonte. */
+    UNKNOWN,
+
     /** Consolidação das Leis do Trabalho — regime formal brasileiro com FGTS, 13°, etc. */
     CLT,
 
