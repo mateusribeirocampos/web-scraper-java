@@ -12,6 +12,7 @@ public record PciConcursosPreviewItem(
         String salaryDescription,
         String registrationStartDate,
         String registrationEndDate,
+        String contestUrl,
         String detailUrl
 ) {
 }

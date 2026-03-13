@@ -28,7 +28,8 @@ public class PciConcursosFixtureParser {
             "educationLevel",
             "salaryRange",
             "registrationDeadline",
-            "detailUrl"
+            "detailUrl",
+            "nextPage"
     );
     private static final Pattern REGISTRATION_PERIOD_PATTERN =
             Pattern.compile("(\\d{4}-\\d{2}-\\d{2}).*?(\\d{4}-\\d{2}-\\d{2})");
@@ -61,6 +62,26 @@ public class PciConcursosFixtureParser {
         );
     }
 
+    public String extractNextPageUrl(String html, String sourceUrl) {
+        Objects.requireNonNull(html, "html must not be null");
+        Objects.requireNonNull(sourceUrl, "sourceUrl must not be null");
+
+        Document document = Jsoup.parse(html, sourceUrl);
+        Element nextPageElement = document.selectFirst(selector("nextPage"));
+        if (nextPageElement == null) {
+            return null;
+        }
+
+        String nextPageUrl = nextPageElement.absUrl("href");
+        if (nextPageUrl == null || nextPageUrl.isBlank()) {
+            return null;
+        }
+        if (nextPageUrl.equals(sourceUrl + "#")) {
+            return null;
+        }
+        return nextPageUrl;
+    }
+
     private PciConcursosPreviewItem toPreviewItem(Element card) {
         return new PciConcursosPreviewItem(
                 text(card, selector("contestName")),
@@ -71,6 +92,7 @@ public class PciConcursosFixtureParser {
                 text(card, selector("salaryRange")),
                 extractRegistrationDate(text(card, selector("registrationDeadline")), 1),
                 extractRegistrationDate(text(card, selector("registrationDeadline")), 2),
+                absoluteHref(card, selector("contestName")),
                 absoluteHref(card, selector("detailUrl"))
         );
     }

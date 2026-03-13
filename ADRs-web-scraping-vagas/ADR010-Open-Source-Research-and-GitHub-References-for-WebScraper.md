@@ -232,6 +232,14 @@ bundle versionado fica na Story 8.2.
   `webscraper/src/main/java/com/campos/webscraper/infrastructure/parser/PciConcursosSelectorBundles.java`
 - o parser do PCI agora consome o bundle versionado em vez de seletores inline
 
+**Atualização de implementação (Story 8.3):**
+
+- `PciConcursosScraperStrategy` implementada com paginação por `nextPage`
+- `PciConcursosContestNormalizer` implementado para transformar cards do PCI em
+  `PublicContestPostingEntity`
+- o bundle `pci_concursos_v1` passou a incluir também o seletor de navegação:
+  - `nav.pagination .next`
+
 ---
 
 #### 3.2 `Vinimartinsc/concursosPublicosAPI`

@@ -35,6 +35,50 @@ class PciConcursosSelectorBundleParserTest {
                 .isEqualTo("Prefeitura de Curitiba abre processo seletivo para Desenvolvedor Java");
     }
 
+    @Test
+    @DisplayName("should treat blank next page href as end of pagination")
+    void shouldTreatBlankNextPageHrefAsEndOfPagination() {
+        PciConcursosFixtureParser parser = new PciConcursosFixtureParser(PciConcursosSelectorBundles.v1());
+
+        String html = """
+                <html><body>
+                <main class="listagem-concursos"></main>
+                <nav class="pagination">
+                    <a class="next">Proxima</a>
+                </nav>
+                </body></html>
+                """;
+
+        String nextPageUrl = parser.extractNextPageUrl(
+                html,
+                "https://www.pciconcursos.com.br/concursos/tecnologia-da-informacao"
+        );
+
+        assertThat(nextPageUrl).isNull();
+    }
+
+    @Test
+    @DisplayName("should treat hash only next page href as end of pagination")
+    void shouldTreatHashOnlyNextPageHrefAsEndOfPagination() {
+        PciConcursosFixtureParser parser = new PciConcursosFixtureParser(PciConcursosSelectorBundles.v1());
+
+        String html = """
+                <html><body>
+                <main class="listagem-concursos"></main>
+                <nav class="pagination">
+                    <a class="next" href="#">Proxima</a>
+                </nav>
+                </body></html>
+                """;
+
+        String nextPageUrl = parser.extractNextPageUrl(
+                html,
+                "https://www.pciconcursos.com.br/concursos/tecnologia-da-informacao"
+        );
+
+        assertThat(nextPageUrl).isNull();
+    }
+
     private String fixture(String classpathLocation) throws IOException {
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(classpathLocation)) {
             if (inputStream == null) {

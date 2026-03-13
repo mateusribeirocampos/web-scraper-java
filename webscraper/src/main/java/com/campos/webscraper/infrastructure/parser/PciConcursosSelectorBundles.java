@@ -28,7 +28,8 @@ public final class PciConcursosSelectorBundles {
                         "educationLevel", ".ca-escolaridade",
                         "salaryRange", ".ca-salario",
                         "registrationDeadline", ".ca-inscricoes",
-                        "detailUrl", ".ca-detalhes"
+                        "detailUrl", ".ca-detalhes",
+                        "nextPage", "nav.pagination .next"
                 )
         );
     }
