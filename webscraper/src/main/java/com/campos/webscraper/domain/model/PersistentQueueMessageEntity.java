@@ -30,7 +30,7 @@ import java.time.Instant;
         }
 )
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class PersistentQueueMessageEntity {

@@ -27,7 +27,7 @@ class PersistentQueueMessageRepositoryImpl implements PersistentQueueMessageRepo
                     SELECT id
                     FROM persistent_queue_messages
                     WHERE queue_name = :queueName
-                      AND status = 'READY'
+                      AND status IN ('READY', 'RETRY_WAIT')
                       AND available_at <= :availableAt
                     ORDER BY available_at ASC, id ASC
                     FOR UPDATE SKIP LOCKED
@@ -47,5 +47,85 @@ class PersistentQueueMessageRepositoryImpl implements PersistentQueueMessageRepo
                 .getResultList();
 
         return claimedMessages.stream().findFirst();
+    }
+
+    @Override
+    @Transactional
+    public Optional<PersistentQueueMessageEntity> markDone(Long messageId, Instant updatedAt) {
+        return updateClaimedMessage("""
+                UPDATE persistent_queue_messages
+                SET status = 'DONE',
+                    claimed_at = NULL,
+                    updated_at = :updatedAt
+                WHERE id = :messageId
+                  AND status = 'CLAIMED'
+                RETURNING *
+                """, messageId, updatedAt, null, null, null);
+    }
+
+    @Override
+    @Transactional
+    public Optional<PersistentQueueMessageEntity> scheduleRetry(
+            Long messageId,
+            String payloadJson,
+            Instant nextAvailableAt,
+            Instant updatedAt,
+            String lastError
+    ) {
+        return updateClaimedMessage("""
+                UPDATE persistent_queue_messages
+                SET status = 'RETRY_WAIT',
+                    payload_json = :payloadJson,
+                    available_at = :availableAt,
+                    retry_count = retry_count + 1,
+                    last_error = :lastError,
+                    claimed_at = NULL,
+                    updated_at = :updatedAt
+                WHERE id = :messageId
+                  AND status = 'CLAIMED'
+                RETURNING *
+                """, messageId, updatedAt, nextAvailableAt, lastError, payloadJson);
+    }
+
+    @Override
+    @Transactional
+    public Optional<PersistentQueueMessageEntity> moveToDeadLetter(Long messageId, Instant updatedAt, String lastError) {
+        return updateClaimedMessage("""
+                UPDATE persistent_queue_messages
+                SET status = 'DEAD_LETTER',
+                    claimed_at = NULL,
+                    last_error = :lastError,
+                    updated_at = :updatedAt
+                WHERE id = :messageId
+                  AND status = 'CLAIMED'
+                RETURNING *
+                """, messageId, updatedAt, null, lastError, null);
+    }
+
+    private Optional<PersistentQueueMessageEntity> updateClaimedMessage(
+            String sql,
+            Long messageId,
+            Instant updatedAt,
+            Instant availableAt,
+            String lastError,
+            String payloadJson
+    ) {
+        var query = entityManager.createNativeQuery(sql, PersistentQueueMessageEntity.class)
+                .setParameter("messageId", messageId)
+                .setParameter("updatedAt", Timestamp.from(updatedAt));
+        if (sql.contains(":availableAt")) {
+            query.setParameter("availableAt", availableAt == null ? null : Timestamp.from(availableAt));
+        }
+        if (sql.contains(":lastError")) {
+            query.setParameter("lastError", lastError);
+        }
+        if (sql.contains(":payloadJson")) {
+            query.setParameter("payloadJson", payloadJson);
+        }
+
+        @SuppressWarnings("unchecked")
+        List<PersistentQueueMessageEntity> updatedMessages = query.getResultList();
+
+        return updatedMessages.stream().findFirst();
     }
 }

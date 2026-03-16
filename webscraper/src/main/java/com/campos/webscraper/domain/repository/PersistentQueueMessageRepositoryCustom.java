@@ -9,4 +9,16 @@ import java.util.Optional;
 public interface PersistentQueueMessageRepositoryCustom {
 
     Optional<PersistentQueueMessageEntity> claimNextReadyMessage(CrawlJobQueueName queueName, Instant availableAt);
+
+    Optional<PersistentQueueMessageEntity> markDone(Long messageId, Instant updatedAt);
+
+    Optional<PersistentQueueMessageEntity> scheduleRetry(
+            Long messageId,
+            String payloadJson,
+            Instant nextAvailableAt,
+            Instant updatedAt,
+            String lastError
+    );
+
+    Optional<PersistentQueueMessageEntity> moveToDeadLetter(Long messageId, Instant updatedAt, String lastError);
 }

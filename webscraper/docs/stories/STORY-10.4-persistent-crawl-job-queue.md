@@ -49,6 +49,24 @@ Implementação desta fatia:
 Esta fatia ainda não troca o wiring de produção. Ela fecha o adaptador persistente antes da
 migração de scheduler/worker.
 
+### GREEN — terceira fatia persistente
+
+Implementação desta fatia:
+
+1. `markDone(...)`
+2. `scheduleRetry(...)`
+3. `moveToDeadLetter(...)`
+4. transições restritas a mensagens já `CLAIMED`
+
+Esta fatia fecha o lifecycle persistente básico da mensagem antes da migração de scheduler/worker.
+
+Correção pós-review:
+
+- `RETRY_WAIT` passou a continuar elegível para claim quando `availableAt` vencer
+- o retry persistente deixou de criar beco sem saída no lifecycle da fila
+- `scheduleRetry(...)` agora atualiza também o `payload_json` materializado
+- `updatedAt` do retry passou a registrar o instante real da transição, não o próximo horário de execução
+
 ### REFACTOR
 
 O modelo ficou separado da abstração atual de fila para permitir migração incremental sem quebrar
@@ -92,6 +110,7 @@ o fluxo já existente.
 - criada a entidade `PersistentQueueMessageEntity` com payload, disponibilidade, `claimedAt`, `retryCount` e erro
 - criado o `PersistentQueueMessageRepository` com claim atômico `READY -> CLAIMED` usando `FOR UPDATE SKIP LOCKED`
 - criada a `PersistentCrawlJobQueue` com persistência de envelope em `payload_json` e round-trip `enqueue/consume`
+- adicionadas transições persistentes `CLAIMED -> DONE`, `CLAIMED -> RETRY_WAIT` e `CLAIMED -> DEAD_LETTER`
 - criada a migration `V007` para materializar a fila durável no Postgres
 - adicionada cobertura unitária para entidade, enum e fila persistida, além do teste de integração do repositório
 
@@ -111,7 +130,7 @@ Correção pós-review:
 
 ## Estado final
 
-10.4.1 e 10.4.2 implementadas e validadas.
+10.4.1, 10.4.2 e 10.4.3 implementadas e validadas.
 
 Validação executada:
 
@@ -126,5 +145,5 @@ Pendência conhecida:
 
 Próxima fatia planejada:
 
-- 10.4.3 — claim/ack/retry/dead-letter persistentes
 - 10.4.4 — troca de scheduler/worker para a fila persistida
+- 10.4.5 — revisão de simplificação e limpeza
