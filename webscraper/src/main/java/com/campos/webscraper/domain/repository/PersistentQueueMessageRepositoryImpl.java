@@ -89,17 +89,24 @@ class PersistentQueueMessageRepositoryImpl implements PersistentQueueMessageRepo
 
     @Override
     @Transactional
-    public Optional<PersistentQueueMessageEntity> moveToDeadLetter(Long messageId, Instant updatedAt, String lastError) {
+    public Optional<PersistentQueueMessageEntity> moveToDeadLetter(
+            Long messageId,
+            String payloadJson,
+            Instant updatedAt,
+            String lastError
+    ) {
         return updateClaimedMessage("""
                 UPDATE persistent_queue_messages
                 SET status = 'DEAD_LETTER',
+                    queue_name = 'DEAD_LETTER_JOBS',
+                    payload_json = :payloadJson,
                     claimed_at = NULL,
                     last_error = :lastError,
                     updated_at = :updatedAt
                 WHERE id = :messageId
                   AND status = 'CLAIMED'
                 RETURNING *
-                """, messageId, updatedAt, null, lastError, null);
+                """, messageId, updatedAt, null, lastError, payloadJson);
     }
 
     private Optional<PersistentQueueMessageEntity> updateClaimedMessage(

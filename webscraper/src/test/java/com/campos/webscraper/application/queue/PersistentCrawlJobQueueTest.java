@@ -24,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -68,6 +69,7 @@ class PersistentCrawlJobQueueTest {
     @DisplayName("should persist a re-enqueued envelope with the overridden queue name")
     void shouldPersistAReEnqueuedEnvelopeWithTheOverriddenQueueName() {
         EnqueuedCrawlJob original = new EnqueuedCrawlJob(
+                null,
                 2L,
                 1002L,
                 "greenhouse_bitso",
@@ -99,6 +101,7 @@ class PersistentCrawlJobQueueTest {
     @DisplayName("should consume the next claimed message from persistent storage")
     void shouldConsumeTheNextClaimedMessageFromPersistentStorage() {
         EnqueuedCrawlJob expected = new EnqueuedCrawlJob(
+                30L,
                 3L,
                 1003L,
                 "pci_concursos",
@@ -140,6 +143,91 @@ class PersistentCrawlJobQueueTest {
         )).thenReturn(Optional.empty());
 
         assertThat(queue.consume(CrawlJobQueueName.API_JOBS)).isEmpty();
+    }
+
+    @Test
+    @DisplayName("should mark a claimed persistent message as done")
+    void shouldMarkAClaimedPersistentMessageAsDone() {
+        EnqueuedCrawlJob claimed = new EnqueuedCrawlJob(
+                40L,
+                3L,
+                1003L,
+                "pci_concursos",
+                "https://www.pciconcursos.com.br/professores/",
+                ExtractionMode.STATIC_HTML,
+                JobCategory.PRIVATE_SECTOR,
+                Instant.parse("2026-03-16T19:55:00Z"),
+                CrawlJobQueueName.STATIC_SCRAPE_JOBS,
+                Instant.parse("2026-03-16T19:55:10Z"),
+                0,
+                Instant.parse("2026-03-16T19:55:10Z")
+        );
+
+        queue.markDone(claimed);
+
+        verify(persistentQueueMessageRepository).markDone(40L, Instant.parse("2026-03-16T20:00:00Z"));
+    }
+
+    @Test
+    @DisplayName("should update persistent retry metadata instead of re-enqueueing a new row")
+    void shouldUpdatePersistentRetryMetadataInsteadOfReEnqueueingANewRow() {
+        EnqueuedCrawlJob claimed = new EnqueuedCrawlJob(
+                50L,
+                4L,
+                1004L,
+                "indeed-br",
+                "https://br.indeed.com/jobs?q=java",
+                ExtractionMode.API,
+                JobCategory.PRIVATE_SECTOR,
+                Instant.parse("2026-03-16T19:55:00Z"),
+                CrawlJobQueueName.API_JOBS,
+                Instant.parse("2026-03-16T19:55:10Z"),
+                0,
+                Instant.parse("2026-03-16T19:55:10Z")
+        );
+        Instant nextAttempt = Instant.parse("2026-03-16T20:05:00Z");
+
+        EnqueuedCrawlJob retried = queue.scheduleRetry(claimed, nextAttempt, "temporary outage");
+
+        assertThat(retried.retryCount()).isEqualTo(1);
+        assertThat(retried.availableAt()).isEqualTo(nextAttempt);
+        verify(persistentQueueMessageRepository).scheduleRetry(
+                eq(50L),
+                org.mockito.ArgumentMatchers.contains("\"retryCount\":1"),
+                eq(nextAttempt),
+                eq(Instant.parse("2026-03-16T20:00:00Z")),
+                eq("temporary outage")
+        );
+        verify(persistentQueueMessageRepository, never()).save(any(PersistentQueueMessageEntity.class));
+    }
+
+    @Test
+    @DisplayName("should move a claimed persistent message to dead letter using repository transition")
+    void shouldMoveAClaimedPersistentMessageToDeadLetterUsingRepositoryTransition() {
+        EnqueuedCrawlJob claimed = new EnqueuedCrawlJob(
+                60L,
+                5L,
+                1005L,
+                "indeed-br",
+                "https://br.indeed.com/jobs?q=java",
+                ExtractionMode.API,
+                JobCategory.PRIVATE_SECTOR,
+                Instant.parse("2026-03-16T19:55:00Z"),
+                CrawlJobQueueName.API_JOBS,
+                Instant.parse("2026-03-16T19:55:10Z"),
+                0,
+                Instant.parse("2026-03-16T19:55:10Z")
+        );
+
+        EnqueuedCrawlJob deadLetter = queue.moveToDeadLetter(claimed, "fatal upstream error");
+
+        assertThat(deadLetter.queueName()).isEqualTo(CrawlJobQueueName.DEAD_LETTER_JOBS);
+        verify(persistentQueueMessageRepository).moveToDeadLetter(
+                eq(60L),
+                org.mockito.ArgumentMatchers.contains("\"queueName\":\"DEAD_LETTER_JOBS\""),
+                eq(Instant.parse("2026-03-16T20:00:00Z")),
+                eq("fatal upstream error")
+        );
     }
 
     private String writeJson(EnqueuedCrawlJob message) {

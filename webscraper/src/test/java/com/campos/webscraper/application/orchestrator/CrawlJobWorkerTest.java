@@ -54,6 +54,7 @@ class CrawlJobWorkerTest {
     @DisplayName("should consume persisted queued job and dispatch it")
     void shouldConsumePersistedQueuedJobAndDispatchIt() {
         EnqueuedCrawlJob message = new EnqueuedCrawlJob(
+                null,
                 10L,
                 100L,
                 "indeed-br",
@@ -82,6 +83,7 @@ class CrawlJobWorkerTest {
         assertThat(jobCaptor.getValue().getId()).isEqualTo(10L);
         assertThat(jobCaptor.getValue().getTargetSite().getSiteCode()).isEqualTo("indeed-br");
         assertThat(jobCaptor.getValue().getTargetSite().getBaseUrl()).isEqualTo("https://br.indeed.com/jobs?q=java");
+        verify(crawlJobQueue).markDone(message);
         verify(inFlightCrawlJobRegistry).release(10L);
     }
 
@@ -89,6 +91,7 @@ class CrawlJobWorkerTest {
     @DisplayName("should persist transient queued job before dispatching it")
     void shouldPersistTransientQueuedJobBeforeDispatchingIt() {
         EnqueuedCrawlJob message = new EnqueuedCrawlJob(
+                null,
                 null,
                 200L,
                 "greenhouse_bitso",
@@ -142,6 +145,7 @@ class CrawlJobWorkerTest {
         EnqueuedCrawlJob message = new EnqueuedCrawlJob(
                 null,
                 null,
+                null,
                 "greenhouse_bitso",
                 "https://boards-api.greenhouse.io/v1/boards/bitso/jobs?content=true",
                 ExtractionMode.API,
@@ -157,7 +161,7 @@ class CrawlJobWorkerTest {
         CrawlJobWorker worker = newWorker();
 
         assertThat(worker.consumeNext(CrawlJobQueueName.API_JOBS)).isFalse();
-        verify(crawlJobQueue).enqueue(message, CrawlJobQueueName.DEAD_LETTER_JOBS);
+        verify(crawlJobQueue).moveToDeadLetter(message, "targetSiteId must not be null for transient queued jobs");
         verify(crawlJobDispatcher, never()).dispatch(org.mockito.ArgumentMatchers.any());
     }
 
@@ -165,6 +169,7 @@ class CrawlJobWorkerTest {
     @DisplayName("should move message to dead letter when persisted crawl job no longer exists")
     void shouldMoveMessageToDeadLetterWhenPersistedCrawlJobNoLongerExists() {
         EnqueuedCrawlJob message = new EnqueuedCrawlJob(
+                null,
                 10L,
                 100L,
                 "indeed-br",
@@ -183,7 +188,7 @@ class CrawlJobWorkerTest {
         CrawlJobWorker worker = newWorker();
 
         assertThat(worker.consumeNext(CrawlJobQueueName.API_JOBS)).isFalse();
-        verify(crawlJobQueue).enqueue(message, CrawlJobQueueName.DEAD_LETTER_JOBS);
+        verify(crawlJobQueue).moveToDeadLetter(message, "Crawl job not found: 10");
         verify(crawlJobDispatcher, never()).dispatch(org.mockito.ArgumentMatchers.any());
     }
 
@@ -191,6 +196,7 @@ class CrawlJobWorkerTest {
     @DisplayName("should skip queued job when target site is currently disabled")
     void shouldSkipQueuedJobWhenTargetSiteIsCurrentlyDisabled() {
         EnqueuedCrawlJob message = new EnqueuedCrawlJob(
+                null,
                 10L,
                 100L,
                 "indeed-br",
@@ -228,7 +234,7 @@ class CrawlJobWorkerTest {
         CrawlJobWorker worker = newWorker();
 
         assertThat(worker.consumeNext(CrawlJobQueueName.API_JOBS)).isFalse();
-        verify(crawlJobQueue).enqueue(message, CrawlJobQueueName.DEAD_LETTER_JOBS);
+        verify(crawlJobQueue).moveToDeadLetter(message, "Target site disabled after enqueue");
         verify(crawlJobDispatcher, never()).dispatch(org.mockito.ArgumentMatchers.any());
         verify(inFlightCrawlJobRegistry).release(10L);
     }
@@ -237,6 +243,7 @@ class CrawlJobWorkerTest {
     @DisplayName("should requeue message in original queue when dispatcher fails transiently")
     void shouldRequeueMessageInOriginalQueueWhenDispatcherFailsTransiently() {
         EnqueuedCrawlJob message = new EnqueuedCrawlJob(
+                null,
                 10L,
                 100L,
                 "indeed-br",
@@ -259,16 +266,18 @@ class CrawlJobWorkerTest {
 
         assertThat(worker.consumeNext(CrawlJobQueueName.API_JOBS)).isFalse();
         ArgumentCaptor<EnqueuedCrawlJob> envelopeCaptor = ArgumentCaptor.forClass(EnqueuedCrawlJob.class);
-        verify(crawlJobQueue).enqueue(envelopeCaptor.capture(), org.mockito.ArgumentMatchers.eq(CrawlJobQueueName.API_JOBS));
-        assertThat(envelopeCaptor.getValue().retryCount()).isEqualTo(1);
-        assertThat(envelopeCaptor.getValue().availableAt()).isAfter(message.availableAt());
+        ArgumentCaptor<Instant> retryAtCaptor = ArgumentCaptor.forClass(Instant.class);
+        verify(crawlJobQueue).scheduleRetry(envelopeCaptor.capture(), retryAtCaptor.capture(), org.mockito.ArgumentMatchers.eq("Transient execution failure"));
+        assertThat(envelopeCaptor.getValue().retryCount()).isEqualTo(0);
         assertThat(envelopeCaptor.getValue().targetUrl()).isEqualTo(message.targetUrl());
+        assertThat(retryAtCaptor.getValue()).isAfter(message.availableAt());
     }
 
     @Test
     @DisplayName("should move transient message to dead letter when target site no longer exists")
     void shouldMoveTransientMessageToDeadLetterWhenTargetSiteNoLongerExists() {
         EnqueuedCrawlJob message = new EnqueuedCrawlJob(
+                null,
                 null,
                 200L,
                 "greenhouse_bitso",
@@ -287,7 +296,7 @@ class CrawlJobWorkerTest {
         CrawlJobWorker worker = newWorker();
 
         assertThat(worker.consumeNext(CrawlJobQueueName.API_JOBS)).isFalse();
-        verify(crawlJobQueue).enqueue(message, CrawlJobQueueName.DEAD_LETTER_JOBS);
+        verify(crawlJobQueue).moveToDeadLetter(message, "Target site not found for queued job: 200");
         verify(crawlJobDispatcher, never()).dispatch(org.mockito.ArgumentMatchers.any());
     }
 
@@ -310,6 +319,7 @@ class CrawlJobWorkerTest {
     @DisplayName("should requeue message in original queue when execution finishes as failed")
     void shouldRequeueMessageInOriginalQueueWhenExecutionFinishesAsFailed() {
         EnqueuedCrawlJob message = new EnqueuedCrawlJob(
+                null,
                 10L,
                 100L,
                 "indeed-br",
@@ -332,15 +342,17 @@ class CrawlJobWorkerTest {
 
         assertThat(worker.consumeNext(CrawlJobQueueName.API_JOBS)).isFalse();
         ArgumentCaptor<EnqueuedCrawlJob> envelopeCaptor = ArgumentCaptor.forClass(EnqueuedCrawlJob.class);
-        verify(crawlJobQueue).enqueue(envelopeCaptor.capture(), org.mockito.ArgumentMatchers.eq(CrawlJobQueueName.API_JOBS));
-        assertThat(envelopeCaptor.getValue().retryCount()).isEqualTo(1);
-        assertThat(envelopeCaptor.getValue().availableAt()).isAfter(message.availableAt());
+        ArgumentCaptor<Instant> retryAtCaptor = ArgumentCaptor.forClass(Instant.class);
+        verify(crawlJobQueue).scheduleRetry(envelopeCaptor.capture(), retryAtCaptor.capture(), org.mockito.ArgumentMatchers.eq("Transient execution failure"));
+        assertThat(envelopeCaptor.getValue().retryCount()).isEqualTo(0);
+        assertThat(retryAtCaptor.getValue()).isAfter(message.availableAt());
     }
 
     @Test
     @DisplayName("should requeue transient message with persisted crawl job id after failed execution")
     void shouldRequeueTransientMessageWithPersistedCrawlJobIdAfterFailedExecution() {
         EnqueuedCrawlJob message = new EnqueuedCrawlJob(
+                null,
                 null,
                 200L,
                 "greenhouse_bitso",
@@ -375,15 +387,18 @@ class CrawlJobWorkerTest {
         assertThat(worker.consumeNext(CrawlJobQueueName.API_JOBS)).isFalse();
 
         ArgumentCaptor<EnqueuedCrawlJob> envelopeCaptor = ArgumentCaptor.forClass(EnqueuedCrawlJob.class);
-        verify(crawlJobQueue).enqueue(envelopeCaptor.capture(), org.mockito.ArgumentMatchers.eq(CrawlJobQueueName.API_JOBS));
+        ArgumentCaptor<Instant> retryAtCaptor = ArgumentCaptor.forClass(Instant.class);
+        verify(crawlJobQueue).scheduleRetry(envelopeCaptor.capture(), retryAtCaptor.capture(), org.mockito.ArgumentMatchers.eq("Transient execution failure"));
         assertThat(envelopeCaptor.getValue().crawlJobId()).isEqualTo(20L);
         assertThat(envelopeCaptor.getValue().targetSiteId()).isEqualTo(200L);
+        assertThat(retryAtCaptor.getValue()).isAfter(message.availableAt());
     }
 
     @Test
     @DisplayName("should preserve queued target url override when retrying persisted transient job")
     void shouldPreserveQueuedTargetUrlOverrideWhenRetryingPersistedTransientJob() {
         EnqueuedCrawlJob message = new EnqueuedCrawlJob(
+                null,
                 20L,
                 200L,
                 "greenhouse_bitso",
@@ -418,17 +433,19 @@ class CrawlJobWorkerTest {
         assertThat(jobCaptor.getValue().getTargetSite().getBaseUrl())
                 .isEqualTo("https://boards-api.greenhouse.io/v1/boards/bitso/jobs?content=true&query=java");
         ArgumentCaptor<EnqueuedCrawlJob> envelopeCaptor = ArgumentCaptor.forClass(EnqueuedCrawlJob.class);
-        verify(crawlJobQueue).enqueue(envelopeCaptor.capture(), org.mockito.ArgumentMatchers.eq(CrawlJobQueueName.API_JOBS));
+        ArgumentCaptor<Instant> retryAtCaptor = ArgumentCaptor.forClass(Instant.class);
+        verify(crawlJobQueue).scheduleRetry(envelopeCaptor.capture(), retryAtCaptor.capture(), org.mockito.ArgumentMatchers.eq("Transient execution failure"));
         assertThat(envelopeCaptor.getValue().crawlJobId()).isEqualTo(20L);
-        assertThat(envelopeCaptor.getValue().retryCount()).isEqualTo(1);
-        assertThat(envelopeCaptor.getValue().availableAt()).isAfter(message.availableAt());
+        assertThat(envelopeCaptor.getValue().retryCount()).isEqualTo(0);
         assertThat(envelopeCaptor.getValue().targetUrl()).isEqualTo(message.targetUrl());
+        assertThat(retryAtCaptor.getValue()).isAfter(message.availableAt());
     }
 
     @Test
     @DisplayName("should move dispatcher dead-letter executions to dead-letter queue")
     void shouldMoveDispatcherDeadLetterExecutionsToDeadLetterQueue() {
         EnqueuedCrawlJob message = new EnqueuedCrawlJob(
+                null,
                 10L,
                 100L,
                 "indeed-br",
@@ -450,7 +467,7 @@ class CrawlJobWorkerTest {
         CrawlJobWorker worker = newWorker();
 
         assertThat(worker.consumeNext(CrawlJobQueueName.API_JOBS)).isFalse();
-        verify(crawlJobQueue).enqueue(message, CrawlJobQueueName.DEAD_LETTER_JOBS);
+        verify(crawlJobQueue).moveToDeadLetter(message, "Dispatcher moved execution to dead letter");
         verify(inFlightCrawlJobRegistry).release(10L);
     }
 
@@ -458,6 +475,7 @@ class CrawlJobWorkerTest {
     @DisplayName("should move message to dead letter when retry limit is exhausted")
     void shouldMoveMessageToDeadLetterWhenRetryLimitIsExhausted() {
         EnqueuedCrawlJob message = new EnqueuedCrawlJob(
+                null,
                 10L,
                 100L,
                 "indeed-br",
@@ -479,7 +497,7 @@ class CrawlJobWorkerTest {
         CrawlJobWorker worker = newWorker();
 
         assertThat(worker.consumeNext(CrawlJobQueueName.API_JOBS)).isFalse();
-        verify(crawlJobQueue).enqueue(message, CrawlJobQueueName.DEAD_LETTER_JOBS);
+        verify(crawlJobQueue).moveToDeadLetter(message, "Retry limit exhausted");
         verify(inFlightCrawlJobRegistry).release(10L);
     }
 
@@ -487,6 +505,7 @@ class CrawlJobWorkerTest {
     @DisplayName("should inherit target site job category for transient public contest jobs")
     void shouldInheritTargetSiteJobCategoryForTransientPublicContestJobs() {
         EnqueuedCrawlJob message = new EnqueuedCrawlJob(
+                null,
                 null,
                 300L,
                 "pci_concursos",

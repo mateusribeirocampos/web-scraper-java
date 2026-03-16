@@ -25,5 +25,10 @@ public interface PersistentQueueMessageRepository
             String lastError
     );
 
-    Optional<PersistentQueueMessageEntity> moveToDeadLetter(Long messageId, Instant updatedAt, String lastError);
+    Optional<PersistentQueueMessageEntity> moveToDeadLetter(
+            Long messageId,
+            String payloadJson,
+            Instant updatedAt,
+            String lastError
+    );
 }

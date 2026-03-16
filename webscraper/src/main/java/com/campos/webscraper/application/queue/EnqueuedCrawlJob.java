@@ -12,6 +12,7 @@ import java.util.Objects;
  * Immutable queue envelope with the minimum materialized metadata needed across async boundaries.
  */
 public record EnqueuedCrawlJob(
+        Long queueMessageId,
         Long crawlJobId,
         Long targetSiteId,
         String targetSiteCode,
@@ -41,6 +42,7 @@ public record EnqueuedCrawlJob(
                 ? targetSite == null ? null : targetSite.getJobCategory()
                 : crawlJob.getJobCategory();
         return new EnqueuedCrawlJob(
+                null,
                 crawlJob.getId(),
                 targetSite == null ? null : targetSite.getId(),
                 targetSite == null ? null : targetSite.getSiteCode(),
@@ -58,6 +60,7 @@ public record EnqueuedCrawlJob(
     public EnqueuedCrawlJob withQueueName(CrawlJobQueueName queueName) {
         Objects.requireNonNull(queueName, "queueName must not be null");
         return new EnqueuedCrawlJob(
+                queueMessageId,
                 crawlJobId,
                 targetSiteId,
                 targetSiteCode,
@@ -74,6 +77,7 @@ public record EnqueuedCrawlJob(
 
     public EnqueuedCrawlJob withCrawlJobId(Long crawlJobId) {
         return new EnqueuedCrawlJob(
+                queueMessageId,
                 crawlJobId,
                 targetSiteId,
                 targetSiteCode,
@@ -92,6 +96,7 @@ public record EnqueuedCrawlJob(
         Objects.requireNonNull(queueName, "queueName must not be null");
         Objects.requireNonNull(availableAt, "availableAt must not be null");
         return new EnqueuedCrawlJob(
+                queueMessageId,
                 crawlJobId,
                 targetSiteId,
                 targetSiteCode,
@@ -102,6 +107,23 @@ public record EnqueuedCrawlJob(
                 queueName,
                 enqueuedAt,
                 retryCount + 1,
+                availableAt
+        );
+    }
+
+    public EnqueuedCrawlJob withQueueMessageId(Long queueMessageId) {
+        return new EnqueuedCrawlJob(
+                queueMessageId,
+                crawlJobId,
+                targetSiteId,
+                targetSiteCode,
+                targetUrl,
+                extractionMode,
+                jobCategory,
+                scheduledAt,
+                queueName,
+                enqueuedAt,
+                retryCount,
                 availableAt
         );
     }

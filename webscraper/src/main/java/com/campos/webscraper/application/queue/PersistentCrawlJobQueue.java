@@ -6,6 +6,8 @@ import com.campos.webscraper.domain.model.PersistentQueueMessageEntity;
 import com.campos.webscraper.domain.repository.PersistentQueueMessageRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -15,6 +17,8 @@ import java.util.Optional;
 /**
  * Postgres-backed queue implementation that persists queue envelopes before worker adoption.
  */
+@Component
+@Primary
 public class PersistentCrawlJobQueue implements CrawlJobQueue {
 
     private final PersistentQueueMessageRepository persistentQueueMessageRepository;
@@ -67,6 +71,53 @@ public class PersistentCrawlJobQueue implements CrawlJobQueue {
                 .map(this::deserializeMessage);
     }
 
+    @Override
+    public void markDone(EnqueuedCrawlJob crawlJob) {
+        Objects.requireNonNull(crawlJob, "crawlJob must not be null");
+        if (crawlJob.queueMessageId() == null) {
+            return;
+        }
+        persistentQueueMessageRepository.markDone(crawlJob.queueMessageId(), Instant.now(clock));
+    }
+
+    @Override
+    public EnqueuedCrawlJob scheduleRetry(EnqueuedCrawlJob crawlJob, Instant nextAvailableAt, String lastError) {
+        Objects.requireNonNull(crawlJob, "crawlJob must not be null");
+        Objects.requireNonNull(nextAvailableAt, "nextAvailableAt must not be null");
+
+        EnqueuedCrawlJob retriedMessage = crawlJob.forRetry(crawlJob.queueName(), nextAvailableAt);
+        if (crawlJob.queueMessageId() == null) {
+            persistentQueueMessageRepository.save(toPersistentMessage(retriedMessage, retriedMessage.queueName()));
+            return retriedMessage;
+        }
+        persistentQueueMessageRepository.scheduleRetry(
+                crawlJob.queueMessageId(),
+                serializeMessage(retriedMessage),
+                nextAvailableAt,
+                Instant.now(clock),
+                lastError
+        );
+        return retriedMessage;
+    }
+
+    @Override
+    public EnqueuedCrawlJob moveToDeadLetter(EnqueuedCrawlJob crawlJob, String lastError) {
+        Objects.requireNonNull(crawlJob, "crawlJob must not be null");
+
+        EnqueuedCrawlJob deadLetter = crawlJob.withQueueName(CrawlJobQueueName.DEAD_LETTER_JOBS);
+        if (crawlJob.queueMessageId() == null) {
+            persistentQueueMessageRepository.save(toPersistentMessage(deadLetter, CrawlJobQueueName.DEAD_LETTER_JOBS));
+            return deadLetter;
+        }
+        persistentQueueMessageRepository.moveToDeadLetter(
+                crawlJob.queueMessageId(),
+                serializeMessage(deadLetter),
+                Instant.now(clock),
+                lastError
+        );
+        return deadLetter;
+    }
+
     private PersistentQueueMessageEntity toPersistentMessage(EnqueuedCrawlJob message, CrawlJobQueueName queueName) {
         Instant now = Instant.now(clock);
         return PersistentQueueMessageEntity.builder()
@@ -90,7 +141,8 @@ public class PersistentCrawlJobQueue implements CrawlJobQueue {
 
     private EnqueuedCrawlJob deserializeMessage(PersistentQueueMessageEntity message) {
         try {
-            return objectMapper.readValue(message.getPayloadJson(), EnqueuedCrawlJob.class);
+            return objectMapper.readValue(message.getPayloadJson(), EnqueuedCrawlJob.class)
+                    .withQueueMessageId(message.getId());
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Failed to deserialize queue message payload", e);
         }

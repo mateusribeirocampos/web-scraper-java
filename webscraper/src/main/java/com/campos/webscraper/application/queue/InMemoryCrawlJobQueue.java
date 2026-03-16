@@ -68,4 +68,28 @@ public class InMemoryCrawlJobQueue implements CrawlJobQueue {
         }
         return Optional.empty();
     }
+
+    @Override
+    public void markDone(EnqueuedCrawlJob crawlJob) {
+        Objects.requireNonNull(crawlJob, "crawlJob must not be null");
+    }
+
+    @Override
+    public EnqueuedCrawlJob scheduleRetry(EnqueuedCrawlJob crawlJob, Instant nextAvailableAt, String lastError) {
+        Objects.requireNonNull(crawlJob, "crawlJob must not be null");
+        Objects.requireNonNull(nextAvailableAt, "nextAvailableAt must not be null");
+
+        EnqueuedCrawlJob delayedRetry = crawlJob.forRetry(crawlJob.queueName(), nextAvailableAt);
+        queues.get(delayedRetry.queueName()).add(delayedRetry);
+        return delayedRetry;
+    }
+
+    @Override
+    public EnqueuedCrawlJob moveToDeadLetter(EnqueuedCrawlJob crawlJob, String lastError) {
+        Objects.requireNonNull(crawlJob, "crawlJob must not be null");
+
+        EnqueuedCrawlJob deadLetter = crawlJob.withQueueName(CrawlJobQueueName.DEAD_LETTER_JOBS);
+        queues.get(CrawlJobQueueName.DEAD_LETTER_JOBS).add(deadLetter);
+        return deadLetter;
+    }
 }

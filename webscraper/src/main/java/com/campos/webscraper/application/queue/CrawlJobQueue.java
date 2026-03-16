@@ -2,6 +2,7 @@ package com.campos.webscraper.application.queue;
 
 import com.campos.webscraper.domain.model.CrawlJobEntity;
 
+import java.time.Instant;
 import java.util.Optional;
 
 /**
@@ -23,4 +24,19 @@ public interface CrawlJobQueue {
      * Consumes the next available crawl job from the requested queue, if any.
      */
     Optional<EnqueuedCrawlJob> consume(CrawlJobQueueName queueName);
+
+    /**
+     * Marks a consumed message as successfully completed.
+     */
+    void markDone(EnqueuedCrawlJob crawlJob);
+
+    /**
+     * Schedules a consumed message for retry using the same queue.
+     */
+    EnqueuedCrawlJob scheduleRetry(EnqueuedCrawlJob crawlJob, Instant nextAvailableAt, String lastError);
+
+    /**
+     * Moves a consumed message to dead-letter handling.
+     */
+    EnqueuedCrawlJob moveToDeadLetter(EnqueuedCrawlJob crawlJob, String lastError);
 }

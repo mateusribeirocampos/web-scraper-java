@@ -67,6 +67,17 @@ Correção pós-review:
 - `scheduleRetry(...)` agora atualiza também o `payload_json` materializado
 - `updatedAt` do retry passou a registrar o instante real da transição, não o próximo horário de execução
 
+### GREEN — quarta fatia persistente
+
+Implementação desta fatia:
+
+1. `PersistentCrawlJobQueue` promovida a bean primária
+2. contrato `CrawlJobQueue` ampliado com `markDone`, `scheduleRetry` e `moveToDeadLetter`
+3. `CrawlJobWorker` migrado para lifecycle explícito da fila
+
+Esta fatia conecta scheduler/worker ao contrato persistente da fila, mantendo a implementação em
+memória apenas como fallback temporário até a limpeza final.
+
 ### REFACTOR
 
 O modelo ficou separado da abstração atual de fila para permitir migração incremental sem quebrar
@@ -111,6 +122,8 @@ o fluxo já existente.
 - criado o `PersistentQueueMessageRepository` com claim atômico `READY -> CLAIMED` usando `FOR UPDATE SKIP LOCKED`
 - criada a `PersistentCrawlJobQueue` com persistência de envelope em `payload_json` e round-trip `enqueue/consume`
 - adicionadas transições persistentes `CLAIMED -> DONE`, `CLAIMED -> RETRY_WAIT` e `CLAIMED -> DEAD_LETTER`
+- `PersistentCrawlJobQueue` passou a ser a implementação primária de `CrawlJobQueue`
+- `CrawlJobWorker` deixou de reenfileirar manualmente mensagens persistidas e passou a usar `done/retry/dead-letter` pela própria fila
 - criada a migration `V007` para materializar a fila durável no Postgres
 - adicionada cobertura unitária para entidade, enum e fila persistida, além do teste de integração do repositório
 
@@ -130,7 +143,7 @@ Correção pós-review:
 
 ## Estado final
 
-10.4.1, 10.4.2 e 10.4.3 implementadas e validadas.
+10.4.1, 10.4.2, 10.4.3 e 10.4.4 implementadas e validadas.
 
 Validação executada:
 
@@ -145,5 +158,4 @@ Pendência conhecida:
 
 Próxima fatia planejada:
 
-- 10.4.4 — troca de scheduler/worker para a fila persistida
 - 10.4.5 — revisão de simplificação e limpeza

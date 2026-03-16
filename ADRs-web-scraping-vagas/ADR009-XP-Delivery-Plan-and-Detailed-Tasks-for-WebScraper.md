@@ -356,7 +356,8 @@ Exemplo de fixture de resposta JSON do Indeed MCP:
   - `10.4.1` storage + migration + repository com claim atômico
   - `10.4.2` adaptador `PersistentCrawlJobQueue`
   - `10.4.3` ack/retry/dead-letter persistentes
-  - `10.4.4` migração de scheduler/worker
+  - `10.4.4` migração de scheduler/worker para o lifecycle persistente da fila
+  - `10.4.5` revisão de simplificação e limpeza
 - **TDD:** entity/repository contract tests primeiro.
 
 #### Gate arquitetural antes das próximas stories funcionais

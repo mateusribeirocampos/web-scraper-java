@@ -59,7 +59,7 @@ public class CrawlJobWorker {
                     try {
                         crawlJob = resolveCrawlJob(message);
                         if (!crawlJob.getTargetSite().isEnabled()) {
-                            crawlJobQueue.enqueue(message, CrawlJobQueueName.DEAD_LETTER_JOBS);
+                            crawlJobQueue.moveToDeadLetter(message, "Target site disabled after enqueue");
                             releaseClaim(crawlJob, message.crawlJobId());
                             return false;
                         }
@@ -69,14 +69,15 @@ public class CrawlJobWorker {
                             return false;
                         }
                         if (executionStatus == CrawlExecutionStatus.DEAD_LETTER) {
-                            crawlJobQueue.enqueue(retryMessage(message, crawlJob), CrawlJobQueueName.DEAD_LETTER_JOBS);
+                            crawlJobQueue.moveToDeadLetter(retryMessage(message, crawlJob), "Dispatcher moved execution to dead letter");
                             releaseClaim(crawlJob, message.crawlJobId());
                             return false;
                         }
+                        crawlJobQueue.markDone(message);
                         releaseClaim(crawlJob, message.crawlJobId());
                         return true;
                     } catch (CrawlJobNotFoundException | QueuedCrawlJobResolutionException exception) {
-                        crawlJobQueue.enqueue(message, CrawlJobQueueName.DEAD_LETTER_JOBS);
+                        crawlJobQueue.moveToDeadLetter(message, exception.getMessage());
                         releaseClaim(crawlJob, message.crawlJobId());
                         return false;
                     } catch (RuntimeException exception) {
@@ -132,15 +133,15 @@ public class CrawlJobWorker {
     private void requeueForRetry(EnqueuedCrawlJob message, CrawlJobEntity crawlJob) {
         EnqueuedCrawlJob retryMessage = retryMessage(message, crawlJob);
         if (retryMessage.retryCount() >= MAX_RETRIES) {
-            crawlJobQueue.enqueue(retryMessage, CrawlJobQueueName.DEAD_LETTER_JOBS);
+            crawlJobQueue.moveToDeadLetter(retryMessage, "Retry limit exhausted");
             releaseClaim(crawlJob, retryMessage.crawlJobId());
             return;
         }
-        EnqueuedCrawlJob delayedRetry = retryMessage.forRetry(
-                retryMessage.queueName(),
-                Instant.now().plus(RETRY_BACKOFF)
+        crawlJobQueue.scheduleRetry(
+                retryMessage,
+                Instant.now().plus(RETRY_BACKOFF),
+                "Transient execution failure"
         );
-        crawlJobQueue.enqueue(delayedRetry, delayedRetry.queueName());
     }
 
     private static CrawlJobEntity rebuildQueuedJob(

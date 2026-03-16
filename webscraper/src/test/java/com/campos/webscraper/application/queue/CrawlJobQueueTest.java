@@ -91,6 +91,7 @@ class CrawlJobQueueTest {
     void shouldPreserveTheQueueAlreadyAssignedOnAnEnqueuedMessage() {
         CrawlJobQueueRouter router = new CrawlJobQueueRouter();
         EnqueuedCrawlJob deadLetterMessage = new EnqueuedCrawlJob(
+                null,
                 90L,
                 1090L,
                 "indeed-br",
@@ -112,6 +113,7 @@ class CrawlJobQueueTest {
     void shouldRequeueAnExistingEnvelopeIntoADifferentQueueWithoutLosingItsPayload() {
         InMemoryCrawlJobQueue queue = new InMemoryCrawlJobQueue();
         EnqueuedCrawlJob message = new EnqueuedCrawlJob(
+                null,
                 90L,
                 1090L,
                 "indeed-br",
@@ -198,6 +200,7 @@ class CrawlJobQueueTest {
                 Clock.fixed(Instant.parse("2026-03-13T18:00:00Z"), ZoneOffset.UTC)
         );
         EnqueuedCrawlJob delayed = new EnqueuedCrawlJob(
+                null,
                 1L,
                 1001L,
                 "indeed-br",
@@ -211,6 +214,7 @@ class CrawlJobQueueTest {
                 Instant.parse("2026-03-13T18:05:00Z")
         );
         EnqueuedCrawlJob ready = new EnqueuedCrawlJob(
+                null,
                 2L,
                 1002L,
                 "greenhouse_bitso",

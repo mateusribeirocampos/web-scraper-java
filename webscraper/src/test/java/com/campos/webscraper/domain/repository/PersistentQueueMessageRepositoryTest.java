@@ -215,7 +215,12 @@ class PersistentQueueMessageRepositoryTest {
         );
 
         PersistentQueueMessageEntity updated = persistentQueueMessageRepository
-                .moveToDeadLetter(claimedMessage.getId(), now, "unsupported payload")
+                .moveToDeadLetter(
+                        claimedMessage.getId(),
+                        "{\"crawlJobId\":12,\"queueName\":\"DEAD_LETTER_JOBS\"}",
+                        now,
+                        "unsupported payload"
+                )
                 .orElseThrow();
 
         assertThat(updated.getStatus()).isEqualTo(QueueMessageStatus.DEAD_LETTER);
