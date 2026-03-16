@@ -348,6 +348,12 @@ Exemplo de fixture de resposta JSON do Indeed MCP:
   o contrato funcional dos imports.
 - **TDD:** testes de execução duplicada primeiro.
 
+#### Story 10.4 — PersistentCrawlJobQueue no Postgres
+- Introduzir storage durável da fila em tabela própria no Postgres.
+- Modelar estados mínimos de mensagem: `READY`, `CLAIMED`, `RETRY_WAIT`, `DEAD_LETTER`, `DONE`.
+- Persistir payload materializado suficiente para reconstrução do job sem depender de memória local.
+- **TDD:** entity/repository contract tests primeiro.
+
 #### Gate arquitetural antes das próximas stories funcionais
 
 Antes de seguir o roadmap funcional com segurança, o projeto precisa fechar uma story técnica de
@@ -365,7 +371,7 @@ Decisão explícita:
 
 Recomendação atual do projeto:
 
-- priorizar **fila persistida/outbox no Postgres** antes de avançar outras stories funcionais
+- priorizar **Story 10.4 — fila persistida/outbox no Postgres** antes de avançar outras stories funcionais
 - só depois reconsiderar remoção de mitigadores em memória
 - tratar qualquer continuação sem esse passo como evolução com risco operacional conhecido
 

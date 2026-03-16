@@ -427,6 +427,51 @@ class DomainEnumsTest {
     }
 
     // =========================================================================
+    // QueueMessageStatus
+    // =========================================================================
+
+    @Nested
+    @DisplayName("QueueMessageStatus")
+    class QueueMessageStatusTests {
+
+        @Test
+        @DisplayName("deve ter exatamente 5 status de mensagem de fila")
+        void shouldHaveFiveQueueMessageStatuses() {
+            assertThat(QueueMessageStatus.values()).hasSize(5);
+        }
+
+        @Test
+        @DisplayName("deve conter READY")
+        void shouldContainReady() {
+            assertThatCode(() -> QueueMessageStatus.valueOf("READY")).doesNotThrowAnyException();
+        }
+
+        @Test
+        @DisplayName("deve conter CLAIMED")
+        void shouldContainClaimed() {
+            assertThatCode(() -> QueueMessageStatus.valueOf("CLAIMED")).doesNotThrowAnyException();
+        }
+
+        @Test
+        @DisplayName("deve conter RETRY_WAIT")
+        void shouldContainRetryWait() {
+            assertThatCode(() -> QueueMessageStatus.valueOf("RETRY_WAIT")).doesNotThrowAnyException();
+        }
+
+        @Test
+        @DisplayName("deve conter DEAD_LETTER")
+        void shouldContainQueueDeadLetter() {
+            assertThatCode(() -> QueueMessageStatus.valueOf("DEAD_LETTER")).doesNotThrowAnyException();
+        }
+
+        @Test
+        @DisplayName("deve conter DONE")
+        void shouldContainDone() {
+            assertThatCode(() -> QueueMessageStatus.valueOf("DONE")).doesNotThrowAnyException();
+        }
+    }
+
+    // =========================================================================
     // CrawlExecutionStatus
     // =========================================================================
 

@@ -66,3 +66,4 @@ Exemplos:
 | 10.1 — Abstração de fila | [STORY-10.1-crawl-job-queue-abstraction.md](STORY-10.1-crawl-job-queue-abstraction.md) | ✅ Concluída |
 | 10.2 — Worker de execução | [STORY-10.2-crawl-job-worker.md](STORY-10.2-crawl-job-worker.md) | ✅ Concluída |
 | 10.3 — Idempotência e prevenção de duplicatas | [STORY-10.3-idempotency-and-duplicate-prevention.md](STORY-10.3-idempotency-and-duplicate-prevention.md) | 🚧 Em andamento |
+| 10.4 — PersistentCrawlJobQueue no Postgres | [STORY-10.4-persistent-crawl-job-queue.md](STORY-10.4-persistent-crawl-job-queue.md) | 🚧 Em andamento |
