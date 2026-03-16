@@ -352,6 +352,11 @@ Exemplo de fixture de resposta JSON do Indeed MCP:
 - Introduzir storage durável da fila em tabela própria no Postgres.
 - Modelar estados mínimos de mensagem: `READY`, `CLAIMED`, `RETRY_WAIT`, `DEAD_LETTER`, `DONE`.
 - Persistir payload materializado suficiente para reconstrução do job sem depender de memória local.
+- Fechar em fatias:
+  - `10.4.1` storage + migration + repository com claim atômico
+  - `10.4.2` adaptador `PersistentCrawlJobQueue`
+  - `10.4.3` ack/retry/dead-letter persistentes
+  - `10.4.4` migração de scheduler/worker
 - **TDD:** entity/repository contract tests primeiro.
 
 #### Gate arquitetural antes das próximas stories funcionais

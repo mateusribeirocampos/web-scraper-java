@@ -36,6 +36,19 @@ Implementação desta fatia:
 Esta primeira fatia ainda não substitui scheduler/worker. Ela cria o storage durável para as
 próximas sessões.
 
+### GREEN — segunda fatia persistente
+
+Implementação desta fatia:
+
+1. `PersistentCrawlJobQueue`
+2. serialização de `EnqueuedCrawlJob` em `payload_json`
+3. `enqueue(CrawlJobEntity, queueName)`
+4. `enqueue(EnqueuedCrawlJob, queueName)`
+5. `consume(queueName)` via `claimNextReadyMessage(...)`
+
+Esta fatia ainda não troca o wiring de produção. Ela fecha o adaptador persistente antes da
+migração de scheduler/worker.
+
 ### REFACTOR
 
 O modelo ficou separado da abstração atual de fila para permitir migração incremental sem quebrar
@@ -46,9 +59,11 @@ o fluxo já existente.
 ## Arquivos criados / modificados
 
 - `src/main/java/com/campos/webscraper/domain/enums/QueueMessageStatus.java`
+- `src/main/java/com/campos/webscraper/application/queue/PersistentCrawlJobQueue.java`
 - `src/main/java/com/campos/webscraper/domain/model/PersistentQueueMessageEntity.java`
 - `src/main/java/com/campos/webscraper/domain/repository/PersistentQueueMessageRepository.java`
 - `src/main/resources/db/migration/V007__create_persistent_queue_messages.sql`
+- `src/test/java/com/campos/webscraper/application/queue/PersistentCrawlJobQueueTest.java`
 - `src/test/java/com/campos/webscraper/domain/model/PersistentQueueMessageEntityTest.java`
 - `src/test/java/com/campos/webscraper/domain/repository/PersistentQueueMessageRepositoryTest.java`
 - `src/test/java/com/campos/webscraper/domain/enums/DomainEnumsTest.java`
@@ -76,8 +91,9 @@ o fluxo já existente.
 - criado o enum `QueueMessageStatus` com os estados mínimos do lifecycle persistente
 - criada a entidade `PersistentQueueMessageEntity` com payload, disponibilidade, `claimedAt`, `retryCount` e erro
 - criado o `PersistentQueueMessageRepository` com claim atômico `READY -> CLAIMED` usando `FOR UPDATE SKIP LOCKED`
+- criada a `PersistentCrawlJobQueue` com persistência de envelope em `payload_json` e round-trip `enqueue/consume`
 - criada a migration `V007` para materializar a fila durável no Postgres
-- adicionada cobertura unitária para entidade e enum, além do teste de integração do repositório
+- adicionada cobertura unitária para entidade, enum e fila persistida, além do teste de integração do repositório
 
 Correção pós-review:
 
@@ -95,14 +111,20 @@ Correção pós-review:
 
 ## Estado final
 
-Primeira fatia da 10.4.1 implementada e validada.
+10.4.1 e 10.4.2 implementadas e validadas.
 
 Validação executada:
 
 - `./mvnw test -DexcludedGroups=integration -Dtest=PersistentQueueMessageEntityTest,DomainEnumsTest`
+- `./mvnw test -DexcludedGroups=integration -Dtest=PersistentCrawlJobQueueTest,PersistentQueueMessageEntityTest,DomainEnumsTest`
 - `./mvnw test -DexcludedGroups=integration`
 
 Pendência conhecida:
 
 - `PersistentQueueMessageRepositoryTest` foi criado e a tentativa de execução confirmou que o ambiente
   continua bloqueado pelo Docker/Testcontainers (`client version 1.32 is too old; minimum supported API version is 1.40`)
+
+Próxima fatia planejada:
+
+- 10.4.3 — claim/ack/retry/dead-letter persistentes
+- 10.4.4 — troca de scheduler/worker para a fila persistida
