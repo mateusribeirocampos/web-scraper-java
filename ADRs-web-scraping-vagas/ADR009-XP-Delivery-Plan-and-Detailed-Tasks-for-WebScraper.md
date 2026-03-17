@@ -396,6 +396,7 @@ Recomendação atual do projeto:
 - Criar `PlaywrightJobFetcher` como implementação de `JobFetcher`.
 - **TDD:** contract test com comportamento de página controlado (`WireMock` ou transporte
   equivalente + HTML fake) primeiro.
+- Status atual: `PlaywrightJobFetcher` já implementa o contrato com um `PlaywrightBrowserClient` testável e um cliente padrão para Chromium; o teste unitário `PlaywrightJobFetcherTest` cobre o mapeamento do payload.
 
 #### Story 11.2 — Strategy para site dinâmico
 - Usar browser fetch somente para sites Tipo C classificados.
