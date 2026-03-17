@@ -69,3 +69,4 @@ Exemplos:
 | 10.4 — PersistentCrawlJobQueue no Postgres | [STORY-10.4-persistent-crawl-job-queue.md](STORY-10.4-persistent-crawl-job-queue.md) | ✅ Concluída |
 | 11.1 — PlaywrightJobFetcher | [STORY-11.1-playwright-job-fetcher.md](STORY-11.1-playwright-job-fetcher.md) | ✅ Concluída |
 | 11.2 — Playwright dynamic strategy | [STORY-11.2-playwright-dynamic-strategy.md](STORY-11.2-playwright-dynamic-strategy.md) | ✅ Concluída |
+| 11.3 — Playwright bulkhead | [STORY-11.3-playwright-bulkhead.md](STORY-11.3-playwright-bulkhead.md) | ✅ Concluída |

@@ -406,6 +406,7 @@ Recomendação atual do projeto:
 #### Story 11.3 — Bulkhead para browser jobs
 - Isolar concorrência de browser dos jobs estáticos.
 - **TDD:** testes de limite de concorrência primeiro.
+- Status atual: criada a `PlaywrightConcurrencyService` com `Semaphore`, a strategy consome o serviço e o `PlaywrightConfiguration` expõe o bean para garantir que nenhum browser extra seja aberto acima do limite configurado.
 
 ---
 

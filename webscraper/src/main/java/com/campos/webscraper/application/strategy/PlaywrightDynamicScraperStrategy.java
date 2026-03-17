@@ -28,15 +28,18 @@ public class PlaywrightDynamicScraperStrategy implements JobScraperStrategy<JobP
     private final PlaywrightJobFetcher jobFetcher;
     private final DynamicJobListingParser parser;
     private final DynamicJobNormalizer normalizer;
+    private final PlaywrightConcurrencyService concurrencyService;
 
     public PlaywrightDynamicScraperStrategy(
             PlaywrightJobFetcher jobFetcher,
             DynamicJobListingParser parser,
-            DynamicJobNormalizer normalizer
+            DynamicJobNormalizer normalizer,
+            PlaywrightConcurrencyService concurrencyService
     ) {
         this.jobFetcher = Objects.requireNonNull(jobFetcher, "jobFetcher must not be null");
         this.parser = Objects.requireNonNull(parser, "parser must not be null");
         this.normalizer = Objects.requireNonNull(normalizer, "normalizer must not be null");
+        this.concurrencyService = Objects.requireNonNull(concurrencyService, "concurrencyService must not be null");
     }
 
     @Override
@@ -50,7 +53,8 @@ public class PlaywrightDynamicScraperStrategy implements JobScraperStrategy<JobP
 
     @Override
     public ScrapeResult<JobPostingEntity> scrape(ScrapeCommand command) {
-        FetchedPage page = jobFetcher.fetch(FetchRequest.of(command.targetUrl(), command.siteCode()));
+        FetchedPage page = concurrencyService.execute(() ->
+                jobFetcher.fetch(FetchRequest.of(command.targetUrl(), command.siteCode())));
         if (!page.isSuccess()) {
             return ScrapeResult.failure(command.siteCode(),
                     "Playwright fetch failed with status " + page.statusCode());
