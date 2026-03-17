@@ -1,6 +1,6 @@
 # STORY 10.4 — PersistentCrawlJobQueue no Postgres
 
-**Status:** 🚧 Em andamento
+**Status:** ✅ Concluída
 **Iteration:** 10 — Processamento assíncrono
 **Data:** 2026-03-16
 **Referência ADR:** ADR009 Story 10.4
@@ -83,16 +83,29 @@ memória apenas como fallback temporário até a limpeza final.
 O modelo ficou separado da abstração atual de fila para permitir migração incremental sem quebrar
 o fluxo já existente.
 
+### GREEN — quinta fatia persistente
+
+Implementação desta fatia:
+
+1. `InMemoryCrawlJobQueue` removida do wiring de produção
+2. testes de uso `scheduler -> persistent queue -> worker`
+3. documentação explícita do que ainda permanece temporário
+
+Esta fatia fecha a limpeza mínima para retomar stories funcionais sem continuar tratando a fila em
+memória como caminho principal da aplicação.
+
 ---
 
 ## Arquivos criados / modificados
 
 - `src/main/java/com/campos/webscraper/domain/enums/QueueMessageStatus.java`
 - `src/main/java/com/campos/webscraper/application/queue/PersistentCrawlJobQueue.java`
+- `src/main/java/com/campos/webscraper/application/queue/InMemoryCrawlJobQueue.java`
 - `src/main/java/com/campos/webscraper/domain/model/PersistentQueueMessageEntity.java`
 - `src/main/java/com/campos/webscraper/domain/repository/PersistentQueueMessageRepository.java`
 - `src/main/resources/db/migration/V007__create_persistent_queue_messages.sql`
 - `src/test/java/com/campos/webscraper/application/queue/PersistentCrawlJobQueueTest.java`
+- `src/test/java/com/campos/webscraper/application/orchestrator/PersistentQueueWorkflowTest.java`
 - `src/test/java/com/campos/webscraper/domain/model/PersistentQueueMessageEntityTest.java`
 - `src/test/java/com/campos/webscraper/domain/repository/PersistentQueueMessageRepositoryTest.java`
 - `src/test/java/com/campos/webscraper/domain/enums/DomainEnumsTest.java`
@@ -112,6 +125,8 @@ o fluxo já existente.
 
 - o projeto evoluiu o pipeline assíncrono antes de ter uma fila durável
 - faltava um modelo persistente explícito de mensagem para que as próximas stories pudessem implementar claim/ack/retry no banco
+- mesmo após a migração da fila, ainda era preciso provar o fluxo de uso completo `scheduler -> queue -> worker`
+- a fila em memória ainda aparecia como implementação Spring possível, o que mantinha ambiguidade desnecessária no runtime
 
 ---
 
@@ -126,6 +141,8 @@ o fluxo já existente.
 - `CrawlJobWorker` deixou de reenfileirar manualmente mensagens persistidas e passou a usar `done/retry/dead-letter` pela própria fila
 - criada a migration `V007` para materializar a fila durável no Postgres
 - adicionada cobertura unitária para entidade, enum e fila persistida, além do teste de integração do repositório
+- adicionados testes de uso para o fluxo real `scheduler -> persistent queue -> worker`, cobrindo sucesso e retry persistente
+- `InMemoryCrawlJobQueue` deixou de ser bean de produção e ficou restrita a testes de contrato e cenários locais sem Spring
 
 Correção pós-review:
 
@@ -138,24 +155,24 @@ Correção pós-review:
 
 - a migração segura para fila persistida precisa acontecer em fatias: storage primeiro, orchestration depois
 - ter o payload já materializado em tabela reduz o acoplamento com estado efêmero da memória
+- testes de uso ajudam a detectar regressões de integração entre scheduler, fila e worker antes de voltar às stories funcionais
+- a fila em memória ainda pode existir como suporte de teste, mas não deve mais disputar o wiring principal da aplicação
 
 ---
 
 ## Estado final
 
-10.4.1, 10.4.2, 10.4.3 e 10.4.4 implementadas e validadas.
+10.4.1, 10.4.2, 10.4.3, 10.4.4 e 10.4.5 implementadas e validadas.
 
 Validação executada:
 
 - `./mvnw test -DexcludedGroups=integration -Dtest=PersistentQueueMessageEntityTest,DomainEnumsTest`
 - `./mvnw test -DexcludedGroups=integration -Dtest=PersistentCrawlJobQueueTest,PersistentQueueMessageEntityTest,DomainEnumsTest`
+- `./mvnw test -DexcludedGroups=integration -Dtest=PersistentQueueWorkflowTest,PersistentCrawlJobQueueTest,CrawlJobWorkerTest,CrawlJobSchedulerTest`
 - `./mvnw test -DexcludedGroups=integration`
 
-Pendência conhecida:
+Pendências conhecidas:
 
 - `PersistentQueueMessageRepositoryTest` foi criado e a tentativa de execução confirmou que o ambiente
   continua bloqueado pelo Docker/Testcontainers (`client version 1.32 is too old; minimum supported API version is 1.40`)
-
-Próxima fatia planejada:
-
-- 10.4.5 — revisão de simplificação e limpeza
+- `InFlightCrawlJobRegistry` continua existindo como mitigação temporária no scheduler até eventual simplificação futura ou absorção total pelo lifecycle persistente

@@ -358,6 +358,11 @@ Exemplo de fixture de resposta JSON do Indeed MCP:
   - `10.4.3` ack/retry/dead-letter persistentes
   - `10.4.4` migração de scheduler/worker para o lifecycle persistente da fila
   - `10.4.5` revisão de simplificação e limpeza
+- Estado atual após 10.4.5:
+  - `PersistentCrawlJobQueue` é o caminho principal de produção
+  - `InMemoryCrawlJobQueue` fica restrita a testes de contrato e cenários locais sem Spring
+  - testes de uso cobrem o fluxo `scheduler -> persistent queue -> worker` para sucesso e retry
+  - `InFlightCrawlJobRegistry` ainda permanece como mitigação temporária no scheduler e deve ser revisado em limpeza futura, não em stories funcionais imediatas
 - **TDD:** entity/repository contract tests primeiro.
 
 #### Gate arquitetural antes das próximas stories funcionais

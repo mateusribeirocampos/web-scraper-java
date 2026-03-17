@@ -1,7 +1,6 @@
 package com.campos.webscraper.application.queue;
 
 import com.campos.webscraper.domain.model.CrawlJobEntity;
-import org.springframework.stereotype.Component;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -13,9 +12,8 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * In-memory queue implementation used to validate producer/consumer contracts before real brokers.
+ * In-memory queue implementation kept only for contract tests and local non-Spring scenarios.
  */
-@Component
 public class InMemoryCrawlJobQueue implements CrawlJobQueue {
 
     private final Map<CrawlJobQueueName, Queue<EnqueuedCrawlJob>> queues;
