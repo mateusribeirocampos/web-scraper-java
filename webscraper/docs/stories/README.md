@@ -68,3 +68,4 @@ Exemplos:
 | 10.3 — Idempotência e prevenção de duplicatas | [STORY-10.3-idempotency-and-duplicate-prevention.md](STORY-10.3-idempotency-and-duplicate-prevention.md) | 🚧 Em andamento |
 | 10.4 — PersistentCrawlJobQueue no Postgres | [STORY-10.4-persistent-crawl-job-queue.md](STORY-10.4-persistent-crawl-job-queue.md) | ✅ Concluída |
 | 11.1 — PlaywrightJobFetcher | [STORY-11.1-playwright-job-fetcher.md](STORY-11.1-playwright-job-fetcher.md) | ✅ Concluída |
+| 11.2 — Playwright dynamic strategy | [STORY-11.2-playwright-dynamic-strategy.md](STORY-11.2-playwright-dynamic-strategy.md) | ✅ Concluída |

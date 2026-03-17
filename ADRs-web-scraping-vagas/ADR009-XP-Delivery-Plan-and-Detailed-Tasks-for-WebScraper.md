@@ -401,6 +401,7 @@ Recomendação atual do projeto:
 #### Story 11.2 — Strategy para site dinâmico
 - Usar browser fetch somente para sites Tipo C classificados.
 - **TDD:** fixture de extração dinâmica falhando primeiro.
+- Status atual: `PlaywrightDynamicScraperStrategy` já está implementada, parseia cartões JS-heavy via `DynamicJobListingParser` e falha rapidamente quando o fetch retorna status diferente de 200.
 
 #### Story 11.3 — Bulkhead para browser jobs
 - Isolar concorrência de browser dos jobs estáticos.
