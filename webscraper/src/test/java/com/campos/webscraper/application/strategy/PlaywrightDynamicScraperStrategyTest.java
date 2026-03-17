@@ -8,7 +8,8 @@ import com.campos.webscraper.domain.model.JobPostingEntity;
 import com.campos.webscraper.domain.model.ScrapeCommand;
 import com.campos.webscraper.domain.model.ScrapeResult;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
-import com.campos.webscraper.infrastructure.http.JobFetcher;
+import com.campos.webscraper.infrastructure.http.PlaywrightJobFetcher;
+import com.campos.webscraper.infrastructure.http.PlaywrightBrowserClient;
 import com.campos.webscraper.infrastructure.parser.DynamicJobListingParser;
 import com.campos.webscraper.application.normalizer.DynamicJobNormalizer;
 import com.campos.webscraper.shared.FetchRequest;
@@ -21,7 +22,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.time.Clock;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -44,7 +48,7 @@ class PlaywrightDynamicScraperStrategyTest {
     @DisplayName("supports only approved Type C sites")
     void supportsOnlyDynamicSites() {
         PlaywrightDynamicScraperStrategy strategy = new PlaywrightDynamicScraperStrategy(
-                request -> fakePage(200, "<body/>"),
+                new PlaywrightJobFetcher(new StubBrowserClient(request -> fakePage(200, "<body/>")), Clock.systemUTC()),
                 parser,
                 normalizer
         );
@@ -55,12 +59,15 @@ class PlaywrightDynamicScraperStrategyTest {
     @Test
     @DisplayName("returns failure when the Playwright fetch fails")
     void returnsFailureOnFetchError() {
-        JobFetcher failingFetcher = request -> new FetchedPage(
-                request.url(),
-                "",
-                503,
-                null,
-                LocalDateTime.now()
+        PlaywrightJobFetcher failingFetcher = new PlaywrightJobFetcher(
+                new StubBrowserClient(request -> new FetchedPage(
+                        request.url(),
+                        "",
+                        503,
+                        null,
+                        LocalDateTime.now()
+                )),
+                Clock.systemUTC()
         );
 
         PlaywrightDynamicScraperStrategy strategy = new PlaywrightDynamicScraperStrategy(
@@ -84,12 +91,15 @@ class PlaywrightDynamicScraperStrategyTest {
     @DisplayName("parses dynamic job cards and returns success")
     void parsesDynamicJobCards() throws IOException {
         String html = Files.readString(Path.of("src/test/resources/fixtures/playwright/dynamic-site.html"));
-        JobFetcher fetcher = request -> new FetchedPage(
-                request.url(),
-                html,
-                200,
-                "text/html",
-                LocalDateTime.now()
+        PlaywrightJobFetcher fetcher = new PlaywrightJobFetcher(
+                new StubBrowserClient(request -> new FetchedPage(
+                        request.url(),
+                        html,
+                        200,
+                        "text/html",
+                        LocalDateTime.now()
+                )),
+                Clock.systemUTC()
         );
 
         PlaywrightDynamicScraperStrategy strategy = new PlaywrightDynamicScraperStrategy(
@@ -109,6 +119,26 @@ class PlaywrightDynamicScraperStrategyTest {
         assertThat(result.items()).hasSize(2);
         assertThat(result.items().get(0).getTitle()).isEqualTo("Frontend Engineer");
         assertThat(result.items().get(1).getLocation()).isEqualTo("São Paulo");
+    }
+
+    private static final class StubBrowserClient implements PlaywrightBrowserClient {
+
+        private final Function<FetchRequest, FetchedPage> delegate;
+
+        private StubBrowserClient(Function<FetchRequest, FetchedPage> delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public PlaywrightBrowserResponse fetch(FetchRequest request) {
+            FetchedPage page = delegate.apply(request);
+            return new PlaywrightBrowserResponse(
+                    page.url(),
+                    page.htmlContent(),
+                    page.statusCode(),
+                    page.contentType()
+            );
+        }
     }
 
     private FetchedPage fakePage(int status, String html) {

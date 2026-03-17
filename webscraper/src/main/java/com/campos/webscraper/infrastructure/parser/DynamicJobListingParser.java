@@ -11,6 +11,9 @@ import java.util.List;
 /**
  * Parses dynamic job cards rendered by a Playwright browser session.
  */
+import org.springframework.stereotype.Component;
+
+@Component
 public class DynamicJobListingParser {
 
     /**

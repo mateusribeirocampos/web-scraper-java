@@ -9,7 +9,7 @@ import com.campos.webscraper.domain.model.JobPostingEntity;
 import com.campos.webscraper.domain.model.ScrapeCommand;
 import com.campos.webscraper.domain.model.ScrapeResult;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
-import com.campos.webscraper.infrastructure.http.JobFetcher;
+import com.campos.webscraper.infrastructure.http.PlaywrightJobFetcher;
 import com.campos.webscraper.shared.FetchRequest;
 import com.campos.webscraper.shared.FetchedPage;
 import com.campos.webscraper.infrastructure.parser.DynamicJobListingParser;
@@ -25,12 +25,12 @@ import java.util.Objects;
 @Component
 public class PlaywrightDynamicScraperStrategy implements JobScraperStrategy<JobPostingEntity> {
 
-    private final JobFetcher jobFetcher;
+    private final PlaywrightJobFetcher jobFetcher;
     private final DynamicJobListingParser parser;
     private final DynamicJobNormalizer normalizer;
 
     public PlaywrightDynamicScraperStrategy(
-            JobFetcher jobFetcher,
+            PlaywrightJobFetcher jobFetcher,
             DynamicJobListingParser parser,
             DynamicJobNormalizer normalizer
     ) {

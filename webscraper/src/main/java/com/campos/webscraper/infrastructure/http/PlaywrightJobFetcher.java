@@ -20,7 +20,7 @@ public final class PlaywrightJobFetcher implements JobFetcher {
         this(new DefaultPlaywrightBrowserClient(), Clock.systemUTC());
     }
 
-    PlaywrightJobFetcher(PlaywrightBrowserClient browserClient, Clock clock) {
+    public PlaywrightJobFetcher(PlaywrightBrowserClient browserClient, Clock clock) {
         this.browserClient = Objects.requireNonNull(browserClient, "browserClient must not be null");
         this.clock = Objects.requireNonNull(clock, "clock must not be null");
     }
