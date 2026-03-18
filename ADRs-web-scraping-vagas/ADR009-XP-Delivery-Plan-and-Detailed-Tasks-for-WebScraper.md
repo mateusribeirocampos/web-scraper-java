@@ -411,6 +411,39 @@ Recomendação atual do projeto:
 #### Story 11.4 — Verificação em campo (manual)
 - Definir e executar um fluxo de aceitação manual (um `CrawlJob` parametrizado para um site Type C real) para validar que o Playwright fallback funciona em produção.
 - **TDD:** documentar o cenário de uso e preparar fixture/configuração antes de aplicar o Playwright real.
+- Status atual: o projeto já passou a documentar um procedimento oficial de aceite manual por família de fonte. Para a família Gupy, o fluxo validado em campo é disparar os jobs `15`, `16`, `17` e `18` pelo endpoint manual e depois consultar `job_postings` por uma intenção do usuário (`java`/`spring`/`kotlin`/`backend`/`desenvolvedor`) para verificar a utilidade real do dado persistido.
+
+Procedimento documentado:
+
+```bash
+for id in 15 16 17 18; do
+  echo -n "Job $id:"
+  curl -s -X POST http://localhost:8080/api/v1/crawl-jobs/$id/execute
+  echo ""
+done
+```
+
+```sql
+SELECT title, company, seniority, tech_stack_tags, canonical_url
+FROM job_postings
+WHERE (
+    tech_stack_tags ILIKE '%java%'
+    OR tech_stack_tags ILIKE '%spring%'
+    OR tech_stack_tags ILIKE '%kotlin%'
+    OR title ILIKE '%backend%'
+    OR title ILIKE '%software engineer%'
+    OR title ILIKE '%desenvolvedor%'
+)
+ORDER BY
+    CASE seniority
+        WHEN 'JUNIOR' THEN 1
+        WHEN 'INTERN' THEN 2
+        WHEN 'MID'    THEN 3
+        WHEN 'SENIOR' THEN 4
+        ELSE 5
+    END,
+    published_at DESC;
+```
 
 
 ---

@@ -76,8 +76,8 @@ da implementação.
 e ordenação cronológica.
 
 **Resiliência:** Resilience4j com Retry, RateLimiter, Bulkhead e CircuitBreaker integrados ao
-Spring Boot. Rate limit obrigatório por site. Retry, rate limiting, circuit breaker por fonte e
-dead-letter já foram implementados; fila assíncrona dedicada ainda permanece planejada.
+Spring Boot. Rate limit obrigatório por site. Retry, rate limiting, circuit breaker por fonte,
+dead-letter e fila persistida de execução já foram implementados.
 
 **Teste de aceite do usuário:** além do TDD e dos testes automatizados, toda nova família de fonte
 deve fechar com um cenário manual reproduzível de execução e leitura dos resultados, usando uma
@@ -98,39 +98,74 @@ CI quality gates e rollout controlado por família de scraper.
 |---|---|
 | Linguagem de produção | Java 21 — definido e confirmado |
 | API-first como prioridade | Definido |
-| Contratos de scraper | Implementados para Indeed, DOU, PCI Concursos e Greenhouse Bitso |
+| Contratos de scraper | Implementados para Indeed, DOU, PCI Concursos, Greenhouse, Gupy e Playwright dinâmico |
 | Modelo JPA de domínio de vagas | Implementado |
 | Política de TDD | Mandatória |
 | Retry e rate limiting | Implementados |
 | Circuit breaker e dead-letter | Implementados |
 | Scheduler e trigger manual | Implementados |
-| Processamento assíncrono por fila | Planejado |
+| Processamento assíncrono por fila | Implementado com fila persistida |
 | Observabilidade | Planejada |
 | Governança legal (robots.txt, ToS) | Implementada para o gate de onboarding; expansão planejada |
 | Tarefas XP detalhadas | Definidas — 12 iterations |
 | Pesquisa open source | Realizada e documentada |
 | PCI Concursos | Implementado tecnicamente; produção ainda pendente de checklist legal completo |
 | Greenhouse Bitso | Onboarding, client, normalizer, strategy e persistência ponta a ponta implementados |
+| Gupy | Client, normalizer, strategy, import use case e seed operacional implementados |
 
 ---
 
 ## Uso Atual do Projeto Para Teste do Usuário
 
 No estado atual, o usuário já consegue validar o comportamento do scraper no sistema rodando,
-mesmo sem busca livre exposta como input público:
+mesmo sem busca livre exposta como input público. O procedimento oficial de aceite manual para a
+família Gupy passou a ser:
 
-1. executar manualmente um `CrawlJob` com `POST /api/v1/crawl-jobs/{jobId}/execute`
-2. aguardar a conclusão da execução
-3. consultar os dados persistidos nos endpoints de leitura
-4. comparar os resultados com a intenção da busca desejada
+1. disparar manualmente os `CrawlJob`s persistidos da família validada
+2. aguardar o despacho e a persistência das execuções
+3. consultar diretamente `job_postings` com um filtro representativo da intenção do usuário
+4. comparar os resultados retornados com a busca desejada
 
 Consultas de referência documentadas:
 
 - `desenvolvedor de software em java spring boot`
 - `concurso analista de ti`
 
+Fluxo manual atualmente validado:
+
+```bash
+for id in 15 16 17 18; do
+  echo -n "Job $id:"
+  curl -s -X POST http://localhost:8080/api/v1/crawl-jobs/$id/execute
+  echo ""
+done
+```
+
+```sql
+SELECT title, company, seniority, tech_stack_tags, canonical_url
+FROM job_postings
+WHERE (
+    tech_stack_tags ILIKE '%java%'
+    OR tech_stack_tags ILIKE '%spring%'
+    OR tech_stack_tags ILIKE '%kotlin%'
+    OR title ILIKE '%backend%'
+    OR title ILIKE '%software engineer%'
+    OR title ILIKE '%desenvolvedor%'
+)
+ORDER BY
+    CASE seniority
+        WHEN 'JUNIOR' THEN 1
+        WHEN 'INTERN' THEN 2
+        WHEN 'MID'    THEN 3
+        WHEN 'SENIOR' THEN 4
+        ELSE 5
+    END,
+    published_at DESC;
+```
+
 Hoje essa intenção ainda precisa estar refletida na configuração do job/fonte. A busca livre
-customizada continua como evolução funcional futura.
+customizada continua como evolução funcional futura, mas esse fluxo já valida a aplicação de ponta
+a ponta com uma pesquisa reconhecível pelo usuário.
 
 ---
 

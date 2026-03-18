@@ -242,6 +242,41 @@ Nenhum scraper pode ser ativado em produção sem este checklist completo.
    exemplo:
    - vagas privadas: `desenvolvedor de software em java spring boot`
    - concursos: `concurso analista de ti` ou `concurso desenvolvedor java`
+   - para a família Gupy atualmente validada no projeto, usar o seguinte fluxo operacional:
+
+```bash
+for id in 15 16 17 18; do
+  echo -n "Job $id:"
+  curl -s -X POST http://localhost:8080/api/v1/crawl-jobs/$id/execute
+  echo ""
+done
+```
+
+```sql
+SELECT title, company, seniority, tech_stack_tags, canonical_url
+FROM job_postings
+WHERE (
+    tech_stack_tags ILIKE '%java%'
+    OR tech_stack_tags ILIKE '%spring%'
+    OR tech_stack_tags ILIKE '%kotlin%'
+    OR title ILIKE '%backend%'
+    OR title ILIKE '%software engineer%'
+    OR title ILIKE '%desenvolvedor%'
+)
+ORDER BY
+    CASE seniority
+        WHEN 'JUNIOR' THEN 1
+        WHEN 'INTERN' THEN 2
+        WHEN 'MID'    THEN 3
+        WHEN 'SENIOR' THEN 4
+        ELSE 5
+    END,
+    published_at DESC;
+```
+
+Esse procedimento existe para validar ponta a ponta o caminho real de uso: `CrawlJob` persistido,
+dispatch da execução, import em `job_postings` e leitura final filtrada por uma intenção de busca
+reconhecível pelo usuário.
 
 ## References
 
