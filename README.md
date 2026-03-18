@@ -51,7 +51,7 @@ Playwright e execucao assíncrona com fila persistida.
 
 ```mermaid
 flowchart LR
-    A[Scheduler ou POST /api/v1/crawl-jobs/{id}/execute] --> B[CrawlJobDispatcher]
+    A[Scheduler ou endpoint manual de execucao] --> B[CrawlJobDispatcher]
     B --> C[PersistentCrawlJobQueue]
     C --> D[CrawlJobWorker]
     D --> E[ImportingCrawlJobExecutionRunner]
@@ -76,7 +76,7 @@ sequenceDiagram
     participant S as Strategy
     participant DB as PostgreSQL
 
-    U->>API: POST /api/v1/crawl-jobs/{jobId}/execute
+    U->>API: POST execute crawl job
     API->>Q: enqueue(job)
     W->>Q: claim next message
     W->>R: run(crawlJob, crawlExecution)
