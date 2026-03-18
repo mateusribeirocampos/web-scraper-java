@@ -2,6 +2,7 @@ package com.campos.webscraper.application.orchestrator;
 
 import com.campos.webscraper.application.usecase.DouContestImportUseCase;
 import com.campos.webscraper.application.usecase.GreenhouseJobImportUseCase;
+import com.campos.webscraper.application.usecase.GupyJobImportUseCase;
 import com.campos.webscraper.application.usecase.IndeedJobImportUseCase;
 import com.campos.webscraper.application.usecase.PciConcursosImportUseCase;
 import com.campos.webscraper.domain.enums.JobCategory;
@@ -22,31 +23,27 @@ public class ImportingCrawlJobExecutionRunner implements CrawlJobExecutionRunner
 
     private final IndeedJobImportUseCase indeedJobImportUseCase;
     private final GreenhouseJobImportUseCase greenhouseJobImportUseCase;
+    private final GupyJobImportUseCase gupyJobImportUseCase;
     private final DouContestImportUseCase douContestImportUseCase;
     private final PciConcursosImportUseCase pciConcursosImportUseCase;
 
     public ImportingCrawlJobExecutionRunner(
             IndeedJobImportUseCase indeedJobImportUseCase,
             GreenhouseJobImportUseCase greenhouseJobImportUseCase,
+            GupyJobImportUseCase gupyJobImportUseCase,
             DouContestImportUseCase douContestImportUseCase,
             PciConcursosImportUseCase pciConcursosImportUseCase
     ) {
         this.indeedJobImportUseCase = Objects.requireNonNull(
-                indeedJobImportUseCase,
-                "indeedJobImportUseCase must not be null"
-        );
+                indeedJobImportUseCase, "indeedJobImportUseCase must not be null");
         this.greenhouseJobImportUseCase = Objects.requireNonNull(
-                greenhouseJobImportUseCase,
-                "greenhouseJobImportUseCase must not be null"
-        );
+                greenhouseJobImportUseCase, "greenhouseJobImportUseCase must not be null");
+        this.gupyJobImportUseCase = Objects.requireNonNull(
+                gupyJobImportUseCase, "gupyJobImportUseCase must not be null");
         this.douContestImportUseCase = Objects.requireNonNull(
-                douContestImportUseCase,
-                "douContestImportUseCase must not be null"
-        );
+                douContestImportUseCase, "douContestImportUseCase must not be null");
         this.pciConcursosImportUseCase = Objects.requireNonNull(
-                pciConcursosImportUseCase,
-                "pciConcursosImportUseCase must not be null"
-        );
+                pciConcursosImportUseCase, "pciConcursosImportUseCase must not be null");
     }
 
     @Override
@@ -62,13 +59,20 @@ public class ImportingCrawlJobExecutionRunner implements CrawlJobExecutionRunner
                 effectiveJobCategory(crawlJob, targetSite)
         );
 
-        int itemsFound = switch (targetSite.getSiteCode()) {
-            case "indeed-br" -> indeedJobImportUseCase.execute(targetSite, crawlExecution, command).size();
-            case "greenhouse_bitso" -> greenhouseJobImportUseCase.execute(targetSite, crawlExecution, command).size();
-            case "dou-api" -> douContestImportUseCase.execute(targetSite, crawlExecution, command).size();
-            case "pci_concursos" -> pciConcursosImportUseCase.execute(targetSite, crawlExecution, command).size();
-            default -> throw new UnsupportedSiteException("No import runner registered for site: " + targetSite.getSiteCode());
-        };
+        String siteCode = targetSite.getSiteCode();
+        int itemsFound;
+        if (siteCode.startsWith("greenhouse_")) {
+            itemsFound = greenhouseJobImportUseCase.execute(targetSite, crawlExecution, command).size();
+        } else if (siteCode.startsWith("gupy_")) {
+            itemsFound = gupyJobImportUseCase.execute(targetSite, crawlExecution, command).size();
+        } else {
+            itemsFound = switch (siteCode) {
+                case "indeed-br"    -> indeedJobImportUseCase.execute(targetSite, crawlExecution, command).size();
+                case "dou-api"      -> douContestImportUseCase.execute(targetSite, crawlExecution, command).size();
+                case "pci_concursos"-> pciConcursosImportUseCase.execute(targetSite, crawlExecution, command).size();
+                default -> throw new UnsupportedSiteException("No import runner registered for site: " + siteCode);
+            };
+        }
 
         return new CrawlExecutionOutcome(1, itemsFound);
     }

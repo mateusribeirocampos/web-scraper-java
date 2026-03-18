@@ -2,13 +2,14 @@ package com.campos.webscraper.application.normalizer;
 
 import com.campos.webscraper.domain.enums.SeniorityLevel;
 import com.campos.webscraper.domain.model.JobPostingEntity;
-import com.campos.webscraper.interfaces.dto.GreenhouseJobBoardItemResponse;
+import com.campos.webscraper.interfaces.dto.GupyJobListingResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
 import java.text.Normalizer;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,18 +18,17 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
- * Maps Greenhouse Job Board payloads into the canonical private-sector job posting shape.
+ * Maps Gupy Portal API payloads into the canonical private-sector job posting shape.
  */
 @Component
-public class GreenhouseJobNormalizer {
+public class GupyJobNormalizer {
 
     private static final Pattern INTERN_PATTERN  = Pattern.compile("\\b(intern|internship|estagio|estagiario)\\b");
     private static final Pattern LEAD_PATTERN    = Pattern.compile("\\b(lead|staff|principal|lider)\\b");
-    private static final Pattern SENIOR_PATTERN  = Pattern.compile("\\b(senior|sr|sênior|senior)\\b");
-    private static final Pattern JUNIOR_PATTERN  = Pattern.compile("\\b(junior|jr|junior)\\b");
+    private static final Pattern SENIOR_PATTERN  = Pattern.compile("\\b(senior|sr)\\b");
+    private static final Pattern JUNIOR_PATTERN  = Pattern.compile("\\b(junior|jr)\\b");
     private static final Pattern MID_PATTERN     = Pattern.compile("\\b(mid|pleno|mid-level)\\b");
 
-    // Tech stack detection patterns (title + description)
     private static final Pattern JAVA_PATTERN        = Pattern.compile("\\bjava\\b");
     private static final Pattern SPRING_PATTERN      = Pattern.compile("\\bspring\\b");
     private static final Pattern KOTLIN_PATTERN      = Pattern.compile("\\bkotlin\\b");
@@ -44,78 +44,101 @@ public class GreenhouseJobNormalizer {
 
     private final ObjectMapper objectMapper;
 
-    public GreenhouseJobNormalizer() {
+    public GupyJobNormalizer() {
         this(new ObjectMapper());
     }
 
-    public GreenhouseJobNormalizer(ObjectMapper objectMapper) {
+    public GupyJobNormalizer(ObjectMapper objectMapper) {
         this.objectMapper = Objects.requireNonNull(objectMapper, "objectMapper must not be null");
     }
 
-    public JobPostingEntity normalize(GreenhouseJobBoardItemResponse response) {
+    public JobPostingEntity normalize(GupyJobListingResponse response) {
         Objects.requireNonNull(response, "response must not be null");
 
         return JobPostingEntity.builder()
                 .externalId(String.valueOf(response.id()))
-                .canonicalUrl(response.absoluteUrl())
-                .title(response.title())
-                .company(response.companyName())
-                .location(response.location() == null ? null : response.location().name())
-                .remote(isRemote(response))
-                .seniority(resolveSeniority(response.title()))
+                .canonicalUrl(response.jobUrl())
+                .title(response.name())
+                .company(response.careerPageName())
+                .location(resolveLocation(response))
+                .remote(resolveRemote(response))
+                .seniority(resolveSeniority(response.name()))
                 .techStackTags(resolveTechStackTags(response))
-                .description(response.content())
-                .publishedAt(OffsetDateTime.parse(response.firstPublished()).toLocalDate())
+                .description(response.description())
+                .publishedAt(resolvePublishedAt(response.publishedDate()))
+                .applicationDeadline(resolveDeadline(response.applicationDeadline()))
                 .payloadJson(toJson(response))
                 .createdAt(Instant.now())
                 .build();
     }
 
-    private boolean isRemote(GreenhouseJobBoardItemResponse response) {
-        String title = response.title() == null ? "" : response.title().toLowerCase(Locale.ROOT);
-        String location = response.location() == null || response.location().name() == null
-                ? ""
-                : response.location().name().toLowerCase(Locale.ROOT);
-        String country = response.location() == null || response.location().country() == null
-                ? ""
-                : response.location().country().toLowerCase(Locale.ROOT);
-        return title.contains("remote")
-                || location.contains("remote")
-                || location.contains("remoto")
-                || location.contains("latam")
-                || location.contains("latin america")
-                || country.contains("remote");
+    private String resolveLocation(GupyJobListingResponse response) {
+        String city  = response.city()  == null ? "" : response.city().strip();
+        String state = response.state() == null ? "" : response.state().strip();
+        if (city.isEmpty() && state.isEmpty()) {
+            return response.country();
+        }
+        if (city.isEmpty()) {
+            return state + ", " + response.country();
+        }
+        if (state.isEmpty()) {
+            return city + ", " + response.country();
+        }
+        return city + ", " + state;
+    }
+
+    private boolean resolveRemote(GupyJobListingResponse response) {
+        if (response.isRemoteWork()) {
+            return true;
+        }
+        String type = response.workplaceType() == null ? "" : response.workplaceType().toLowerCase(Locale.ROOT);
+        return type.contains("remote");
+    }
+
+    private LocalDate resolvePublishedAt(String publishedDate) {
+        if (publishedDate == null || publishedDate.isBlank()) {
+            return LocalDate.now();
+        }
+        try {
+            return OffsetDateTime.parse(publishedDate).toLocalDate();
+        } catch (Exception e) {
+            return LocalDate.now();
+        }
+    }
+
+    private LocalDate resolveDeadline(String deadline) {
+        if (deadline == null || deadline.isBlank()) {
+            return null;
+        }
+        try {
+            LocalDate date = OffsetDateTime.parse(deadline).toLocalDate();
+            // Gupy uses "2035-12-31" as a placeholder for "no deadline"
+            if (date.getYear() > 2030) {
+                return null;
+            }
+            return date;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private SeniorityLevel resolveSeniority(String title) {
         if (title == null) {
             return null;
         }
-
-        // Remove accents so "Júnior" → "junior", "Sênior" → "senior", etc.
         String normalized = stripAccents(title.toLowerCase(Locale.ROOT));
-        if (INTERN_PATTERN.matcher(normalized).find()) {
-            return SeniorityLevel.INTERN;
-        }
-        if (LEAD_PATTERN.matcher(normalized).find()) {
-            return SeniorityLevel.LEAD;
-        }
-        if (SENIOR_PATTERN.matcher(normalized).find()) {
-            return SeniorityLevel.SENIOR;
-        }
-        if (JUNIOR_PATTERN.matcher(normalized).find()) {
-            return SeniorityLevel.JUNIOR;
-        }
-        if (MID_PATTERN.matcher(normalized).find()) {
-            return SeniorityLevel.MID;
-        }
+        if (INTERN_PATTERN.matcher(normalized).find())  return SeniorityLevel.INTERN;
+        if (LEAD_PATTERN.matcher(normalized).find())    return SeniorityLevel.LEAD;
+        if (SENIOR_PATTERN.matcher(normalized).find())  return SeniorityLevel.SENIOR;
+        if (JUNIOR_PATTERN.matcher(normalized).find())  return SeniorityLevel.JUNIOR;
+        if (MID_PATTERN.matcher(normalized).find())     return SeniorityLevel.MID;
         return null;
     }
 
-    private String resolveTechStackTags(GreenhouseJobBoardItemResponse response) {
+    private String resolveTechStackTags(GupyJobListingResponse response) {
         String haystack = stripAccents(
-                ((response.title() == null ? "" : response.title()) + " "
-                + (response.content() == null ? "" : response.content()))
+                ((response.name()        == null ? "" : response.name()) + " "
+                + (response.description() == null ? "" : response.description()))
                 .toLowerCase(Locale.ROOT));
 
         List<String> tags = new ArrayList<>();
@@ -135,17 +158,16 @@ public class GreenhouseJobNormalizer {
         return tags.isEmpty() ? null : String.join(",", tags);
     }
 
-    /** Removes diacritical marks: "júnior" → "junior", "sênior" → "senior". */
     private static String stripAccents(String input) {
         String decomposed = Normalizer.normalize(input, Normalizer.Form.NFD);
         return decomposed.replaceAll("\\p{InCombiningDiacriticalMarks}", "");
     }
 
-    private String toJson(GreenhouseJobBoardItemResponse response) {
+    private String toJson(GupyJobListingResponse response) {
         try {
             return objectMapper.writeValueAsString(response);
         } catch (JsonProcessingException exception) {
-            throw new IllegalStateException("Failed to serialize Greenhouse payload for audit", exception);
+            throw new IllegalStateException("Failed to serialize Gupy payload for audit", exception);
         }
     }
 }

@@ -408,6 +408,11 @@ Recomendação atual do projeto:
 - **TDD:** testes de limite de concorrência primeiro.
 - Status atual: criada a `PlaywrightConcurrencyService` com `Semaphore`, a strategy consome o serviço e o `PlaywrightConfiguration` expõe o bean para garantir que nenhum browser extra seja aberto acima do limite configurado.
 
+#### Story 11.4 — Verificação em campo (manual)
+- Definir e executar um fluxo de aceitação manual (um `CrawlJob` parametrizado para um site Type C real) para validar que o Playwright fallback funciona em produção.
+- **TDD:** documentar o cenário de uso e preparar fixture/configuração antes de aplicar o Playwright real.
+
+
 ---
 
 ### Iteration 12 — Observabilidade e governança

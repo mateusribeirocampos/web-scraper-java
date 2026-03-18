@@ -2,6 +2,7 @@ package com.campos.webscraper.application.usecase;
 
 import com.campos.webscraper.application.normalizer.IndeedJobNormalizer;
 import com.campos.webscraper.application.strategy.IndeedApiJobScraperStrategy;
+import com.campos.webscraper.application.usecase.IdempotentJobPostingPersistenceService;
 import com.campos.webscraper.domain.enums.CrawlExecutionStatus;
 import com.campos.webscraper.domain.enums.ExtractionMode;
 import com.campos.webscraper.domain.enums.JobCategory;
@@ -18,6 +19,7 @@ import com.campos.webscraper.domain.repository.JobPostingRepository;
 import com.campos.webscraper.domain.repository.TargetSiteRepository;
 import com.campos.webscraper.infrastructure.http.IndeedApiClient;
 import com.campos.webscraper.interfaces.dto.IndeedApiResponse;
+import com.campos.webscraper.shared.JobPostingFingerprintCalculator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -121,7 +123,15 @@ class IndeedJobImportUseCaseTest {
                 new FakeIndeedApiClient(),
                 new IndeedJobNormalizer()
         );
-        IndeedJobImportUseCase useCase = new IndeedJobImportUseCase(jobPostingRepository, strategy);
+        JobPostingFingerprintCalculator fingerprintCalculator = new JobPostingFingerprintCalculator();
+        IdempotentJobPostingPersistenceService idempotentPersistenceService =
+                new IdempotentJobPostingPersistenceService(jobPostingRepository);
+        IndeedJobImportUseCase useCase = new IndeedJobImportUseCase(
+                jobPostingRepository,
+                strategy,
+                fingerprintCalculator,
+                idempotentPersistenceService
+        );
 
         ScrapeCommand command = new ScrapeCommand(
                 "indeed-br",

@@ -9,6 +9,7 @@ import com.campos.webscraper.domain.model.ScrapeCommand;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
 import com.campos.webscraper.domain.repository.JobPostingRepository;
 import com.campos.webscraper.shared.JobPostingFingerprintCalculator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,18 +26,7 @@ public class GreenhouseJobImportUseCase {
     private final JobPostingFingerprintCalculator fingerprintCalculator;
     private final IdempotentJobPostingPersistenceService idempotentPersistenceService;
 
-    public GreenhouseJobImportUseCase(
-            JobPostingRepository jobPostingRepository,
-            GreenhouseJobScraperStrategy strategy
-    ) {
-        this(
-                jobPostingRepository,
-                strategy,
-                new JobPostingFingerprintCalculator(),
-                new IdempotentJobPostingPersistenceService(jobPostingRepository)
-        );
-    }
-
+    @Autowired
     public GreenhouseJobImportUseCase(
             JobPostingRepository jobPostingRepository,
             GreenhouseJobScraperStrategy strategy,

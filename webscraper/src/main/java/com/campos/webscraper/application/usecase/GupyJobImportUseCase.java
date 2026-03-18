@@ -1,6 +1,6 @@
 package com.campos.webscraper.application.usecase;
 
-import com.campos.webscraper.application.strategy.IndeedApiJobScraperStrategy;
+import com.campos.webscraper.application.strategy.GupyJobScraperStrategy;
 import com.campos.webscraper.domain.enums.DedupStatus;
 import com.campos.webscraper.domain.enums.JobContractType;
 import com.campos.webscraper.domain.model.CrawlExecutionEntity;
@@ -9,27 +9,25 @@ import com.campos.webscraper.domain.model.ScrapeCommand;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
 import com.campos.webscraper.domain.repository.JobPostingRepository;
 import com.campos.webscraper.shared.JobPostingFingerprintCalculator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
 
 /**
- * End-to-end use case for importing Indeed jobs through the strategy and persisting them.
+ * End-to-end use case for importing Gupy jobs and persisting them idempotently.
  */
 @Component
-public class IndeedJobImportUseCase {
+public class GupyJobImportUseCase {
 
     private final JobPostingRepository jobPostingRepository;
-    private final IndeedApiJobScraperStrategy strategy;
+    private final GupyJobScraperStrategy strategy;
     private final JobPostingFingerprintCalculator fingerprintCalculator;
     private final IdempotentJobPostingPersistenceService idempotentPersistenceService;
 
-    @Autowired
-    public IndeedJobImportUseCase(
+    public GupyJobImportUseCase(
             JobPostingRepository jobPostingRepository,
-            IndeedApiJobScraperStrategy strategy,
+            GupyJobScraperStrategy strategy,
             JobPostingFingerprintCalculator fingerprintCalculator,
             IdempotentJobPostingPersistenceService idempotentPersistenceService
     ) {
@@ -37,14 +35,9 @@ public class IndeedJobImportUseCase {
         this.strategy = Objects.requireNonNull(strategy, "strategy must not be null");
         this.fingerprintCalculator = Objects.requireNonNull(fingerprintCalculator, "fingerprintCalculator must not be null");
         this.idempotentPersistenceService = Objects.requireNonNull(
-                idempotentPersistenceService,
-                "idempotentPersistenceService must not be null"
-        );
+                idempotentPersistenceService, "idempotentPersistenceService must not be null");
     }
 
-    /**
-     * Executes the full Indeed import slice and persists the normalized postings.
-     */
     public List<JobPostingEntity> execute(
             TargetSiteEntity targetSite,
             CrawlExecutionEntity crawlExecution,
@@ -68,7 +61,7 @@ public class IndeedJobImportUseCase {
             TargetSiteEntity targetSite,
             CrawlExecutionEntity crawlExecution
     ) {
-        JobPostingEntity enriched = JobPostingEntity.builder()
+        JobPostingEntity withContext = JobPostingEntity.builder()
                 .crawlExecution(crawlExecution)
                 .targetSite(targetSite)
                 .externalId(item.getExternalId())
@@ -79,7 +72,6 @@ public class IndeedJobImportUseCase {
                 .remote(item.isRemote())
                 .contractType(JobContractType.CLT)
                 .seniority(item.getSeniority())
-                .salaryRange(item.getSalaryRange())
                 .techStackTags(item.getTechStackTags())
                 .description(item.getDescription())
                 .publishedAt(item.getPublishedAt())
@@ -87,32 +79,29 @@ public class IndeedJobImportUseCase {
                 .dedupStatus(DedupStatus.NEW)
                 .payloadJson(item.getPayloadJson())
                 .createdAt(item.getCreatedAt())
-                .updatedAt(item.getUpdatedAt())
                 .build();
 
-        String fingerprint = fingerprintCalculator.calculate(enriched);
+        String fingerprint = fingerprintCalculator.calculate(withContext);
 
         return JobPostingEntity.builder()
-                .crawlExecution(enriched.getCrawlExecution())
-                .targetSite(enriched.getTargetSite())
-                .externalId(enriched.getExternalId())
-                .canonicalUrl(enriched.getCanonicalUrl())
-                .title(enriched.getTitle())
-                .company(enriched.getCompany())
-                .location(enriched.getLocation())
-                .remote(enriched.isRemote())
-                .contractType(enriched.getContractType())
-                .seniority(enriched.getSeniority())
-                .salaryRange(enriched.getSalaryRange())
-                .techStackTags(enriched.getTechStackTags())
-                .description(enriched.getDescription())
-                .publishedAt(enriched.getPublishedAt())
-                .applicationDeadline(enriched.getApplicationDeadline())
+                .crawlExecution(withContext.getCrawlExecution())
+                .targetSite(withContext.getTargetSite())
+                .externalId(withContext.getExternalId())
+                .canonicalUrl(withContext.getCanonicalUrl())
+                .title(withContext.getTitle())
+                .company(withContext.getCompany())
+                .location(withContext.getLocation())
+                .remote(withContext.isRemote())
+                .contractType(withContext.getContractType())
+                .seniority(withContext.getSeniority())
+                .techStackTags(withContext.getTechStackTags())
+                .description(withContext.getDescription())
+                .publishedAt(withContext.getPublishedAt())
+                .applicationDeadline(withContext.getApplicationDeadline())
                 .fingerprintHash(fingerprint)
-                .dedupStatus(enriched.getDedupStatus())
-                .payloadJson(enriched.getPayloadJson())
-                .createdAt(enriched.getCreatedAt())
-                .updatedAt(enriched.getUpdatedAt())
+                .dedupStatus(withContext.getDedupStatus())
+                .payloadJson(withContext.getPayloadJson())
+                .createdAt(withContext.getCreatedAt())
                 .build();
     }
 }

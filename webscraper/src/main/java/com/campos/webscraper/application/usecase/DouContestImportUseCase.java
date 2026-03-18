@@ -11,6 +11,7 @@ import com.campos.webscraper.domain.model.ScrapeCommand;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
 import com.campos.webscraper.domain.repository.PublicContestPostingRepository;
 import com.campos.webscraper.shared.ContestPostingFingerprintCalculator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -28,6 +29,7 @@ public class DouContestImportUseCase {
     private final ContestPostingFingerprintCalculator fingerprintCalculator;
     private final IdempotentPublicContestPersistenceService idempotentPersistenceService;
 
+    @Autowired
     public DouContestImportUseCase(
             PublicContestPostingRepository publicContestPostingRepository,
             DouApiContestScraperStrategy strategy

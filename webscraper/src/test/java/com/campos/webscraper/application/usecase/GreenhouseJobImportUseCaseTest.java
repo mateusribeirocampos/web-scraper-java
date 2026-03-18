@@ -2,6 +2,7 @@ package com.campos.webscraper.application.usecase;
 
 import com.campos.webscraper.application.normalizer.GreenhouseJobNormalizer;
 import com.campos.webscraper.application.strategy.GreenhouseJobScraperStrategy;
+import com.campos.webscraper.shared.JobPostingFingerprintCalculator;
 import com.campos.webscraper.domain.enums.CrawlExecutionStatus;
 import com.campos.webscraper.domain.enums.ExtractionMode;
 import com.campos.webscraper.domain.enums.JobCategory;
@@ -123,7 +124,12 @@ class GreenhouseJobImportUseCaseTest {
                 new FakeGreenhouseJobBoardClient(),
                 new GreenhouseJobNormalizer()
         );
-        GreenhouseJobImportUseCase useCase = new GreenhouseJobImportUseCase(jobPostingRepository, strategy);
+        GreenhouseJobImportUseCase useCase = new GreenhouseJobImportUseCase(
+                jobPostingRepository,
+                strategy,
+                new JobPostingFingerprintCalculator(),
+                new IdempotentJobPostingPersistenceService(jobPostingRepository)
+        );
 
         ScrapeCommand command = new ScrapeCommand(
                 "greenhouse_bitso",

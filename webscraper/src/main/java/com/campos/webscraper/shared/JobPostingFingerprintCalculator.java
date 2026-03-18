@@ -1,6 +1,7 @@
 package com.campos.webscraper.shared;
 
 import com.campos.webscraper.domain.model.JobPostingEntity;
+import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -13,6 +14,7 @@ import java.util.Objects;
 /**
  * Calculates a stable SHA-256 fingerprint for a job posting using canonical business fields.
  */
+@Component
 public class JobPostingFingerprintCalculator {
 
     /**

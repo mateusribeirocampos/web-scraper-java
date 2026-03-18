@@ -6,6 +6,7 @@ import com.campos.webscraper.domain.model.PersistentQueueMessageEntity;
 import com.campos.webscraper.domain.repository.PersistentQueueMessageRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,7 @@ public class PersistentCrawlJobQueue implements CrawlJobQueue {
     private final ObjectMapper objectMapper;
     private final Clock clock;
 
+    @Autowired
     public PersistentCrawlJobQueue(PersistentQueueMessageRepository persistentQueueMessageRepository) {
         this(persistentQueueMessageRepository, new ObjectMapper().findAndRegisterModules(), Clock.systemUTC());
     }
