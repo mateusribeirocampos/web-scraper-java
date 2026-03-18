@@ -12,6 +12,7 @@ import com.campos.webscraper.infrastructure.http.PlaywrightJobFetcher;
 import com.campos.webscraper.infrastructure.http.PlaywrightBrowserClient;
 import com.campos.webscraper.infrastructure.parser.DynamicJobListingParser;
 import com.campos.webscraper.application.normalizer.DynamicJobNormalizer;
+import com.campos.webscraper.application.strategy.PlaywrightConcurrencyService;
 import com.campos.webscraper.shared.FetchRequest;
 import com.campos.webscraper.shared.FetchedPage;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +25,6 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.Clock;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,6 +43,7 @@ class PlaywrightDynamicScraperStrategyTest {
 
     private final DynamicJobListingParser parser = new DynamicJobListingParser();
     private final DynamicJobNormalizer normalizer = new DynamicJobNormalizer();
+    private final PlaywrightConcurrencyService concurrencyService = new PlaywrightConcurrencyService(1);
 
     @Test
     @DisplayName("supports only approved Type C sites")
@@ -50,7 +51,8 @@ class PlaywrightDynamicScraperStrategyTest {
         PlaywrightDynamicScraperStrategy strategy = new PlaywrightDynamicScraperStrategy(
                 new PlaywrightJobFetcher(new StubBrowserClient(request -> fakePage(200, "<body/>")), Clock.systemUTC()),
                 parser,
-                normalizer
+                normalizer,
+                concurrencyService
         );
 
         assertThat(strategy.supports(DYNAMIC_SITE)).isTrue();
@@ -73,7 +75,8 @@ class PlaywrightDynamicScraperStrategyTest {
         PlaywrightDynamicScraperStrategy strategy = new PlaywrightDynamicScraperStrategy(
                 failingFetcher,
                 parser,
-                normalizer
+                normalizer,
+                concurrencyService
         );
 
         ScrapeResult<JobPostingEntity> result = strategy.scrape(new ScrapeCommand(
@@ -105,7 +108,8 @@ class PlaywrightDynamicScraperStrategyTest {
         PlaywrightDynamicScraperStrategy strategy = new PlaywrightDynamicScraperStrategy(
                 fetcher,
                 parser,
-                normalizer
+                normalizer,
+                concurrencyService
         );
 
         ScrapeResult<JobPostingEntity> result = strategy.scrape(new ScrapeCommand(

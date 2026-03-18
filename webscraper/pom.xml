@@ -172,6 +172,13 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- JUnit Jupiter (core engine) -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- Integracao Spring Boot com Testcontainers (@ServiceConnection)  -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
