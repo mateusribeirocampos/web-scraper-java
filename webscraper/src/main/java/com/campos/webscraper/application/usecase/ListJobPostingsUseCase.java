@@ -22,9 +22,15 @@ public class ListJobPostingsUseCase {
     }
 
     /**
-     * Returns postings on or after the given date filtered by seniority.
+     * Returns recent postings on or after the given date. When seniority is null, all seniorities are returned.
      */
     public List<JobPostingEntity> execute(LocalDate since, SeniorityLevel seniority) {
+        Objects.requireNonNull(since, "since must not be null");
+
+        if (seniority == null) {
+            return jobPostingRepository.findByPublishedAtGreaterThanEqualOrderByPublishedAtDesc(since);
+        }
+
         return jobPostingRepository.findByPublishedAtGreaterThanEqualAndSeniorityOrderByPublishedAtDesc(since, seniority);
     }
 }

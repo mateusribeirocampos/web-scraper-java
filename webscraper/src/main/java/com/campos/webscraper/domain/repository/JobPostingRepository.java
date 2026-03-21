@@ -25,6 +25,11 @@ public interface JobPostingRepository extends JpaRepository<JobPostingEntity, Lo
     List<JobPostingEntity> findByPublishedAtGreaterThanEqual(LocalDate publishedAt);
 
     /**
+     * Returns postings published on or after the provided date, newest first.
+     */
+    List<JobPostingEntity> findByPublishedAtGreaterThanEqualOrderByPublishedAtDesc(LocalDate publishedAt);
+
+    /**
      * Returns postings filtered by publication date and seniority, newest first.
      */
     List<JobPostingEntity> findByPublishedAtGreaterThanEqualAndSeniorityOrderByPublishedAtDesc(

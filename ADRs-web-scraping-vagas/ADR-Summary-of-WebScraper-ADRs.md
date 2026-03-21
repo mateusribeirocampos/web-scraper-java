@@ -123,7 +123,7 @@ família Gupy passou a ser:
 
 1. disparar manualmente os `CrawlJob`s persistidos da família validada
 2. aguardar o despacho e a persistência das execuções
-3. consultar diretamente `job_postings` com um filtro representativo da intenção do usuário
+3. consultar diretamente `job_postings` com recência obrigatória e um filtro representativo da intenção do usuário
 4. comparar os resultados retornados com a busca desejada
 
 Consultas de referência documentadas:
@@ -144,14 +144,16 @@ done
 ```sql
 SELECT title, company, seniority, tech_stack_tags, canonical_url
 FROM job_postings
-WHERE (
+WHERE published_at >= CURRENT_DATE - INTERVAL '60 days'
+  AND (application_deadline IS NULL OR application_deadline >= CURRENT_DATE)
+  AND (
     tech_stack_tags ILIKE '%java%'
     OR tech_stack_tags ILIKE '%spring%'
     OR tech_stack_tags ILIKE '%kotlin%'
     OR title ILIKE '%backend%'
     OR title ILIKE '%software engineer%'
     OR title ILIKE '%desenvolvedor%'
-)
+  )
 ORDER BY
     CASE seniority
         WHEN 'JUNIOR' THEN 1
@@ -166,6 +168,14 @@ ORDER BY
 Hoje essa intenção ainda precisa estar refletida na configuração do job/fonte. A busca livre
 customizada continua como evolução funcional futura, mas esse fluxo já valida a aplicação de ponta
 a ponta com uma pesquisa reconhecível pelo usuário.
+
+Para consumo via API, o contrato oficial de listagem de vagas recentes passa a ser:
+
+```text
+GET /api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60
+```
+
+`since` continua suportado e sobrescreve `daysBack` quando informado explicitamente.
 
 ---
 

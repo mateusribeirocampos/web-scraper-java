@@ -119,7 +119,7 @@ web-scraper-java/
 | Metodo | Endpoint | Uso |
 |---|---|---|
 | `POST` | `/api/v1/crawl-jobs/{jobId}/execute` | Dispara execucao manual de um `CrawlJob` |
-| `GET` | `/api/v1/job-postings?since=...&category=PRIVATE_SECTOR&seniority=...` | Lista vagas privadas filtradas |
+| `GET` | `/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&seniority=...` | Lista vagas privadas recentes; `since` continua aceito e sobrescreve `daysBack` |
 | `GET` | `/api/v1/public-contests?status=...&orderBy=...` | Lista concursos publicos |
 
 ## Como Rodar Localmente
@@ -176,7 +176,7 @@ O procedimento oficial atual para validar o fluxo de ponta a ponta da familia Gu
 
 1. disparar os `CrawlJob`s persistidos via endpoint manual;
 2. aguardar o `DISPATCHED` e a conclusao da execucao;
-3. consultar `job_postings` por uma intencao de busca real do usuario.
+3. consultar apenas vagas recentes por uma intencao de busca real do usuario.
 
 ### Disparo manual dos jobs
 
@@ -202,14 +202,16 @@ encaminhado ao pipeline de execucao.
 ```sql
 SELECT title, company, seniority, tech_stack_tags, canonical_url
 FROM job_postings
-WHERE (
+WHERE published_at >= CURRENT_DATE - INTERVAL '60 days'
+  AND (application_deadline IS NULL OR application_deadline >= CURRENT_DATE)
+  AND (
     tech_stack_tags ILIKE '%java%'
     OR tech_stack_tags ILIKE '%spring%'
     OR tech_stack_tags ILIKE '%kotlin%'
     OR title ILIKE '%backend%'
     OR title ILIKE '%software engineer%'
     OR title ILIKE '%desenvolvedor%'
-)
+  )
 ORDER BY
     CASE seniority
         WHEN 'JUNIOR' THEN 1
@@ -229,6 +231,21 @@ Esse teste valida o caminho completo:
 - strategy e import use case da fonte
 - persistencia em `job_postings`
 - consulta final orientada a uma busca real
+
+### Consulta oficial por endpoint
+
+Para consumo da API da aplicacao, o caminho oficial agora ja trata recencia como criterio obrigatorio
+de utilidade:
+
+```bash
+curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60"
+```
+
+Exemplo com filtro adicional de senioridade:
+
+```bash
+curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&seniority=JUNIOR"
+```
 
 ## Diagramas de Componentes
 

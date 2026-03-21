@@ -255,14 +255,16 @@ done
 ```sql
 SELECT title, company, seniority, tech_stack_tags, canonical_url
 FROM job_postings
-WHERE (
+WHERE published_at >= CURRENT_DATE - INTERVAL '60 days'
+  AND (application_deadline IS NULL OR application_deadline >= CURRENT_DATE)
+  AND (
     tech_stack_tags ILIKE '%java%'
     OR tech_stack_tags ILIKE '%spring%'
     OR tech_stack_tags ILIKE '%kotlin%'
     OR title ILIKE '%backend%'
     OR title ILIKE '%software engineer%'
     OR title ILIKE '%desenvolvedor%'
-)
+  )
 ORDER BY
     CASE seniority
         WHEN 'JUNIOR' THEN 1
@@ -276,7 +278,8 @@ ORDER BY
 
 Esse procedimento existe para validar ponta a ponta o caminho real de uso: `CrawlJob` persistido,
 dispatch da execução, import em `job_postings` e leitura final filtrada por uma intenção de busca
-reconhecível pelo usuário.
+reconhecível pelo usuário, com recência obrigatória para aproximar o resultado de vagas ainda
+aplicáveis.
 
 ## References
 

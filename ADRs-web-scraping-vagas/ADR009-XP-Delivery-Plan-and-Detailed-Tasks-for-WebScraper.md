@@ -71,7 +71,7 @@ No estado atual do projeto em 2026-03-13, o uso manual para validar scraping fun
    - `POST /api/v1/crawl-jobs/{jobId}/execute`
 3. Acompanhar a execução persistida.
 4. Consultar a saída persistida:
-   - `GET /api/v1/job-postings?since=YYYY-MM-DD&category=PRIVATE_SECTOR&seniority=...`
+   - `GET /api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&seniority=...`
    - `GET /api/v1/public-contests?...`
 5. Confirmar se os resultados correspondem à intenção do usuário.
 
@@ -232,7 +232,7 @@ Exemplo de fixture de resposta JSON do Indeed MCP:
 - **TDD:** testes de ciclo de vida de status primeiro.
 
 #### Story 6.4 — Endpoint de listagem de vagas por data
-- `GET /api/v1/job-postings?since=2026-03-01&category=PRIVATE_SECTOR&seniority=JUNIOR`
+- `GET /api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&seniority=JUNIOR`
 - `GET /api/v1/public-contests?status=OPEN&orderBy=registrationEndDate`
 - **TDD:** testes de endpoint com consulta por `publishedAt` primeiro.
 
@@ -411,7 +411,7 @@ Recomendação atual do projeto:
 #### Story 11.4 — Verificação em campo (manual)
 - Definir e executar um fluxo de aceitação manual (um `CrawlJob` parametrizado para um site Type C real) para validar que o Playwright fallback funciona em produção.
 - **TDD:** documentar o cenário de uso e preparar fixture/configuração antes de aplicar o Playwright real.
-- Status atual: o projeto já passou a documentar um procedimento oficial de aceite manual por família de fonte. Para a família Gupy, o fluxo validado em campo é disparar os jobs `15`, `16`, `17` e `18` pelo endpoint manual e depois consultar `job_postings` por uma intenção do usuário (`java`/`spring`/`kotlin`/`backend`/`desenvolvedor`) para verificar a utilidade real do dado persistido.
+- Status atual: o projeto já passou a documentar um procedimento oficial de aceite manual por família de fonte. Para a família Gupy, o fluxo validado em campo é disparar os jobs `15`, `16`, `17` e `18` pelo endpoint manual e depois consultar `job_postings` por uma intenção do usuário (`java`/`spring`/`kotlin`/`backend`/`desenvolvedor`) com recência obrigatória para verificar a utilidade real do dado persistido.
 
 Procedimento documentado:
 
@@ -426,14 +426,16 @@ done
 ```sql
 SELECT title, company, seniority, tech_stack_tags, canonical_url
 FROM job_postings
-WHERE (
+WHERE published_at >= CURRENT_DATE - INTERVAL '60 days'
+  AND (application_deadline IS NULL OR application_deadline >= CURRENT_DATE)
+  AND (
     tech_stack_tags ILIKE '%java%'
     OR tech_stack_tags ILIKE '%spring%'
     OR tech_stack_tags ILIKE '%kotlin%'
     OR title ILIKE '%backend%'
     OR title ILIKE '%software engineer%'
     OR title ILIKE '%desenvolvedor%'
-)
+  )
 ORDER BY
     CASE seniority
         WHEN 'JUNIOR' THEN 1

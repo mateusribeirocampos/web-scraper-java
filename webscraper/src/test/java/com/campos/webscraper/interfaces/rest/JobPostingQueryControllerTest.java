@@ -68,4 +68,47 @@ class JobPostingQueryControllerTest {
 
         verify(listJobPostingsUseCase).execute(LocalDate.of(2026, 3, 1), SeniorityLevel.JUNIOR);
     }
+
+    @Test
+    @DisplayName("should default to recent postings when since is not provided")
+    void shouldDefaultToRecentPostingsWhenSinceIsNotProvided() throws Exception {
+        LocalDate expectedSince = LocalDate.now().minusDays(60);
+
+        when(listJobPostingsUseCase.execute(expectedSince, null))
+                .thenReturn(List.of(
+                        JobPostingEntity.builder()
+                                .id(2L)
+                                .title("Backend Engineer")
+                                .company("Beta")
+                                .canonicalUrl("https://example.com/jobs/2")
+                                .publishedAt(LocalDate.of(2026, 3, 12))
+                                .build()
+                ));
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new RestExceptionHandler())
+                .build();
+
+        mockMvc.perform(get("/api/v1/job-postings")
+                        .param("category", "PRIVATE_SECTOR"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(2))
+                .andExpect(jsonPath("$[0].title").value("Backend Engineer"));
+
+        verify(listJobPostingsUseCase).execute(expectedSince, null);
+    }
+
+    @Test
+    @DisplayName("should reject non-positive daysBack")
+    void shouldRejectNonPositiveDaysBack() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new RestExceptionHandler())
+                .build();
+
+        mockMvc.perform(get("/api/v1/job-postings")
+                        .param("category", "PRIVATE_SECTOR")
+                        .param("daysBack", "0"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("daysBack must be greater than zero"));
+    }
 }

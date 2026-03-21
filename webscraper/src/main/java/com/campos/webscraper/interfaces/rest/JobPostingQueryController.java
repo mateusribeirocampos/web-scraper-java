@@ -27,19 +27,26 @@ public class JobPostingQueryController {
     }
 
     /**
-     * Lists private-sector job postings by publication date and seniority.
+     * Lists recent private-sector job postings. Recency is mandatory either via "since" or the default "daysBack".
      */
     @GetMapping
     public List<JobPostingSummaryResponse> list(
-            @RequestParam LocalDate since,
+            @RequestParam(required = false) LocalDate since,
+            @RequestParam(defaultValue = "60") int daysBack,
             @RequestParam JobCategory category,
-            @RequestParam SeniorityLevel seniority
+            @RequestParam(required = false) SeniorityLevel seniority
     ) {
         if (category != JobCategory.PRIVATE_SECTOR) {
             throw new IllegalArgumentException("Unsupported category: " + category);
         }
 
-        return listJobPostingsUseCase.execute(since, seniority).stream()
+        if (daysBack <= 0) {
+            throw new IllegalArgumentException("daysBack must be greater than zero");
+        }
+
+        LocalDate effectiveSince = since != null ? since : LocalDate.now().minusDays(daysBack);
+
+        return listJobPostingsUseCase.execute(effectiveSince, seniority).stream()
                 .map(posting -> new JobPostingSummaryResponse(
                         posting.getId(),
                         posting.getTitle(),

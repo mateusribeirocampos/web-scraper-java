@@ -2,6 +2,7 @@ package com.campos.webscraper.application.orchestrator;
 
 import com.campos.webscraper.application.usecase.DouContestImportUseCase;
 import com.campos.webscraper.application.usecase.GreenhouseJobImportUseCase;
+import com.campos.webscraper.application.usecase.GupyJobImportUseCase;
 import com.campos.webscraper.application.usecase.IndeedJobImportUseCase;
 import com.campos.webscraper.application.usecase.PciConcursosImportUseCase;
 import com.campos.webscraper.domain.enums.CrawlExecutionStatus;
@@ -43,6 +44,9 @@ class ImportingCrawlJobExecutionRunnerTest {
     private GreenhouseJobImportUseCase greenhouseJobImportUseCase;
 
     @Mock
+    private GupyJobImportUseCase gupyJobImportUseCase;
+
+    @Mock
     private DouContestImportUseCase douContestImportUseCase;
 
     @Mock
@@ -59,6 +63,7 @@ class ImportingCrawlJobExecutionRunnerTest {
         ImportingCrawlJobExecutionRunner runner = new ImportingCrawlJobExecutionRunner(
                 indeedJobImportUseCase,
                 greenhouseJobImportUseCase,
+                gupyJobImportUseCase,
                 douContestImportUseCase,
                 pciConcursosImportUseCase
         );
@@ -81,6 +86,7 @@ class ImportingCrawlJobExecutionRunnerTest {
         ImportingCrawlJobExecutionRunner runner = new ImportingCrawlJobExecutionRunner(
                 indeedJobImportUseCase,
                 greenhouseJobImportUseCase,
+                gupyJobImportUseCase,
                 douContestImportUseCase,
                 pciConcursosImportUseCase
         );
@@ -103,6 +109,7 @@ class ImportingCrawlJobExecutionRunnerTest {
         ImportingCrawlJobExecutionRunner runner = new ImportingCrawlJobExecutionRunner(
                 indeedJobImportUseCase,
                 greenhouseJobImportUseCase,
+                gupyJobImportUseCase,
                 douContestImportUseCase,
                 pciConcursosImportUseCase
         );
@@ -123,6 +130,7 @@ class ImportingCrawlJobExecutionRunnerTest {
         ImportingCrawlJobExecutionRunner runner = new ImportingCrawlJobExecutionRunner(
                 indeedJobImportUseCase,
                 greenhouseJobImportUseCase,
+                gupyJobImportUseCase,
                 douContestImportUseCase,
                 pciConcursosImportUseCase
         );
@@ -130,6 +138,29 @@ class ImportingCrawlJobExecutionRunnerTest {
         assertThatThrownBy(() -> runner.run(crawlJob, crawlExecution))
                 .isInstanceOf(UnsupportedSiteException.class)
                 .hasMessageContaining("lever_demo");
+    }
+
+    @Test
+    @DisplayName("should execute gupy import for gupy sites")
+    void shouldExecuteGupyImportForGupySites() {
+        CrawlJobEntity crawlJob = buildPrivateJob("gupy_java");
+        CrawlExecutionEntity crawlExecution = buildExecution(crawlJob);
+        when(gupyJobImportUseCase.execute(any(), any(), any()))
+                .thenReturn(List.of(JobPostingEntity.builder().externalId("gupy-1").build()));
+
+        ImportingCrawlJobExecutionRunner runner = new ImportingCrawlJobExecutionRunner(
+                indeedJobImportUseCase,
+                greenhouseJobImportUseCase,
+                gupyJobImportUseCase,
+                douContestImportUseCase,
+                pciConcursosImportUseCase
+        );
+
+        CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
+
+        assertThat(outcome.pagesVisited()).isEqualTo(1);
+        assertThat(outcome.itemsFound()).isEqualTo(1);
+        verify(gupyJobImportUseCase).execute(any(), any(), any());
     }
 
     private static CrawlJobEntity buildPrivateJob(String siteCode) {

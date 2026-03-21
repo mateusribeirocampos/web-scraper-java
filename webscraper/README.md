@@ -24,7 +24,7 @@ O fluxo manual oficial atual para validar a familia Gupy e a utilidade real dos 
 
 1. disparar os `CrawlJob`s persistidos pelo endpoint manual;
 2. deixar a aplicacao concluir o dispatch/import;
-3. consultar `job_postings` com uma intencao de busca reconhecivel pelo usuario.
+3. consultar apenas vagas recentes com uma intencao de busca reconhecivel pelo usuario.
 
 ### Disparo dos jobs
 
@@ -44,14 +44,16 @@ encaminhada. A verificacao funcional acontece na leitura posterior do banco.
 ```sql
 SELECT title, company, seniority, tech_stack_tags, canonical_url
 FROM job_postings
-WHERE (
+WHERE published_at >= CURRENT_DATE - INTERVAL '60 days'
+  AND (application_deadline IS NULL OR application_deadline >= CURRENT_DATE)
+  AND (
     tech_stack_tags ILIKE '%java%'
     OR tech_stack_tags ILIKE '%spring%'
     OR tech_stack_tags ILIKE '%kotlin%'
     OR title ILIKE '%backend%'
     OR title ILIKE '%software engineer%'
     OR title ILIKE '%desenvolvedor%'
-)
+  )
 ORDER BY
     CASE seniority
         WHEN 'JUNIOR' THEN 1
@@ -69,6 +71,12 @@ Essa consulta valida ponta a ponta o caminho real de uso:
 - dispatch da execucao
 - import em `job_postings`
 - leitura final por uma intencao de busca do usuario
+
+Consulta oficial pela API:
+
+```bash
+curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60"
+```
 
 ## Documentacao Relacionada
 

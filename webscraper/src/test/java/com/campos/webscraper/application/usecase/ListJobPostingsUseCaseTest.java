@@ -62,4 +62,26 @@ class ListJobPostingsUseCaseTest {
                 SeniorityLevel.JUNIOR
         );
     }
+
+    @Test
+    @DisplayName("should query recent postings by since date without seniority filter")
+    void shouldQueryRecentPostingsBySinceDateWithoutSeniorityFilter() {
+        LocalDate since = LocalDate.of(2026, 2, 1);
+        JobPostingEntity first = JobPostingEntity.builder()
+                .title("Java Backend Developer")
+                .company("Acme")
+                .canonicalUrl("https://example.com/jobs/1")
+                .publishedAt(LocalDate.of(2026, 3, 10))
+                .build();
+
+        when(jobPostingRepository.findByPublishedAtGreaterThanEqualOrderByPublishedAtDesc(since))
+                .thenReturn(List.of(first));
+
+        ListJobPostingsUseCase useCase = new ListJobPostingsUseCase(jobPostingRepository);
+
+        List<JobPostingEntity> result = useCase.execute(since, null);
+
+        assertThat(result).containsExactly(first);
+        verify(jobPostingRepository).findByPublishedAtGreaterThanEqualOrderByPublishedAtDesc(since);
+    }
 }
