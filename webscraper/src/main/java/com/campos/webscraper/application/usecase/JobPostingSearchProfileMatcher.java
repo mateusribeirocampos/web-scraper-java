@@ -37,10 +37,26 @@ public class JobPostingSearchProfileMatcher {
             return true;
         }
 
+        if (profile == JobPostingSearchProfile.JAVA_BACKEND_BALANCED) {
+            return matchesJavaBackendBalanced(posting);
+        }
+
         return matchesJavaJuniorBackend(posting);
     }
 
     private boolean matchesJavaJuniorBackend(JobPostingEntity posting) {
+        if (!matchesJavaBackendBalanced(posting)) {
+            return false;
+        }
+
+        if (posting.getSeniority() == SeniorityLevel.SENIOR || posting.getSeniority() == SeniorityLevel.LEAD) {
+            return false;
+        }
+
+        return hasRoleSignal(posting);
+    }
+
+    private boolean matchesJavaBackendBalanced(JobPostingEntity posting) {
         if (isTalentPool(posting)) {
             return false;
         }
@@ -49,11 +65,7 @@ public class JobPostingSearchProfileMatcher {
             return false;
         }
 
-        if (posting.getSeniority() == SeniorityLevel.SENIOR || posting.getSeniority() == SeniorityLevel.LEAD) {
-            return false;
-        }
-
-        return hasPrimaryStackSignal(posting) && hasRoleSignal(posting);
+        return hasPrimaryStackSignal(posting);
     }
 
     private static boolean isTalentPool(JobPostingEntity posting) {

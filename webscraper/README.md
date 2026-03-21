@@ -82,6 +82,12 @@ Nesse perfil oficial, a API exclui banco de talentos, corta senioridade `SENIOR/
 cargos de gestao/lideranca e exige sinal real de stack (`Java`, `Spring` ou `Kotlin`) junto com
 um sinal de funcao aderente (`backend`, `developer`, `software engineer`, `desenvolvedor`, etc.).
 
+Para um recorte intermediario, que preserva stack aderente mas abre mais do que o perfil default:
+
+```bash
+curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_BACKEND_BALANCED"
+```
+
 Para investigacao mais ampla da base, sem o perfil estrito:
 
 ```bash

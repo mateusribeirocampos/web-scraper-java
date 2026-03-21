@@ -180,4 +180,47 @@ class JobPostingQueryControllerTest {
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].id").value(5));
     }
+
+    @Test
+    @DisplayName("should allow broader engineering matches for the balanced profile")
+    void shouldAllowBroaderEngineeringMatchesForTheBalancedProfile() throws Exception {
+        LocalDate expectedSince = LocalDate.now().minusDays(60);
+
+        when(listJobPostingsUseCase.execute(expectedSince, null))
+                .thenReturn(List.of(
+                        JobPostingEntity.builder()
+                                .id(6L)
+                                .title("Platform Specialist")
+                                .company("Acme")
+                                .canonicalUrl("https://example.com/jobs/6")
+                                .techStackTags("Java,Spring")
+                                .publishedAt(LocalDate.of(2026, 3, 15))
+                                .build(),
+                        JobPostingEntity.builder()
+                                .id(7L)
+                                .title("Engineering Manager")
+                                .company("Bitso")
+                                .canonicalUrl("https://example.com/jobs/7")
+                                .techStackTags("Java,Spring")
+                                .description("Leadership role for Java platform")
+                                .publishedAt(LocalDate.of(2026, 3, 16))
+                                .build()
+                ));
+
+        JobPostingQueryController controller = new JobPostingQueryController(
+                listJobPostingsUseCase,
+                jobPostingSearchProfileMatcher
+        );
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new RestExceptionHandler())
+                .build();
+
+        mockMvc.perform(get("/api/v1/job-postings")
+                        .param("category", "PRIVATE_SECTOR")
+                        .param("profile", JobPostingSearchProfile.JAVA_BACKEND_BALANCED.name()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].id").value(6));
+    }
 }

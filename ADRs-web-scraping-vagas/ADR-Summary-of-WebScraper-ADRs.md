@@ -180,6 +180,15 @@ O perfil oficial também exclui banco de talentos, reduz senioridade alta por pa
 cargos de gestão/liderança e exige sinal real de stack junto com sinal de função aderente para
 evitar falso positivo por títulos genéricos.
 
+Também existe um perfil intermediário:
+
+```text
+GET /api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_BACKEND_BALANCED
+```
+
+Ele preserva o filtro de recência, bloqueia banco de talentos e liderança, mas abre mão do corte
+estrito de senioridade e do sinal obrigatório de função aderente.
+
 ---
 
 ## Mapa de Dependências entre ADRs

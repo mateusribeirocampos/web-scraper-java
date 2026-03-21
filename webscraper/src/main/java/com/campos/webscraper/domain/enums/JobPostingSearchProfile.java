@@ -12,6 +12,12 @@ public enum JobPostingSearchProfile {
     JAVA_JUNIOR_BACKEND,
 
     /**
+     * Intermediate profile: still filters obvious noise, but keeps senior and broader engineering roles
+     * when they have a clear Java / Spring / Kotlin stack signal.
+     */
+    JAVA_BACKEND_BALANCED,
+
+    /**
      * Returns recent postings without additional relevance filtering.
      */
     UNFILTERED

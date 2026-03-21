@@ -119,7 +119,7 @@ web-scraper-java/
 | Metodo | Endpoint | Uso |
 |---|---|---|
 | `POST` | `/api/v1/crawl-jobs/{jobId}/execute` | Dispara execucao manual de um `CrawlJob` |
-| `GET` | `/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_JUNIOR_BACKEND` | Lista vagas privadas recentes e aderentes ao perfil alvo; `since` continua aceito e sobrescreve `daysBack` |
+| `GET` | `/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_JUNIOR_BACKEND` | Lista vagas privadas recentes usando um perfil explícito; `since` continua aceito e sobrescreve `daysBack` |
 | `GET` | `/api/v1/public-contests?status=...&orderBy=...` | Lista concursos publicos |
 
 ## Como Rodar Localmente
@@ -249,6 +249,13 @@ Exemplo com filtro adicional de senioridade:
 
 ```bash
 curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_JUNIOR_BACKEND&seniority=JUNIOR"
+```
+
+Perfil intermediario, menos rigido que o default e ainda protegido contra banco de talentos
+e cargos de lideranca:
+
+```bash
+curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_BACKEND_BALANCED"
 ```
 
 Se voce quiser uma leitura exploratoria mais ampla, sem o perfil estrito de aderencia:
