@@ -112,6 +112,7 @@ web-scraper-java/
 - Scheduler, trigger manual via REST e worker assíncrono.
 - Fila persistida em Postgres com claim, ack, retry e dead-letter.
 - Retry, rate limiting, bulkhead e circuit breaker por fonte.
+- Gate operacional para ativacao de `TargetSite` via checklist consumido pela aplicacao.
 - Consulta REST para vagas privadas e concursos.
 - Story logs e ADRs sincronizados com o estado do projeto.
 
@@ -120,6 +121,7 @@ web-scraper-java/
 | Metodo | Endpoint | Uso |
 |---|---|---|
 | `POST` | `/api/v1/crawl-jobs/{jobId}/execute` | Dispara execucao manual de um `CrawlJob` |
+| `POST` | `/api/v1/target-sites/{siteId}/activation` | Aplica o checklist de onboarding e so habilita o site se a compliance fechar |
 | `GET` | `/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_JUNIOR_BACKEND` | Lista vagas privadas recentes usando um perfil explícito; `since` continua aceito e sobrescreve `daysBack` |
 | `GET` | `/api/v1/public-contests?status=...&orderBy=...` | Lista concursos publicos |
 | `GET` | `/api/v1/scraper/health` | Retorna resumo operacional de execucoes recentes e situacao agregada da fila persistida |

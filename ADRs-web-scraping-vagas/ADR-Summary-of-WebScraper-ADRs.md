@@ -105,8 +105,8 @@ CI quality gates e rollout controlado por família de scraper.
 | Circuit breaker e dead-letter | Implementados |
 | Scheduler e trigger manual | Implementados |
 | Processamento assíncrono por fila | Implementado com fila persistida |
-| Observabilidade | Baseline de métricas e logs estruturados implementada; health summary ainda planejado |
-| Governança legal (robots.txt, ToS) | Implementada para o gate de onboarding; expansão planejada |
+| Observabilidade | Métricas, logs estruturados e health summary implementados |
+| Governança legal (robots.txt, ToS) | Checklist de onboarding agora consumido pela aplicação e ligado ao gate de ativação de `TargetSite` |
 | Tarefas XP detalhadas | Definidas — 12 iterations |
 | Pesquisa open source | Realizada e documentada |
 | PCI Concursos | Implementado tecnicamente; produção ainda pendente de checklist legal completo |

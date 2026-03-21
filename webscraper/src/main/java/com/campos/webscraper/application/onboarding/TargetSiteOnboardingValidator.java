@@ -4,6 +4,7 @@ import com.campos.webscraper.domain.enums.ExtractionMode;
 import com.campos.webscraper.domain.enums.LegalStatus;
 import com.campos.webscraper.domain.enums.SiteType;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Objects;
 /**
  * Applies the ADR002 onboarding checklist and derives the production-safe target-site status.
  */
+@Component
 public class TargetSiteOnboardingValidator {
 
     public TargetSiteOnboardingDecision assess(TargetSiteEntity targetSite, SiteOnboardingChecklist checklist) {

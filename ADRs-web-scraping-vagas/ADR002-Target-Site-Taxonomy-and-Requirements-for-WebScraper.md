@@ -243,6 +243,9 @@ Nenhum scraper pode ser ativado em produção sem este checklist completo.
 3. Implementar adaptador DOU API como segunda integração para concursos federais.
 4. Criar testes com fixtures por classe de site antes de codificar a extração em produção.
 5. Preencher o checklist de onboarding para cada site antes de ativar em produção.
+   - No estado atual do projeto, essa regra já é executada pela aplicação via
+     `POST /api/v1/target-sites/{siteId}/activation`, que reconcilia `legalStatus` e `enabled`
+     a partir do checklist e bloqueia ativação quando a compliance estiver incompleta.
 6. Executar teste manual de aceite por fonte usando uma pesquisa representativa do usuário, por
    exemplo:
    - vagas privadas: `desenvolvedor de software em java spring boot`

@@ -483,6 +483,10 @@ ORDER BY
 - Estender o checklist/validator introduzido na Story 8.4, sem duplicar regras paralelas.
 - Bloquear ativação sem campos de compliance preenchidos.
 - **TDD:** testes de validação primeiro.
+- Status atual: `SiteOnboardingChecklist` e `TargetSiteOnboardingValidator` agora são consumidos
+  por `ActivateTargetSiteUseCase` e `POST /api/v1/target-sites/{siteId}/activation`; a aplicação
+  persiste o estado reconciliado do `TargetSite` e responde `409 CONFLICT` quando a compliance
+  bloqueia `enabled=true`.
 
 #### Story 12.3 — Endpoint de health summary
 - `GET /api/v1/scraper/health` — resumo de jobs recentes.
@@ -495,15 +499,17 @@ ORDER BY
 #### Próxima recomendação após 2026-03-21
 
 Com fila persistida, perfis de busca, reenriquecimento Greenhouse, limpeza das heurísticas de
-stack, métricas/logs e health summary já estabilizados, a próxima story mais defensável passa a ser:
+stack, métricas/logs, health summary e gate de ativação já estabilizados, a próxima story mais
+defensável passa a ser:
 
-- **Story 12.2 — Checklist de habilitação de site em produção**
+- **Story 12.4 — automação/checklist operacional de onboarding por fonte**
 
 Razão:
 
 - a camada de observabilidade mínima já está entregue;
-- o próximo risco operacional mais evidente volta a ser governança de ativação em produção;
-- fechar o checklist operacional reduz chance de habilitar fonte sem compliance completo.
+- o gate transacional de ativação já existe, então o próximo ganho passa a ser reduzir trabalho
+  manual e padronizar onboarding real por fonte;
+- isso fecha o ciclo entre ADR, operação e crescimento seguro do catálogo.
 
 ---
 

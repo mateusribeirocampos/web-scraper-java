@@ -19,6 +19,8 @@ ou browser somente quando permitido.
   - Playwright dinamico para sites Type C
 - Boards Greenhouse onboardados usam `?content=true` e reruns reenriquecem registros antigos
   pela camada idempotente de persistencia
+- Ativacao de `TargetSite` agora passa por endpoint/caso de uso dedicado que aplica o checklist de
+  onboarding e bloqueia `enabled=true` sem compliance completa
 
 ## Validacao Manual Oficial
 
@@ -106,6 +108,30 @@ Resumo operacional da fila persistida e das execucoes recentes:
 
 ```bash
 curl "http://localhost:8080/api/v1/scraper/health"
+```
+
+Gate operacional de ativacao de site:
+
+```bash
+curl -X POST "http://localhost:8080/api/v1/target-sites/7/activation" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "robotsTxtUrl": "https://boards.greenhouse.io/robots.txt",
+    "robotsTxtReviewed": true,
+    "robotsTxtAllowsScraping": true,
+    "termsOfServiceUrl": "",
+    "termsReviewed": true,
+    "termsAllowScraping": true,
+    "officialApiChecked": true,
+    "officialApiEndpointUrl": "https://boards-api.greenhouse.io/v1/boards/bitso/jobs?content=true",
+    "strategySupportVerified": true,
+    "businessJustification": "Private-sector Java/backend source.",
+    "rateLimitProfile": "60 rpm conservative",
+    "legalCategory": "API_OFICIAL",
+    "owner": "platform-team@local",
+    "authenticationStatus": "PUBLIC_ANONYMOUS",
+    "discoveryEvidence": "Greenhouse public API reviewed."
+  }'
 ```
 
 ## Notas de Qualidade de Busca
