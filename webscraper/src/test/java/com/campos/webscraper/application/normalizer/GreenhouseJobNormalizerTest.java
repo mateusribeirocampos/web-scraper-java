@@ -157,6 +157,82 @@ class GreenhouseJobNormalizerTest {
 
         JobPostingEntity posting = normalizer.normalize(response);
 
+        assertThat(posting.getTechStackTags()).isEqualTo("TypeScript");
+    }
+
+    @Test
+    @DisplayName("should avoid tagging business text as Go")
+    void shouldAvoidTaggingBusinessTextAsGo() {
+        GreenhouseJobNormalizer normalizer = new GreenhouseJobNormalizer();
+        GreenhouseJobBoardItemResponse response = new GreenhouseJobBoardItemResponse(
+                5L,
+                "Sales Executive",
+                "https://example.com/jobs/5?gh_jid=5",
+                "Wellhub",
+                new GreenhouseLocationResponse("Brazil", null),
+                "2026-03-10T11:09:26-05:00",
+                "<p>We go above and beyond to help customers go through the sales funnel.</p>"
+        );
+
+        JobPostingEntity posting = normalizer.normalize(response);
+
         assertThat(posting.getTechStackTags()).isNull();
+    }
+
+    @Test
+    @DisplayName("should tag Go only when technical context is present")
+    void shouldTagGoOnlyWhenTechnicalContextIsPresent() {
+        GreenhouseJobNormalizer normalizer = new GreenhouseJobNormalizer();
+        GreenhouseJobBoardItemResponse response = new GreenhouseJobBoardItemResponse(
+                6L,
+                "Backend Engineer",
+                "https://example.com/jobs/6?gh_jid=6",
+                "Wellhub",
+                new GreenhouseLocationResponse("Brazil", null),
+                "2026-03-10T11:09:26-05:00",
+                "<p>Build backend services in Go and PostgreSQL for payments.</p>"
+        );
+
+        JobPostingEntity posting = normalizer.normalize(response);
+
+        assertThat(posting.getTechStackTags()).isEqualTo("Go,PostgreSQL");
+    }
+
+    @Test
+    @DisplayName("should avoid tagging Python for non technical ops roles")
+    void shouldAvoidTaggingPythonForNonTechnicalOpsRoles() {
+        GreenhouseJobNormalizer normalizer = new GreenhouseJobNormalizer();
+        GreenhouseJobBoardItemResponse response = new GreenhouseJobBoardItemResponse(
+                7L,
+                "AML Ops Analyst",
+                "https://example.com/jobs/7?gh_jid=7",
+                "Nubank",
+                new GreenhouseLocationResponse("Sao Paulo", null),
+                "2026-03-10T11:09:26-05:00",
+                "<ul><li>Have knowledge in Excel, Sheets, Looker, SQL and Python.</li></ul>"
+        );
+
+        JobPostingEntity posting = normalizer.normalize(response);
+
+        assertThat(posting.getTechStackTags()).isNull();
+    }
+
+    @Test
+    @DisplayName("should tag Python for clearly technical engineering roles")
+    void shouldTagPythonForClearlyTechnicalEngineeringRoles() {
+        GreenhouseJobNormalizer normalizer = new GreenhouseJobNormalizer();
+        GreenhouseJobBoardItemResponse response = new GreenhouseJobBoardItemResponse(
+                8L,
+                "Staff Platform Engineer | Observability",
+                "https://example.com/jobs/8?gh_jid=8",
+                "Wellhub",
+                new GreenhouseLocationResponse("Brazil", null),
+                "2026-03-10T11:09:26-05:00",
+                "<p>You will also be able to code in Golang, Ruby, or Python to build and maintain our products and tools.</p>"
+        );
+
+        JobPostingEntity posting = normalizer.normalize(response);
+
+        assertThat(posting.getTechStackTags()).isEqualTo("Python,Go");
     }
 }

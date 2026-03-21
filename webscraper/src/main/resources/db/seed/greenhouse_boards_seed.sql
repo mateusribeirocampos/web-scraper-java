@@ -3,7 +3,7 @@
 --
 -- Convenções:
 --   site_code  : greenhouse_{empresa}
---   base_url   : https://boards-api.greenhouse.io/v1/boards/{empresa}/jobs
+--   base_url   : https://boards-api.greenhouse.io/v1/boards/{empresa}/jobs?content=true
 --   site_type  : TYPE_E  (API pública oficial — ADR001: API-first)
 --   extraction_mode : API
 --   job_category    : PRIVATE_SECTOR
@@ -20,49 +20,49 @@ INSERT INTO target_sites (
     (
         'greenhouse_stone',
         'Stone Co.',
-        'https://boards-api.greenhouse.io/v1/boards/stone/jobs',
+        'https://boards-api.greenhouse.io/v1/boards/stone/jobs?content=true',
         'TYPE_E', 'API', 'PRIVATE_SECTOR', 'APPROVED', 'n/a', true, NOW()
     ),
     (
         'greenhouse_nubank',
         'Nubank',
-        'https://boards-api.greenhouse.io/v1/boards/nubank/jobs',
+        'https://boards-api.greenhouse.io/v1/boards/nubank/jobs?content=true',
         'TYPE_E', 'API', 'PRIVATE_SECTOR', 'APPROVED', 'n/a', true, NOW()
     ),
     (
         'greenhouse_creditas',
         'Creditas',
-        'https://boards-api.greenhouse.io/v1/boards/creditas/jobs',
+        'https://boards-api.greenhouse.io/v1/boards/creditas/jobs?content=true',
         'TYPE_E', 'API', 'PRIVATE_SECTOR', 'APPROVED', 'n/a', true, NOW()
     ),
     (
         'greenhouse_dock',
         'Dock',
-        'https://boards-api.greenhouse.io/v1/boards/dock/jobs',
+        'https://boards-api.greenhouse.io/v1/boards/dock/jobs?content=true',
         'TYPE_E', 'API', 'PRIVATE_SECTOR', 'APPROVED', 'n/a', true, NOW()
     ),
     (
         'greenhouse_cloudwalk',
         'CloudWalk',
-        'https://boards-api.greenhouse.io/v1/boards/cloudwalk/jobs',
+        'https://boards-api.greenhouse.io/v1/boards/cloudwalk/jobs?content=true',
         'TYPE_E', 'API', 'PRIVATE_SECTOR', 'APPROVED', 'n/a', true, NOW()
     ),
     (
         'greenhouse_loft',
         'Loft',
-        'https://boards-api.greenhouse.io/v1/boards/loft/jobs',
+        'https://boards-api.greenhouse.io/v1/boards/loft/jobs?content=true',
         'TYPE_E', 'API', 'PRIVATE_SECTOR', 'APPROVED', 'n/a', true, NOW()
     ),
     (
         'greenhouse_kavak',
         'Kavak',
-        'https://boards-api.greenhouse.io/v1/boards/kavak/jobs',
+        'https://boards-api.greenhouse.io/v1/boards/kavak/jobs?content=true',
         'TYPE_E', 'API', 'PRIVATE_SECTOR', 'APPROVED', 'n/a', true, NOW()
     ),
     (
         'greenhouse_olist',
         'Olist',
-        'https://boards-api.greenhouse.io/v1/boards/olist/jobs',
+        'https://boards-api.greenhouse.io/v1/boards/olist/jobs?content=true',
         'TYPE_E', 'API', 'PRIVATE_SECTOR', 'APPROVED', 'n/a', true, NOW()
     );
 

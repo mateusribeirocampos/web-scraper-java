@@ -35,7 +35,21 @@ public class GreenhouseJobNormalizer {
     private static final Pattern NODE_PATTERN        = Pattern.compile("\\bnode\\.?js\\b");
     private static final Pattern TYPESCRIPT_PATTERN  = Pattern.compile("\\btypescript\\b");
     private static final Pattern PYTHON_PATTERN      = Pattern.compile("\\bpython\\b");
-    private static final Pattern GO_PATTERN          = Pattern.compile("\\b(golang|\\bgo\\b)");
+    private static final Pattern PYTHON_TECH_TITLE_PATTERN = Pattern.compile(
+            "\\b(engineer|developer|software|backend|frontend|fullstack|platform|security|infrastructure|devops|sre|scientist|ml|machine learning)\\b"
+    );
+    private static final Pattern PYTHON_NON_TECH_TITLE_PATTERN = Pattern.compile(
+            "\\b(specialist|supervisor|controllership|operations|ops|partnership|projects?|revenue|business|finance|product operations)\\b"
+    );
+    private static final Pattern PYTHON_TECH_CONTEXT_PATTERN = Pattern.compile(
+            "\\bpython\\b.{0,40}\\b(programming|code|coding|script|scripting|automation|api|backend|service|services|application|applications|data models?|machine learning|ml|pandas|django|flask)\\b"
+            + "|\\b(programming|code|coding|script|scripting|automation|api|backend|service|services|application|applications|data models?|machine learning|ml|pandas|django|flask)\\b.{0,40}\\bpython\\b"
+    );
+    private static final Pattern GO_PATTERN          = Pattern.compile(
+            "\\bgolang\\b"
+            + "|\\bgo\\s+(developer|engineer|lang|language|microservices?|services?|backend|api|apis|programming|code|coding)\\b"
+            + "|\\b(developer|engineer|backend|software|programming|code|coding|service|services)\\b.{0,40}\\bgo\\b"
+    );
     private static final Pattern REACT_PATTERN       = Pattern.compile("\\breact\\b");
     private static final Pattern AWS_PATTERN         = Pattern.compile("\\baws\\b");
     private static final Pattern POSTGRES_PATTERN    = Pattern.compile("\\b(postgres|postgresql)\\b");
@@ -113,6 +127,7 @@ public class GreenhouseJobNormalizer {
     }
 
     private String resolveTechStackTags(GreenhouseJobBoardItemResponse response) {
+        String normalizedTitle = stripAccents((response.title() == null ? "" : response.title()).toLowerCase(Locale.ROOT));
         String haystack = stripAccents(
                 ((response.title() == null ? "" : response.title()) + " "
                 + (response.content() == null ? "" : response.content()))
@@ -124,7 +139,7 @@ public class GreenhouseJobNormalizer {
         if (KOTLIN_PATTERN.matcher(haystack).find())     tags.add("Kotlin");
         if (NODE_PATTERN.matcher(haystack).find())       tags.add("Node.js");
         if (TYPESCRIPT_PATTERN.matcher(haystack).find()) tags.add("TypeScript");
-        if (PYTHON_PATTERN.matcher(haystack).find())     tags.add("Python");
+        if (shouldTagPython(normalizedTitle, haystack))  tags.add("Python");
         if (GO_PATTERN.matcher(haystack).find())         tags.add("Go");
         if (REACT_PATTERN.matcher(haystack).find())      tags.add("React");
         if (AWS_PATTERN.matcher(haystack).find())        tags.add("AWS");
@@ -133,6 +148,19 @@ public class GreenhouseJobNormalizer {
         if (DOCKER_PATTERN.matcher(haystack).find())     tags.add("Docker");
 
         return tags.isEmpty() ? null : String.join(",", tags);
+    }
+
+    private boolean shouldTagPython(String normalizedTitle, String haystack) {
+        if (!PYTHON_PATTERN.matcher(haystack).find()) {
+            return false;
+        }
+
+        if (PYTHON_TECH_TITLE_PATTERN.matcher(normalizedTitle).find()) {
+            return true;
+        }
+
+        return !PYTHON_NON_TECH_TITLE_PATTERN.matcher(normalizedTitle).find()
+                && PYTHON_TECH_CONTEXT_PATTERN.matcher(haystack).find();
     }
 
     /** Removes diacritical marks: "júnior" → "junior", "sênior" → "senior". */
