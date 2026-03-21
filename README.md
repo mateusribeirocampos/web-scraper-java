@@ -119,7 +119,7 @@ web-scraper-java/
 | Metodo | Endpoint | Uso |
 |---|---|---|
 | `POST` | `/api/v1/crawl-jobs/{jobId}/execute` | Dispara execucao manual de um `CrawlJob` |
-| `GET` | `/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&seniority=...` | Lista vagas privadas recentes; `since` continua aceito e sobrescreve `daysBack` |
+| `GET` | `/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_JUNIOR_BACKEND` | Lista vagas privadas recentes e aderentes ao perfil alvo; `since` continua aceito e sobrescreve `daysBack` |
 | `GET` | `/api/v1/public-contests?status=...&orderBy=...` | Lista concursos publicos |
 
 ## Como Rodar Localmente
@@ -204,14 +204,15 @@ SELECT title, company, seniority, tech_stack_tags, canonical_url
 FROM job_postings
 WHERE published_at >= CURRENT_DATE - INTERVAL '60 days'
   AND (application_deadline IS NULL OR application_deadline >= CURRENT_DATE)
-  AND (
-    tech_stack_tags ILIKE '%java%'
-    OR tech_stack_tags ILIKE '%spring%'
-    OR tech_stack_tags ILIKE '%kotlin%'
-    OR title ILIKE '%backend%'
-    OR title ILIKE '%software engineer%'
-    OR title ILIKE '%desenvolvedor%'
-  )
+  AND lower(coalesce(title, '') || ' ' || coalesce(company, '') || ' ' || coalesce(canonical_url, ''))
+      !~ '(banco de talentos|banco talentos|talent pool|talent community|talent network)'
+  AND coalesce(seniority::text, '') NOT IN ('SENIOR', 'LEAD')
+  AND lower(coalesce(title, '') || ' ' || coalesce(tech_stack_tags, '') || ' ' || coalesce(description, ''))
+      ~ '(^|[^a-z])(java|spring|kotlin)([^a-z]|$)'
+  AND lower(coalesce(title, '') || ' ' || coalesce(description, ''))
+      ~ '(backend|back-end|desenvolvedor|developer|software engineer|engenheiro de software|programador)'
+  AND lower(coalesce(title, '') || ' ' || coalesce(description, ''))
+      !~ '(manager|gerente|lead|lider|principal|staff|architect|arquiteto|head|director|diretor|coordinator|coordenador)'
 ORDER BY
     CASE seniority
         WHEN 'JUNIOR' THEN 1
@@ -235,16 +236,25 @@ Esse teste valida o caminho completo:
 ### Consulta oficial por endpoint
 
 Para consumo da API da aplicacao, o caminho oficial agora ja trata recencia como criterio obrigatorio
-de utilidade:
+de utilidade. O perfil default tambem exclui banco de talentos, corta senioridade `SENIOR/LEAD`,
+bloqueia cargos de gestao/lideranca e exige sinal real de stack (`Java`, `Spring` ou `Kotlin`)
+mais sinal de funcao aderente (`backend`, `developer`, `software engineer`, `desenvolvedor`,
+etc.) para evitar falso positivo por titulo generico:
 
 ```bash
-curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60"
+curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_JUNIOR_BACKEND"
 ```
 
 Exemplo com filtro adicional de senioridade:
 
 ```bash
-curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&seniority=JUNIOR"
+curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_JUNIOR_BACKEND&seniority=JUNIOR"
+```
+
+Se voce quiser uma leitura exploratoria mais ampla, sem o perfil estrito de aderencia:
+
+```bash
+curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=UNFILTERED"
 ```
 
 ## Diagramas de Componentes

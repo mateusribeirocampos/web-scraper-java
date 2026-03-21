@@ -71,9 +71,19 @@ No estado atual do projeto em 2026-03-13, o uso manual para validar scraping fun
    - `POST /api/v1/crawl-jobs/{jobId}/execute`
 3. Acompanhar a execução persistida.
 4. Consultar a saída persistida:
-   - `GET /api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&seniority=...`
+   - `GET /api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_JUNIOR_BACKEND&seniority=...`
    - `GET /api/v1/public-contests?...`
 5. Confirmar se os resultados correspondem à intenção do usuário.
+
+No perfil oficial `JAVA_JUNIOR_BACKEND`, a listagem deve priorizar resultado útil e ainda aplicável:
+- recência obrigatória;
+- exclusão de banco de talentos;
+- exclusão de cargos de gestão/liderança;
+- exclusão de senioridade `SENIOR/LEAD`;
+- presença de stack aderente (`Java`, `Spring` ou `Kotlin`);
+- presença de função aderente (`backend`, `developer`, `software engineer`, `desenvolvedor`, etc.).
+
+Se o objetivo for apenas exploração ampla da base, o contrato admite `profile=UNFILTERED`.
 
 Exemplos de intenção já adotados como referência:
 
@@ -232,7 +242,7 @@ Exemplo de fixture de resposta JSON do Indeed MCP:
 - **TDD:** testes de ciclo de vida de status primeiro.
 
 #### Story 6.4 — Endpoint de listagem de vagas por data
-- `GET /api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&seniority=JUNIOR`
+- `GET /api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_JUNIOR_BACKEND&seniority=JUNIOR`
 - `GET /api/v1/public-contests?status=OPEN&orderBy=registrationEndDate`
 - **TDD:** testes de endpoint com consulta por `publishedAt` primeiro.
 

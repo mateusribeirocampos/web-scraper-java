@@ -1,6 +1,8 @@
 package com.campos.webscraper.interfaces.rest;
 
 import com.campos.webscraper.application.usecase.ListJobPostingsUseCase;
+import com.campos.webscraper.application.usecase.JobPostingSearchProfileMatcher;
+import com.campos.webscraper.domain.enums.JobPostingSearchProfile;
 import com.campos.webscraper.domain.enums.SeniorityLevel;
 import com.campos.webscraper.domain.model.JobPostingEntity;
 import org.junit.jupiter.api.DisplayName;
@@ -35,8 +37,7 @@ class JobPostingQueryControllerTest {
     @Mock
     private ListJobPostingsUseCase listJobPostingsUseCase;
 
-    @InjectMocks
-    private JobPostingQueryController controller;
+    private final JobPostingSearchProfileMatcher jobPostingSearchProfileMatcher = new JobPostingSearchProfileMatcher();
 
     @Test
     @DisplayName("should return job postings filtered by since date and seniority")
@@ -48,9 +49,15 @@ class JobPostingQueryControllerTest {
                                 .title("Java Backend Developer")
                                 .company("Acme")
                                 .canonicalUrl("https://example.com/jobs/1")
+                                .techStackTags("Java,Spring")
                                 .publishedAt(LocalDate.of(2026, 3, 10))
                                 .build()
                 ));
+
+        JobPostingQueryController controller = new JobPostingQueryController(
+                listJobPostingsUseCase,
+                jobPostingSearchProfileMatcher
+        );
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new RestExceptionHandler())
@@ -78,12 +85,18 @@ class JobPostingQueryControllerTest {
                 .thenReturn(List.of(
                         JobPostingEntity.builder()
                                 .id(2L)
-                                .title("Backend Engineer")
+                                .title("Backend Engineer Java")
                                 .company("Beta")
                                 .canonicalUrl("https://example.com/jobs/2")
+                                .techStackTags("Java")
                                 .publishedAt(LocalDate.of(2026, 3, 12))
                                 .build()
                 ));
+
+        JobPostingQueryController controller = new JobPostingQueryController(
+                listJobPostingsUseCase,
+                jobPostingSearchProfileMatcher
+        );
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new RestExceptionHandler())
@@ -93,7 +106,7 @@ class JobPostingQueryControllerTest {
                         .param("category", "PRIVATE_SECTOR"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(2))
-                .andExpect(jsonPath("$[0].title").value("Backend Engineer"));
+                .andExpect(jsonPath("$[0].title").value("Backend Engineer Java"));
 
         verify(listJobPostingsUseCase).execute(expectedSince, null);
     }
@@ -101,6 +114,11 @@ class JobPostingQueryControllerTest {
     @Test
     @DisplayName("should reject non-positive daysBack")
     void shouldRejectNonPositiveDaysBack() throws Exception {
+        JobPostingQueryController controller = new JobPostingQueryController(
+                listJobPostingsUseCase,
+                jobPostingSearchProfileMatcher
+        );
+
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new RestExceptionHandler())
                 .build();
@@ -110,5 +128,56 @@ class JobPostingQueryControllerTest {
                         .param("daysBack", "0"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("daysBack must be greater than zero"));
+    }
+
+    @Test
+    @DisplayName("should filter out non-adherent postings for the default profile")
+    void shouldFilterOutNonAdherentPostingsForTheDefaultProfile() throws Exception {
+        LocalDate expectedSince = LocalDate.now().minusDays(60);
+
+        when(listJobPostingsUseCase.execute(expectedSince, null))
+                .thenReturn(List.of(
+                        JobPostingEntity.builder()
+                                .id(3L)
+                                .title("Banco de Talentos - Desenvolvedor Java")
+                                .company("Acme")
+                                .canonicalUrl("https://example.com/jobs/3")
+                                .techStackTags("Java")
+                                .publishedAt(LocalDate.of(2026, 3, 12))
+                                .build(),
+                        JobPostingEntity.builder()
+                                .id(4L)
+                                .title("Engineering Manager")
+                                .company("Bitso")
+                                .canonicalUrl("https://example.com/jobs/4")
+                                .techStackTags("Java,Spring")
+                                .description("Leadership role for Java platform")
+                                .publishedAt(LocalDate.of(2026, 3, 13))
+                                .build(),
+                        JobPostingEntity.builder()
+                                .id(5L)
+                                .title("Desenvolvedor Backend Java Jr")
+                                .company("Beta")
+                                .canonicalUrl("https://example.com/jobs/5")
+                                .techStackTags("Java,Spring")
+                                .publishedAt(LocalDate.of(2026, 3, 14))
+                                .build()
+                ));
+
+        JobPostingQueryController controller = new JobPostingQueryController(
+                listJobPostingsUseCase,
+                jobPostingSearchProfileMatcher
+        );
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new RestExceptionHandler())
+                .build();
+
+        mockMvc.perform(get("/api/v1/job-postings")
+                        .param("category", "PRIVATE_SECTOR")
+                        .param("profile", JobPostingSearchProfile.JAVA_JUNIOR_BACKEND.name()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].id").value(5));
     }
 }

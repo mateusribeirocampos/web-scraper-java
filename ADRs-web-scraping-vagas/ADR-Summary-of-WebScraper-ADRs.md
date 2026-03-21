@@ -172,10 +172,13 @@ a ponta com uma pesquisa reconhecível pelo usuário.
 Para consumo via API, o contrato oficial de listagem de vagas recentes passa a ser:
 
 ```text
-GET /api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60
+GET /api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_JUNIOR_BACKEND
 ```
 
 `since` continua suportado e sobrescreve `daysBack` quando informado explicitamente.
+O perfil oficial também exclui banco de talentos, reduz senioridade alta por padrão, bloqueia
+cargos de gestão/liderança e exige sinal real de stack junto com sinal de função aderente para
+evitar falso positivo por títulos genéricos.
 
 ---
 

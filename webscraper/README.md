@@ -75,7 +75,17 @@ Essa consulta valida ponta a ponta o caminho real de uso:
 Consulta oficial pela API:
 
 ```bash
-curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60"
+curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_JUNIOR_BACKEND"
+```
+
+Nesse perfil oficial, a API exclui banco de talentos, corta senioridade `SENIOR/LEAD`, bloqueia
+cargos de gestao/lideranca e exige sinal real de stack (`Java`, `Spring` ou `Kotlin`) junto com
+um sinal de funcao aderente (`backend`, `developer`, `software engineer`, `desenvolvedor`, etc.).
+
+Para investigacao mais ampla da base, sem o perfil estrito:
+
+```bash
+curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=UNFILTERED"
 ```
 
 ## Documentacao Relacionada

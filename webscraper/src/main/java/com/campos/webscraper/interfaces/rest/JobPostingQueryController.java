@@ -1,7 +1,9 @@
 package com.campos.webscraper.interfaces.rest;
 
+import com.campos.webscraper.application.usecase.JobPostingSearchProfileMatcher;
 import com.campos.webscraper.application.usecase.ListJobPostingsUseCase;
 import com.campos.webscraper.domain.enums.JobCategory;
+import com.campos.webscraper.domain.enums.JobPostingSearchProfile;
 import com.campos.webscraper.domain.enums.SeniorityLevel;
 import com.campos.webscraper.interfaces.dto.JobPostingSummaryResponse;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,9 +23,17 @@ import java.util.Objects;
 public class JobPostingQueryController {
 
     private final ListJobPostingsUseCase listJobPostingsUseCase;
+    private final JobPostingSearchProfileMatcher jobPostingSearchProfileMatcher;
 
-    public JobPostingQueryController(ListJobPostingsUseCase listJobPostingsUseCase) {
+    public JobPostingQueryController(
+            ListJobPostingsUseCase listJobPostingsUseCase,
+            JobPostingSearchProfileMatcher jobPostingSearchProfileMatcher
+    ) {
         this.listJobPostingsUseCase = Objects.requireNonNull(listJobPostingsUseCase, "listJobPostingsUseCase must not be null");
+        this.jobPostingSearchProfileMatcher = Objects.requireNonNull(
+                jobPostingSearchProfileMatcher,
+                "jobPostingSearchProfileMatcher must not be null"
+        );
     }
 
     /**
@@ -34,6 +44,7 @@ public class JobPostingQueryController {
             @RequestParam(required = false) LocalDate since,
             @RequestParam(defaultValue = "60") int daysBack,
             @RequestParam JobCategory category,
+            @RequestParam(defaultValue = "JAVA_JUNIOR_BACKEND") JobPostingSearchProfile profile,
             @RequestParam(required = false) SeniorityLevel seniority
     ) {
         if (category != JobCategory.PRIVATE_SECTOR) {
@@ -47,6 +58,7 @@ public class JobPostingQueryController {
         LocalDate effectiveSince = since != null ? since : LocalDate.now().minusDays(daysBack);
 
         return listJobPostingsUseCase.execute(effectiveSince, seniority).stream()
+                .filter(posting -> jobPostingSearchProfileMatcher.matches(posting, profile))
                 .map(posting -> new JobPostingSummaryResponse(
                         posting.getId(),
                         posting.getTitle(),
