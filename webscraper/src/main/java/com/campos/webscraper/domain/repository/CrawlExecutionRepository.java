@@ -19,4 +19,8 @@ public interface CrawlExecutionRepository extends JpaRepository<CrawlExecutionEn
 
     /** Returns all executions with a given lifecycle status. */
     List<CrawlExecutionEntity> findByStatus(CrawlExecutionStatus status);
+
+    long countByStatus(CrawlExecutionStatus status);
+
+    List<CrawlExecutionEntity> findTop10ByOrderByCreatedAtDesc();
 }

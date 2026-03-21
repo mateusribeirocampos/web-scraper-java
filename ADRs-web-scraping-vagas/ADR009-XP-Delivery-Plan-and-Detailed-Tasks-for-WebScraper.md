@@ -487,20 +487,23 @@ ORDER BY
 #### Story 12.3 — Endpoint de health summary
 - `GET /api/v1/scraper/health` — resumo de jobs recentes.
 - **TDD:** endpoint tests primeiro.
+- Status atual: endpoint implementado, retornando:
+  - contagens por `CrawlExecutionStatus`;
+  - contagens por fila/status da fila persistida;
+  - últimas 10 execuções persistidas.
 
 #### Próxima recomendação após 2026-03-21
 
 Com fila persistida, perfis de busca, reenriquecimento Greenhouse, limpeza das heurísticas de
-stack e baseline de métricas/logs já estabilizados, a próxima story mais defensável passa a ser:
+stack, métricas/logs e health summary já estabilizados, a próxima story mais defensável passa a ser:
 
-- **Story 12.3 — Endpoint de health summary**
+- **Story 12.2 — Checklist de habilitação de site em produção**
 
 Razão:
 
-- o projeto já precisa medir utilidade por fonte, não apenas sucesso técnico;
-- agora existe telemetria básica, mas ainda falta um ponto de leitura operacional consolidado;
-- o endpoint de health summary fecha a primeira camada de observabilidade consumível por pessoa
-  operadora, sem depender de consulta direta ao banco ou scraping de logs.
+- a camada de observabilidade mínima já está entregue;
+- o próximo risco operacional mais evidente volta a ser governança de ativação em produção;
+- fechar o checklist operacional reduz chance de habilitar fonte sem compliance completo.
 
 ---
 

@@ -122,6 +122,7 @@ web-scraper-java/
 | `POST` | `/api/v1/crawl-jobs/{jobId}/execute` | Dispara execucao manual de um `CrawlJob` |
 | `GET` | `/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_JUNIOR_BACKEND` | Lista vagas privadas recentes usando um perfil explícito; `since` continua aceito e sobrescreve `daysBack` |
 | `GET` | `/api/v1/public-contests?status=...&orderBy=...` | Lista concursos publicos |
+| `GET` | `/api/v1/scraper/health` | Retorna resumo operacional de execucoes recentes e situacao agregada da fila persistida |
 
 ## Como Rodar Localmente
 

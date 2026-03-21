@@ -1,6 +1,7 @@
 package com.campos.webscraper.domain.repository;
 
 import com.campos.webscraper.application.queue.CrawlJobQueueName;
+import com.campos.webscraper.domain.enums.QueueMessageStatus;
 import com.campos.webscraper.domain.model.PersistentQueueMessageEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -31,4 +32,6 @@ public interface PersistentQueueMessageRepository
             Instant updatedAt,
             String lastError
     );
+
+    long countByQueueNameAndStatus(CrawlJobQueueName queueName, QueueMessageStatus status);
 }

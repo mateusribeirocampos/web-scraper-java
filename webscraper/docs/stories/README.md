@@ -71,3 +71,4 @@ Exemplos:
 | 11.2 — Playwright dynamic strategy | [STORY-11.2-playwright-dynamic-strategy.md](STORY-11.2-playwright-dynamic-strategy.md) | ✅ Concluída |
 | 11.3 — Playwright bulkhead | [STORY-11.3-playwright-bulkhead.md](STORY-11.3-playwright-bulkhead.md) | ✅ Concluída |
 | 12.1 — Métricas e logs estruturados | [STORY-12.1-structured-metrics-and-logs.md](STORY-12.1-structured-metrics-and-logs.md) | ✅ Concluída |
+| 12.3 — Endpoint de health summary | [STORY-12.3-scraper-health-summary-endpoint.md](STORY-12.3-scraper-health-summary-endpoint.md) | ✅ Concluída |

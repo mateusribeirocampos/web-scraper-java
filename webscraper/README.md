@@ -102,6 +102,12 @@ Para investigacao mais ampla da base, sem o perfil estrito:
 curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=UNFILTERED"
 ```
 
+Resumo operacional da fila persistida e das execucoes recentes:
+
+```bash
+curl "http://localhost:8080/api/v1/scraper/health"
+```
+
 ## Notas de Qualidade de Busca
 
 - `tech_stack_tags` e deliberadamente conservador para reduzir falso positivo.
