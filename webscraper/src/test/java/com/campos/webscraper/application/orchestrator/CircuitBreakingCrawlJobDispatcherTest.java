@@ -9,6 +9,7 @@ import com.campos.webscraper.domain.model.CrawlExecutionEntity;
 import com.campos.webscraper.domain.model.CrawlJobEntity;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
 import com.campos.webscraper.domain.repository.CrawlExecutionRepository;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
@@ -53,6 +54,63 @@ class CircuitBreakingCrawlJobDispatcherTest {
     private DeadLetterQueue deadLetterQueue;
 
     @Test
+    @DisplayName("should record success metrics when dispatch completes successfully")
+    void shouldRecordSuccessMetricsWhenDispatchCompletesSuccessfully() {
+        Instant now = Instant.parse("2026-03-12T19:00:00Z");
+        Clock fixedClock = Clock.fixed(now, ZoneOffset.UTC);
+        CrawlJobEntity crawlJob = buildJob(8L, "greenhouse_bitso");
+        SimpleMeterRegistry meterRegistry = new SimpleMeterRegistry();
+
+        when(crawlExecutionRepository.save(any(CrawlExecutionEntity.class)))
+                .thenAnswer(invocation -> {
+                    CrawlExecutionEntity entity = invocation.getArgument(0);
+                    if (entity.getId() == null) {
+                        return CrawlExecutionEntity.builder()
+                                .id(199L)
+                                .crawlJob(entity.getCrawlJob())
+                                .status(entity.getStatus())
+                                .startedAt(entity.getStartedAt())
+                                .finishedAt(entity.getFinishedAt())
+                                .pagesVisited(entity.getPagesVisited())
+                                .itemsFound(entity.getItemsFound())
+                                .retryCount(entity.getRetryCount())
+                                .errorMessage(entity.getErrorMessage())
+                                .createdAt(entity.getCreatedAt())
+                                .build();
+                    }
+                    return entity;
+                });
+        when(crawlJobExecutionRunner.run(org.mockito.ArgumentMatchers.eq(crawlJob), any()))
+                .thenReturn(new CrawlExecutionOutcome(3, 7));
+
+        CircuitBreakingCrawlJobDispatcher dispatcher = new CircuitBreakingCrawlJobDispatcher(
+                crawlExecutionRepository,
+                crawlJobExecutionRunner,
+                deadLetterQueue,
+                CircuitBreakerRegistry.ofDefaults(),
+                new CrawlObservabilityService(meterRegistry),
+                fixedClock
+        );
+
+        assertThat(dispatcher.dispatch(crawlJob)).isEqualTo(CrawlExecutionStatus.SUCCEEDED);
+        assertThat(meterRegistry.get("webscraper.crawl.dispatch.total")
+                .tag("site_code", "greenhouse_bitso")
+                .tag("status", "SUCCEEDED")
+                .counter()
+                .count()).isEqualTo(1.0d);
+        assertThat(meterRegistry.get("webscraper.crawl.dispatch.items_found")
+                .tag("site_code", "greenhouse_bitso")
+                .tag("status", "SUCCEEDED")
+                .summary()
+                .totalAmount()).isEqualTo(7.0d);
+        assertThat(meterRegistry.get("webscraper.crawl.dispatch.duration")
+                .tag("site_code", "greenhouse_bitso")
+                .tag("status", "SUCCEEDED")
+                .timer()
+                .count()).isEqualTo(1L);
+    }
+
+    @Test
     @DisplayName("should route to dead letter and persist DEAD_LETTER when circuit breaker is open")
     void shouldRouteToDeadLetterAndPersistDeadLetterWhenCircuitBreakerIsOpen() {
         Instant now = Instant.parse("2026-03-12T19:00:00Z");
@@ -94,6 +152,7 @@ class CircuitBreakingCrawlJobDispatcherTest {
                 crawlJobExecutionRunner,
                 deadLetterQueue,
                 registry,
+                new CrawlObservabilityService(new SimpleMeterRegistry()),
                 fixedClock
         );
 
@@ -146,6 +205,7 @@ class CircuitBreakingCrawlJobDispatcherTest {
                 crawlJobExecutionRunner,
                 deadLetterQueue,
                 registry,
+                new CrawlObservabilityService(new SimpleMeterRegistry()),
                 fixedClock
         );
 
@@ -204,6 +264,7 @@ class CircuitBreakingCrawlJobDispatcherTest {
                 crawlJobExecutionRunner,
                 deadLetterQueue,
                 registry,
+                new CrawlObservabilityService(new SimpleMeterRegistry()),
                 fixedClock
         );
 

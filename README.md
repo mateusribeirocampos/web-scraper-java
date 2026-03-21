@@ -108,6 +108,7 @@ web-scraper-java/
 - Onboarding legal/técnico de fontes com validator dedicado.
 - Strategies por familia de fonte, resolvidas por factory.
 - Persistencia idempotente para evitar duplicatas em `job_postings` e `public_contest_postings`.
+- Reenriquecimento idempotente de `job_postings` existentes quando reruns trazem payload mais rico.
 - Scheduler, trigger manual via REST e worker assíncrono.
 - Fila persistida em Postgres com claim, ack, retry e dead-letter.
 - Retry, rate limiting, bulkhead e circuit breaker por fonte.
@@ -270,6 +271,17 @@ Se voce quiser uma leitura exploratoria mais ampla, sem o perfil estrito de ader
 ```bash
 curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=UNFILTERED"
 ```
+
+## Qualidade Atual dos Dados
+
+- Boards Greenhouse materializados no projeto usam `?content=true` para trazer `description`
+  completa no payload.
+- Reruns Greenhouse agora atualizam `description`, `tech_stack_tags`, `payload_json` e outros
+  campos enriqueciveis em registros ja existentes com o mesmo fingerprint.
+- As heuristicas de `Go` e `Python` foram endurecidas para exigir contexto tecnico suficiente,
+  reduzindo falso positivo em vagas de sales, ops, controllership e business.
+- Quando a base recente esta escassa, o perfil recomendado para ganhar volume sem cair no
+  `UNFILTERED` continua sendo `JAVA_STACK_PRAGMATIC`.
 
 ## Diagramas de Componentes
 

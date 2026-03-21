@@ -13,6 +13,7 @@ import com.campos.webscraper.domain.model.CrawlJobEntity;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
 import com.campos.webscraper.domain.repository.CrawlJobRepository;
 import com.campos.webscraper.domain.repository.TargetSiteRepository;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -49,6 +50,42 @@ class CrawlJobWorkerTest {
 
     @Mock
     private InFlightCrawlJobRegistry inFlightCrawlJobRegistry;
+
+    @Test
+    @DisplayName("should record retry metric when worker schedules a retry")
+    void shouldRecordRetryMetricWhenWorkerSchedulesARetry() {
+        EnqueuedCrawlJob message = new EnqueuedCrawlJob(
+                null,
+                10L,
+                100L,
+                "indeed-br",
+                "https://br.indeed.com/jobs?q=java",
+                ExtractionMode.API,
+                JobCategory.PRIVATE_SECTOR,
+                Instant.parse("2026-03-13T18:00:00Z"),
+                CrawlJobQueueName.API_JOBS,
+                Instant.parse("2026-03-13T18:01:00Z"),
+                0,
+                Instant.parse("2026-03-13T18:01:00Z")
+        );
+        CrawlJobEntity crawlJob = buildPersistedJob();
+        SimpleMeterRegistry meterRegistry = new SimpleMeterRegistry();
+
+        when(crawlJobQueue.consume(CrawlJobQueueName.API_JOBS)).thenReturn(Optional.of(message));
+        when(crawlJobRepository.findById(10L)).thenReturn(Optional.of(crawlJob));
+        when(crawlJobDispatcher.dispatch(org.mockito.ArgumentMatchers.any(CrawlJobEntity.class)))
+                .thenReturn(CrawlExecutionStatus.FAILED);
+
+        CrawlJobWorker worker = newWorker(meterRegistry);
+
+        assertThat(worker.consumeNext(CrawlJobQueueName.API_JOBS)).isFalse();
+        assertThat(meterRegistry.get("webscraper.crawl.worker.total")
+                .tag("queue", "API_JOBS")
+                .tag("outcome", "retry_scheduled")
+                .tag("site_code", "indeed-br")
+                .counter()
+                .count()).isEqualTo(1.0d);
+    }
 
     @Test
     @DisplayName("should consume persisted queued job and dispatch it")
@@ -562,12 +599,17 @@ class CrawlJobWorkerTest {
     }
 
     private CrawlJobWorker newWorker() {
+        return newWorker(new SimpleMeterRegistry());
+    }
+
+    private CrawlJobWorker newWorker(SimpleMeterRegistry meterRegistry) {
         return new CrawlJobWorker(
                 crawlJobQueue,
                 crawlJobRepository,
                 targetSiteRepository,
                 crawlJobDispatcher,
-                inFlightCrawlJobRegistry
+                inFlightCrawlJobRegistry,
+                new CrawlObservabilityService(meterRegistry)
         );
     }
 

@@ -105,12 +105,13 @@ CI quality gates e rollout controlado por família de scraper.
 | Circuit breaker e dead-letter | Implementados |
 | Scheduler e trigger manual | Implementados |
 | Processamento assíncrono por fila | Implementado com fila persistida |
-| Observabilidade | Planejada |
+| Observabilidade | Baseline de métricas e logs estruturados implementada; health summary ainda planejado |
 | Governança legal (robots.txt, ToS) | Implementada para o gate de onboarding; expansão planejada |
 | Tarefas XP detalhadas | Definidas — 12 iterations |
 | Pesquisa open source | Realizada e documentada |
 | PCI Concursos | Implementado tecnicamente; produção ainda pendente de checklist legal completo |
 | Greenhouse Bitso | Onboarding, client, normalizer, strategy e persistência ponta a ponta implementados |
+| Greenhouse multi-board | Boards materializados com `?content=true`; reruns reenriquecem registros existentes |
 | Gupy | Client, normalizer, strategy, import use case e seed operacional implementados |
 
 ---
@@ -168,6 +169,14 @@ ORDER BY
 Hoje essa intenção ainda precisa estar refletida na configuração do job/fonte. A busca livre
 customizada continua como evolução funcional futura, mas esse fluxo já valida a aplicação de ponta
 a ponta com uma pesquisa reconhecível pelo usuário.
+
+Aprendizado operacional consolidado em 2026-03-21:
+
+- para Greenhouse, `?content=true` virou parte obrigatória do endpoint materializado do board;
+- apenas corrigir o endpoint não bastava, porque fingerprints antigos preservavam linhas pobres;
+- o projeto passou a reenriquecer `job_postings` existentes em reruns idempotentes;
+- as heurísticas de `Go` e `Python` ficaram mais restritivas para evitar falso positivo de stack
+  em vagas não técnicas.
 
 Para consumo via API, o contrato oficial de listagem de vagas recentes passa a ser:
 

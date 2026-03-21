@@ -330,6 +330,12 @@ Exemplo de fixture de resposta JSON do Indeed MCP:
 - **TDD:** integration test da fatia completa primeiro.
 - **Aceite manual obrigatório:** executar um job Greenhouse alinhado ao foco do usuário e validar
   retorno em listagem por data para uma pesquisa como `desenvolvedor de software em java spring boot`.
+- Estado atual:
+  - persistência ponta a ponta fechada;
+  - boards Greenhouse ativos passaram a materializar `?content=true`;
+  - reruns reenriquecem `job_postings` já existentes, evitando preservar versões pobres;
+  - heurísticas de `Go` e `Python` foram endurecidas para reduzir falso positivo por texto
+    genérico em vagas não técnicas.
 
 #### Story 9.6 — Generalizar provider ATS para `LeverPostingsClient`
 - Repetir o mesmo padrão em um segundo provider ATS.
@@ -469,6 +475,9 @@ ORDER BY
 #### Story 12.1 — Métricas e logs estruturados
 - Emitir contadores e durações de job.
 - **TDD:** testes de emissão de métricas/logs primeiro.
+- Status atual: `CrawlObservabilityService` já emite métricas Micrometer e logs estruturados para
+  outcomes de dispatch (`SUCCEEDED`, `FAILED`, `DEAD_LETTER`) e worker (`done`, `retry_scheduled`,
+  `dead_letter_*`, `empty`), com cobertura de testes unitários focados.
 
 #### Story 12.2 — Checklist de habilitação de site em produção
 - Estender o checklist/validator introduzido na Story 8.4, sem duplicar regras paralelas.
@@ -478,6 +487,20 @@ ORDER BY
 #### Story 12.3 — Endpoint de health summary
 - `GET /api/v1/scraper/health` — resumo de jobs recentes.
 - **TDD:** endpoint tests primeiro.
+
+#### Próxima recomendação após 2026-03-21
+
+Com fila persistida, perfis de busca, reenriquecimento Greenhouse, limpeza das heurísticas de
+stack e baseline de métricas/logs já estabilizados, a próxima story mais defensável passa a ser:
+
+- **Story 12.3 — Endpoint de health summary**
+
+Razão:
+
+- o projeto já precisa medir utilidade por fonte, não apenas sucesso técnico;
+- agora existe telemetria básica, mas ainda falta um ponto de leitura operacional consolidado;
+- o endpoint de health summary fecha a primeira camada de observabilidade consumível por pessoa
+  operadora, sem depender de consulta direta ao banco ou scraping de logs.
 
 ---
 

@@ -118,9 +118,14 @@ houses que publicam vagas via plataformas padronizadas em vez de manter um porta
   abordagem API-first.
 - Primeiro board Greenhouse selecionado em 2026-03-13: **Bitso** (`board_token = bitso`) —
   endpoint público validado e board com aderência atual ao foco Java/backend.
-- Estado atual do provider Greenhouse em 2026-03-13: onboarding (`9.1`), client (`9.2`),
-  normalizer (`9.3`) e strategy (`9.4`) implementados para `greenhouse_bitso`; a persistência
-  ponta a ponta permanece planejada para a `9.5`.
+- Estado atual do provider Greenhouse em 2026-03-21:
+  - onboarding (`9.1`), client (`9.2`), normalizer (`9.3`), strategy (`9.4`) e persistência
+    ponta a ponta (`9.5`) já implementados;
+  - múltiplos boards Greenhouse já estão onboardados no banco;
+  - os boards materializados usam `?content=true` para enriquecer `description`;
+  - reruns reenriquecem registros já existentes via merge idempotente;
+  - heurísticas de `tech_stack_tags` foram ajustadas para reduzir falso positivo de `Go` e
+    `Python` em vagas não técnicas.
 - Páginas de carreira próprias: permitidas apenas com `robots.txt` revisado e sinais claros de
   publicação estruturada.
 - LinkedIn: aguardar acesso a Partner API ou excluir da fase 1.

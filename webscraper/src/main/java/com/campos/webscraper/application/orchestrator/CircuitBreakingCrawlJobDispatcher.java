@@ -26,6 +26,7 @@ public class CircuitBreakingCrawlJobDispatcher implements CrawlJobDispatcher {
     private final CrawlJobExecutionRunner crawlJobExecutionRunner;
     private final DeadLetterQueue deadLetterQueue;
     private final CircuitBreakerRegistry circuitBreakerRegistry;
+    private final CrawlObservabilityService crawlObservabilityService;
     private final Clock clock;
 
     public CircuitBreakingCrawlJobDispatcher(
@@ -33,12 +34,17 @@ public class CircuitBreakingCrawlJobDispatcher implements CrawlJobDispatcher {
             CrawlJobExecutionRunner crawlJobExecutionRunner,
             DeadLetterQueue deadLetterQueue,
             CircuitBreakerRegistry circuitBreakerRegistry,
+            CrawlObservabilityService crawlObservabilityService,
             Clock clock
     ) {
         this.crawlExecutionRepository = Objects.requireNonNull(crawlExecutionRepository, "crawlExecutionRepository must not be null");
         this.crawlJobExecutionRunner = Objects.requireNonNull(crawlJobExecutionRunner, "crawlJobExecutionRunner must not be null");
         this.deadLetterQueue = Objects.requireNonNull(deadLetterQueue, "deadLetterQueue must not be null");
         this.circuitBreakerRegistry = Objects.requireNonNull(circuitBreakerRegistry, "circuitBreakerRegistry must not be null");
+        this.crawlObservabilityService = Objects.requireNonNull(
+                crawlObservabilityService,
+                "crawlObservabilityService must not be null"
+        );
         this.clock = Objects.requireNonNull(clock, "clock must not be null");
     }
 
@@ -75,6 +81,14 @@ public class CircuitBreakingCrawlJobDispatcher implements CrawlJobDispatcher {
                     .errorMessage(null)
                     .createdAt(runningExecution.getCreatedAt())
                     .build());
+            crawlObservabilityService.recordDispatch(
+                    crawlJob,
+                    CrawlExecutionStatus.SUCCEEDED,
+                    outcome.itemsFound(),
+                    runningExecution.getStartedAt(),
+                    Instant.now(clock),
+                    null
+            );
             return CrawlExecutionStatus.SUCCEEDED;
         } catch (CallNotPermittedException exception) {
             deadLetterQueue.route(crawlJob, CIRCUIT_OPEN_REASON);
@@ -90,6 +104,14 @@ public class CircuitBreakingCrawlJobDispatcher implements CrawlJobDispatcher {
                     .errorMessage(CIRCUIT_OPEN_REASON)
                     .createdAt(runningExecution.getCreatedAt())
                     .build());
+            crawlObservabilityService.recordDispatch(
+                    crawlJob,
+                    CrawlExecutionStatus.DEAD_LETTER,
+                    0,
+                    runningExecution.getStartedAt(),
+                    Instant.now(clock),
+                    CIRCUIT_OPEN_REASON
+            );
             return CrawlExecutionStatus.DEAD_LETTER;
         } catch (RuntimeException exception) {
             crawlExecutionRepository.save(CrawlExecutionEntity.builder()
@@ -104,6 +126,14 @@ public class CircuitBreakingCrawlJobDispatcher implements CrawlJobDispatcher {
                     .errorMessage(exception.getMessage())
                     .createdAt(runningExecution.getCreatedAt())
                     .build());
+            crawlObservabilityService.recordDispatch(
+                    crawlJob,
+                    CrawlExecutionStatus.FAILED,
+                    0,
+                    runningExecution.getStartedAt(),
+                    Instant.now(clock),
+                    exception.getMessage()
+            );
             return CrawlExecutionStatus.FAILED;
         }
     }

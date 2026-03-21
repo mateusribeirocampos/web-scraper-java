@@ -18,6 +18,7 @@ import com.campos.webscraper.domain.repository.PersistentQueueMessageRepository;
 import com.campos.webscraper.domain.repository.TargetSiteRepository;
 import com.campos.webscraper.interfaces.scheduler.CrawlJobScheduler;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -110,7 +111,8 @@ class PersistentQueueWorkflowTest {
                 crawlJobRepository,
                 targetSiteRepository,
                 crawlJobDispatcher,
-                inFlightCrawlJobRegistry
+                inFlightCrawlJobRegistry,
+                new CrawlObservabilityService(new SimpleMeterRegistry())
         );
 
         assertThat(worker.consumeNext(CrawlJobQueueName.API_JOBS)).isTrue();
@@ -169,7 +171,8 @@ class PersistentQueueWorkflowTest {
                 crawlJobRepository,
                 targetSiteRepository,
                 crawlJobDispatcher,
-                inFlightCrawlJobRegistry
+                inFlightCrawlJobRegistry,
+                new CrawlObservabilityService(new SimpleMeterRegistry())
         );
 
         assertThat(worker.consumeNext(CrawlJobQueueName.API_JOBS)).isFalse();

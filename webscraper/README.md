@@ -17,6 +17,8 @@ ou browser somente quando permitido.
   - Greenhouse
   - Gupy
   - Playwright dinamico para sites Type C
+- Boards Greenhouse onboardados usam `?content=true` e reruns reenriquecem registros antigos
+  pela camada idempotente de persistencia
 
 ## Validacao Manual Oficial
 
@@ -99,6 +101,14 @@ Para investigacao mais ampla da base, sem o perfil estrito:
 ```bash
 curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=UNFILTERED"
 ```
+
+## Notas de Qualidade de Busca
+
+- `tech_stack_tags` e deliberadamente conservador para reduzir falso positivo.
+- `Go` e `Python` nao sao marcados apenas por palavra solta; o normalizer exige titulo/contexto
+  tecnico suficiente.
+- Isso melhora a utilidade dos perfis `JAVA_JUNIOR_BACKEND`, `JAVA_BACKEND_BALANCED` e
+  `JAVA_STACK_PRAGMATIC`.
 
 ## Documentacao Relacionada
 

@@ -32,13 +32,15 @@ public class CrawlJobWorker {
     private final TargetSiteRepository targetSiteRepository;
     private final CrawlJobDispatcher crawlJobDispatcher;
     private final InFlightCrawlJobRegistry inFlightCrawlJobRegistry;
+    private final CrawlObservabilityService crawlObservabilityService;
 
     public CrawlJobWorker(
             CrawlJobQueue crawlJobQueue,
             CrawlJobRepository crawlJobRepository,
             TargetSiteRepository targetSiteRepository,
             CrawlJobDispatcher crawlJobDispatcher,
-            InFlightCrawlJobRegistry inFlightCrawlJobRegistry
+            InFlightCrawlJobRegistry inFlightCrawlJobRegistry,
+            CrawlObservabilityService crawlObservabilityService
     ) {
         this.crawlJobQueue = Objects.requireNonNull(crawlJobQueue, "crawlJobQueue must not be null");
         this.crawlJobRepository = Objects.requireNonNull(crawlJobRepository, "crawlJobRepository must not be null");
@@ -47,6 +49,10 @@ public class CrawlJobWorker {
         this.inFlightCrawlJobRegistry = Objects.requireNonNull(
                 inFlightCrawlJobRegistry,
                 "inFlightCrawlJobRegistry must not be null"
+        );
+        this.crawlObservabilityService = Objects.requireNonNull(
+                crawlObservabilityService,
+                "crawlObservabilityService must not be null"
         );
     }
 
@@ -60,32 +66,41 @@ public class CrawlJobWorker {
                         crawlJob = resolveCrawlJob(message);
                         if (!crawlJob.getTargetSite().isEnabled()) {
                             crawlJobQueue.moveToDeadLetter(message, "Target site disabled after enqueue");
+                            crawlObservabilityService.recordWorkerOutcome(queueName, message, "dead_letter_disabled_site");
                             releaseClaim(crawlJob, message.crawlJobId());
                             return false;
                         }
                         CrawlExecutionStatus executionStatus = crawlJobDispatcher.dispatch(crawlJob);
                         if (executionStatus == CrawlExecutionStatus.FAILED) {
+                            crawlObservabilityService.recordWorkerOutcome(queueName, message, "retry_scheduled");
                             requeueForRetry(message, crawlJob);
                             return false;
                         }
                         if (executionStatus == CrawlExecutionStatus.DEAD_LETTER) {
                             crawlJobQueue.moveToDeadLetter(retryMessage(message, crawlJob), "Dispatcher moved execution to dead letter");
+                            crawlObservabilityService.recordWorkerOutcome(queueName, message, "dead_letter_dispatcher");
                             releaseClaim(crawlJob, message.crawlJobId());
                             return false;
                         }
                         crawlJobQueue.markDone(message);
+                        crawlObservabilityService.recordWorkerOutcome(queueName, message, "done");
                         releaseClaim(crawlJob, message.crawlJobId());
                         return true;
                     } catch (CrawlJobNotFoundException | QueuedCrawlJobResolutionException exception) {
                         crawlJobQueue.moveToDeadLetter(message, exception.getMessage());
+                        crawlObservabilityService.recordWorkerOutcome(queueName, message, "dead_letter_resolution");
                         releaseClaim(crawlJob, message.crawlJobId());
                         return false;
                     } catch (RuntimeException exception) {
+                        crawlObservabilityService.recordWorkerOutcome(queueName, message, "retry_scheduled");
                         requeueForRetry(message, crawlJob);
                         return false;
                     }
                 })
-                .orElse(false);
+                .orElseGet(() -> {
+                    crawlObservabilityService.recordWorkerOutcome(queueName, null, "empty");
+                    return false;
+                });
     }
 
     @Scheduled(fixedDelayString = "${webscraper.worker.poll-interval-ms:1000}", initialDelayString = "${webscraper.worker.initial-delay-ms:1000}")
