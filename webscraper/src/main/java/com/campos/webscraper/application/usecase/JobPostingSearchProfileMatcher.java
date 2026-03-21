@@ -37,6 +37,10 @@ public class JobPostingSearchProfileMatcher {
             return true;
         }
 
+        if (profile == JobPostingSearchProfile.JAVA_STACK_PRAGMATIC) {
+            return matchesJavaStackPragmatic(posting);
+        }
+
         if (profile == JobPostingSearchProfile.JAVA_BACKEND_BALANCED) {
             return matchesJavaBackendBalanced(posting);
         }
@@ -57,11 +61,19 @@ public class JobPostingSearchProfileMatcher {
     }
 
     private boolean matchesJavaBackendBalanced(JobPostingEntity posting) {
-        if (isTalentPool(posting)) {
+        if (!matchesJavaStackPragmatic(posting)) {
             return false;
         }
 
         if (isLeadershipRole(posting)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean matchesJavaStackPragmatic(JobPostingEntity posting) {
+        if (isTalentPool(posting)) {
             return false;
         }
 

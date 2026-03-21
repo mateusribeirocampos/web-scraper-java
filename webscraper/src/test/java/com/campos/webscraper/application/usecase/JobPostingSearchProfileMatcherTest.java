@@ -116,6 +116,20 @@ class JobPostingSearchProfileMatcherTest {
     }
 
     @Test
+    @DisplayName("should accept leadership roles for the pragmatic profile")
+    void shouldAcceptLeadershipRolesForThePragmaticProfile() {
+        JobPostingEntity posting = JobPostingEntity.builder()
+                .title("Engineering Manager")
+                .company("Acme")
+                .techStackTags("Java,Spring")
+                .description("Engineering leadership for Java platform")
+                .canonicalUrl("https://example.com/jobs/9")
+                .build();
+
+        assertThat(matcher.matches(posting, JobPostingSearchProfile.JAVA_STACK_PRAGMATIC)).isTrue();
+    }
+
+    @Test
     @DisplayName("should accept java postings without strict role signal for the balanced profile")
     void shouldAcceptJavaPostingsWithoutStrictRoleSignalForTheBalancedProfile() {
         JobPostingEntity posting = JobPostingEntity.builder()
@@ -123,7 +137,7 @@ class JobPostingSearchProfileMatcherTest {
                 .company("Acme")
                 .techStackTags("Java,Spring")
                 .description("Atuacao em plataforma interna")
-                .canonicalUrl("https://example.com/jobs/9")
+                .canonicalUrl("https://example.com/jobs/10")
                 .build();
 
         assertThat(matcher.matches(posting, JobPostingSearchProfile.JAVA_BACKEND_BALANCED)).isTrue();
@@ -137,7 +151,7 @@ class JobPostingSearchProfileMatcherTest {
                 .company("Acme")
                 .techStackTags("Java,Spring")
                 .description("Engineering leadership for Java platform")
-                .canonicalUrl("https://example.com/jobs/10")
+                .canonicalUrl("https://example.com/jobs/11")
                 .build();
 
         assertThat(matcher.matches(posting, JobPostingSearchProfile.JAVA_BACKEND_BALANCED)).isFalse();
@@ -150,7 +164,7 @@ class JobPostingSearchProfileMatcherTest {
                 .title("Senior Software Engineer")
                 .company("Acme")
                 .seniority(SeniorityLevel.SENIOR)
-                .canonicalUrl("https://example.com/jobs/11")
+                .canonicalUrl("https://example.com/jobs/12")
                 .build();
 
         assertThat(matcher.matches(posting, JobPostingSearchProfile.UNFILTERED)).isTrue();

@@ -86,6 +86,8 @@ No perfil oficial `JAVA_JUNIOR_BACKEND`, a listagem deve priorizar resultado út
 Se o objetivo for apenas exploração ampla da base, o contrato admite `profile=UNFILTERED`.
 Se o objetivo for um meio-termo entre aderência estrita e exploração ampla, o contrato também
 admite `profile=JAVA_BACKEND_BALANCED`.
+Se o objetivo for volume real com stack aderente, mesmo sem fit estrito de função, o contrato
+também admite `profile=JAVA_STACK_PRAGMATIC`.
 
 Exemplos de intenção já adotados como referência:
 

@@ -18,6 +18,12 @@ public enum JobPostingSearchProfile {
     JAVA_BACKEND_BALANCED,
 
     /**
+     * Pragmatic profile: recent postings with stack adherence and no talent-pool noise, prioritizing
+     * result volume over strict role fit.
+     */
+    JAVA_STACK_PRAGMATIC,
+
+    /**
      * Returns recent postings without additional relevance filtering.
      */
     UNFILTERED

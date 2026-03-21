@@ -258,6 +258,13 @@ e cargos de lideranca:
 curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_BACKEND_BALANCED"
 ```
 
+Perfil pragmatico, para volume real com stack aderente e sem banco de talentos, mesmo que a vaga
+nao seja um fit estrito de funcao:
+
+```bash
+curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_STACK_PRAGMATIC"
+```
+
 Se voce quiser uma leitura exploratoria mais ampla, sem o perfil estrito de aderencia:
 
 ```bash

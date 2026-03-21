@@ -223,4 +223,47 @@ class JobPostingQueryControllerTest {
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].id").value(6));
     }
+
+    @Test
+    @DisplayName("should allow stack-adherent leadership roles for the pragmatic profile")
+    void shouldAllowStackAdherentLeadershipRolesForThePragmaticProfile() throws Exception {
+        LocalDate expectedSince = LocalDate.now().minusDays(60);
+
+        when(listJobPostingsUseCase.execute(expectedSince, null))
+                .thenReturn(List.of(
+                        JobPostingEntity.builder()
+                                .id(8L)
+                                .title("Engineering Manager")
+                                .company("Bitso")
+                                .canonicalUrl("https://example.com/jobs/8")
+                                .techStackTags("Java,Spring")
+                                .description("Leadership role for Java platform")
+                                .publishedAt(LocalDate.of(2026, 3, 16))
+                                .build(),
+                        JobPostingEntity.builder()
+                                .id(9L)
+                                .title("Talent Pool")
+                                .company("Bitso")
+                                .canonicalUrl("https://example.com/jobs/9")
+                                .techStackTags("Java")
+                                .publishedAt(LocalDate.of(2026, 3, 16))
+                                .build()
+                ));
+
+        JobPostingQueryController controller = new JobPostingQueryController(
+                listJobPostingsUseCase,
+                jobPostingSearchProfileMatcher
+        );
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new RestExceptionHandler())
+                .build();
+
+        mockMvc.perform(get("/api/v1/job-postings")
+                        .param("category", "PRIVATE_SECTOR")
+                        .param("profile", JobPostingSearchProfile.JAVA_STACK_PRAGMATIC.name()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].id").value(8));
+    }
 }

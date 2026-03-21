@@ -189,6 +189,15 @@ GET /api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_BACKEN
 Ele preserva o filtro de recência, bloqueia banco de talentos e liderança, mas abre mão do corte
 estrito de senioridade e do sinal obrigatório de função aderente.
 
+Também existe um perfil pragmático:
+
+```text
+GET /api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_STACK_PRAGMATIC
+```
+
+Ele mantém recência, exclui banco de talentos e exige stack aderente, mas aceita resultados mais
+amplos para aumentar o volume útil quando a base recente estiver escassa.
+
 ---
 
 ## Mapa de Dependências entre ADRs

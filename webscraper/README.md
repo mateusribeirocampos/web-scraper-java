@@ -88,6 +88,12 @@ Para um recorte intermediario, que preserva stack aderente mas abre mais do que 
 curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_BACKEND_BALANCED"
 ```
 
+Para um recorte pragmatico, focado em volume real com stack aderente e sem banco de talentos:
+
+```bash
+curl "http://localhost:8080/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_STACK_PRAGMATIC"
+```
+
 Para investigacao mais ampla da base, sem o perfil estrito:
 
 ```bash
