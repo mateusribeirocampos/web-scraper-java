@@ -76,7 +76,7 @@ class TargetSiteOnboardingProfileControllerTest {
                         "https://boards-api.greenhouse.io/v1/boards/bitso/jobs?content=true",
                         "greenhouse_bitso",
                         "Bitso Careers via Greenhouse",
-                        "https://boards.greenhouse.io/bitso",
+                        "https://boards-api.greenhouse.io/v1/boards/bitso/jobs?content=true",
                         "TYPE_E",
                         "API",
                         "PRIVATE_SECTOR",

@@ -22,7 +22,7 @@ public final class GreenhouseBoardOnboardingProfiles {
         TargetSiteEntity targetSite = TargetSiteEntity.builder()
                 .siteCode("greenhouse_bitso")
                 .displayName("Bitso Careers via Greenhouse")
-                .baseUrl("https://boards.greenhouse.io/bitso")
+                .baseUrl(apiUrl)
                 .siteType(SiteType.TYPE_E)
                 .extractionMode(ExtractionMode.API)
                 .jobCategory(JobCategory.PRIVATE_SECTOR)

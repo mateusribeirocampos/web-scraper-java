@@ -503,22 +503,39 @@ ORDER BY
 - Status atual: implementado com catálogo operacional e endpoints:
   - `GET /api/v1/onboarding-profiles`
   - `GET /api/v1/onboarding-profiles/{profileKey}`
-  O primeiro perfil curado exposto é `greenhouse_bitso`, reaproveitando o checklist já validado
-  em stories anteriores.
+  O catálogo já cobre `greenhouse_bitso`, `indeed-br`, `dou-api` e `pci_concursos`.
 
-#### Próxima recomendação após 2026-03-21
+#### Story 12.5 — bootstrap de novos perfis/famílias de onboarding
+- Expandir o catálogo operacional para famílias/fontes reais já suportadas.
+- Preservar compatibilidade do contrato v1 do payload detalhado.
+- **TDD:** catálogo/controller tests primeiro.
+- Status atual: implementado com perfis curados para `indeed-br`, `dou-api` e `pci_concursos`,
+  além de `greenhouse_bitso`. O payload detalhado preserva `boardToken` para clientes Greenhouse.
+
+#### Story 12.6 — bootstrap de `TargetSite` a partir de perfil curado
+- Materializar um `TargetSite` persistido diretamente do catálogo operacional.
+- Reduzir o passo manual entre leitura do perfil e ativação de compliance.
+- **TDD:** use case/controller tests primeiro.
+- Status atual: implementado com:
+  - `POST /api/v1/onboarding-profiles/{profileKey}/bootstrap-target-site`
+  - upsert por `siteCode`
+  - `201 CREATED` para criação nova e `200 OK` para atualização
+  - preservação de `enabled`, `legalStatus` e `createdAt` quando o site já existe
+
+#### Próxima recomendação após 2026-03-24
 
 Com fila persistida, perfis de busca, reenriquecimento Greenhouse, limpeza das heurísticas de
-stack, métricas/logs, health summary, gate de ativação e catálogo operacional de onboarding já
-estabilizados, a próxima story mais defensável passa a ser:
+stack, métricas/logs, health summary, gate de ativação, catálogo operacional e bootstrap de
+`TargetSite` já estabilizados, a próxima story mais defensável passa a ser:
 
-- **Story 12.5 — bootstrap de novos perfis/famílias de onboarding**
+- **Story 12.7 — bootstrap de `CrawlJob` a partir de `TargetSite` curado**
 
 Razão:
 
 - a camada operacional básica já está entregue;
-- o próximo ganho passa a ser aumentar cobertura do catálogo para novas famílias/fontes reais;
-- isso prepara o onboarding seguro de novas integrações sem voltar a depender de ADR manual.
+- o próximo ganho passa a ser eliminar também o passo manual entre `TargetSite` persistido e job
+  executável;
+- isso aproxima o onboarding curado de um fluxo quase completo sem SQL/manual intervention.
 
 ---
 

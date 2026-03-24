@@ -21,6 +21,8 @@ ou browser somente quando permitido.
   pela camada idempotente de persistencia
 - Ativacao de `TargetSite` agora passa por endpoint/caso de uso dedicado que aplica o checklist de
   onboarding e bloqueia `enabled=true` sem compliance completa
+- Perfis curados agora podem materializar `TargetSite` persistido via bootstrap REST, reduzindo o
+  passo manual entre catálogo e ativação
 
 ## Validacao Manual Oficial
 
@@ -139,7 +141,11 @@ Catalogo operacional de perfis de onboarding:
 ```bash
 curl "http://localhost:8080/api/v1/onboarding-profiles"
 curl "http://localhost:8080/api/v1/onboarding-profiles/greenhouse_bitso"
+curl -X POST "http://localhost:8080/api/v1/onboarding-profiles/greenhouse_bitso/bootstrap-target-site"
 ```
+
+Esse bootstrap cria ou atualiza o `TargetSite` pelo `siteCode` do perfil curado e devolve o
+`siteId` persistido para o próximo passo de ativação.
 
 ## Notas de Qualidade de Busca
 
