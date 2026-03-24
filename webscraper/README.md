@@ -134,6 +134,13 @@ curl -X POST "http://localhost:8080/api/v1/target-sites/7/activation" \
   }'
 ```
 
+Catalogo operacional de perfis de onboarding:
+
+```bash
+curl "http://localhost:8080/api/v1/onboarding-profiles"
+curl "http://localhost:8080/api/v1/onboarding-profiles/greenhouse_bitso"
+```
+
 ## Notas de Qualidade de Busca
 
 - `tech_stack_tags` e deliberadamente conservador para reduzir falso positivo.

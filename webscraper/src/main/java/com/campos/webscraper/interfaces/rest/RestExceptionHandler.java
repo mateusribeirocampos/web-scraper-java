@@ -2,6 +2,7 @@ package com.campos.webscraper.interfaces.rest;
 
 import com.campos.webscraper.interfaces.dto.ErrorResponse;
 import com.campos.webscraper.interfaces.dto.TargetSiteActivationBlockedErrorResponse;
+import com.campos.webscraper.application.onboarding.TargetSiteOnboardingProfileNotFoundException;
 import com.campos.webscraper.shared.CrawlJobNotFoundException;
 import com.campos.webscraper.shared.TargetSiteActivationBlockedException;
 import com.campos.webscraper.shared.TargetSiteNotFoundException;
@@ -24,6 +25,14 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(TargetSiteNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleTargetSiteNotFound(TargetSiteNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(exception.getMessage()));
+    }
+
+    @ExceptionHandler(TargetSiteOnboardingProfileNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleTargetSiteOnboardingProfileNotFound(
+            TargetSiteOnboardingProfileNotFoundException exception
+    ) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(exception.getMessage()));
     }

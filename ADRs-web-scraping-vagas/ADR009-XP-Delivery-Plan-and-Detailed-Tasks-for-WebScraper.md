@@ -496,20 +496,29 @@ ORDER BY
   - contagens por fila/status da fila persistida;
   - últimas 10 execuções persistidas.
 
+#### Story 12.4 — automação/checklist operacional de onboarding por fonte
+- Expor templates operacionais de onboarding curados pela aplicação.
+- Padronizar leitura de checklist por fonte antes da ativação.
+- **TDD:** catálogo e endpoint tests primeiro.
+- Status atual: implementado com catálogo operacional e endpoints:
+  - `GET /api/v1/onboarding-profiles`
+  - `GET /api/v1/onboarding-profiles/{profileKey}`
+  O primeiro perfil curado exposto é `greenhouse_bitso`, reaproveitando o checklist já validado
+  em stories anteriores.
+
 #### Próxima recomendação após 2026-03-21
 
 Com fila persistida, perfis de busca, reenriquecimento Greenhouse, limpeza das heurísticas de
-stack, métricas/logs, health summary e gate de ativação já estabilizados, a próxima story mais
-defensável passa a ser:
+stack, métricas/logs, health summary, gate de ativação e catálogo operacional de onboarding já
+estabilizados, a próxima story mais defensável passa a ser:
 
-- **Story 12.4 — automação/checklist operacional de onboarding por fonte**
+- **Story 12.5 — bootstrap de novos perfis/famílias de onboarding**
 
 Razão:
 
-- a camada de observabilidade mínima já está entregue;
-- o gate transacional de ativação já existe, então o próximo ganho passa a ser reduzir trabalho
-  manual e padronizar onboarding real por fonte;
-- isso fecha o ciclo entre ADR, operação e crescimento seguro do catálogo.
+- a camada operacional básica já está entregue;
+- o próximo ganho passa a ser aumentar cobertura do catálogo para novas famílias/fontes reais;
+- isso prepara o onboarding seguro de novas integrações sem voltar a depender de ADR manual.
 
 ---
 
