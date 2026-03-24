@@ -114,6 +114,7 @@ web-scraper-java/
 - Retry, rate limiting, bulkhead e circuit breaker por fonte.
 - Gate operacional para ativacao de `TargetSite` via checklist consumido pela aplicacao.
 - Bootstrap de `TargetSite` a partir de perfis curados para reduzir setup manual antes da ativacao.
+- Bootstrap de `CrawlJob` canônico a partir de `TargetSite` persistido.
 - Consulta REST para vagas privadas e concursos.
 - Story logs e ADRs sincronizados com o estado do projeto.
 
@@ -123,6 +124,7 @@ web-scraper-java/
 |---|---|---|
 | `POST` | `/api/v1/crawl-jobs/{jobId}/execute` | Dispara execucao manual de um `CrawlJob` |
 | `POST` | `/api/v1/target-sites/{siteId}/activation` | Aplica o checklist de onboarding e so habilita o site se a compliance fechar |
+| `POST` | `/api/v1/target-sites/{siteId}/bootstrap-crawl-job` | Cria ou atualiza o `CrawlJob` canônico do site persistido |
 | `GET` | `/api/v1/onboarding-profiles` | Lista perfis operacionais de onboarding curados por fonte |
 | `GET` | `/api/v1/onboarding-profiles/{profileKey}` | Retorna o checklist operacional completo de um perfil curado |
 | `POST` | `/api/v1/onboarding-profiles/{profileKey}/bootstrap-target-site` | Cria ou atualiza um `TargetSite` persistido a partir do perfil curado |

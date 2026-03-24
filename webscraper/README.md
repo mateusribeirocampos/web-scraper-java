@@ -147,6 +147,15 @@ curl -X POST "http://localhost:8080/api/v1/onboarding-profiles/greenhouse_bitso/
 Esse bootstrap cria ou atualiza o `TargetSite` pelo `siteCode` do perfil curado e devolve o
 `siteId` persistido para o próximo passo de ativação.
 
+Bootstrap do `CrawlJob` canônico a partir do `TargetSite` persistido:
+
+```bash
+curl -X POST "http://localhost:8080/api/v1/target-sites/7/bootstrap-crawl-job"
+```
+
+Esse passo cria ou atualiza o `CrawlJob` operacional do site, reduzindo o setup manual antes da
+execução real.
+
 ## Notas de Qualidade de Busca
 
 - `tech_stack_tags` e deliberadamente conservador para reduzir falso positivo.

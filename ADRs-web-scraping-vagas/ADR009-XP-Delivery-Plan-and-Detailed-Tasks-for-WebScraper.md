@@ -522,20 +522,29 @@ ORDER BY
   - `201 CREATED` para criação nova e `200 OK` para atualização
   - preservação de `enabled`, `legalStatus` e `createdAt` quando o site já existe
 
+#### Story 12.7 — bootstrap de `CrawlJob` a partir de `TargetSite` curado
+- Materializar um `CrawlJob` persistido a partir do `TargetSite` já bootstrapado.
+- Eliminar o passo manual entre site persistido e job executável.
+- **TDD:** use case/controller tests primeiro.
+- Status atual: implementado com:
+  - `POST /api/v1/target-sites/{siteId}/bootstrap-crawl-job`
+  - upsert canônico por `target_site_id`
+  - `201 CREATED` para criação nova e `200 OK` para atualização
+  - `V009` adicionando unicidade de `crawl_jobs.target_site_id`
+
 #### Próxima recomendação após 2026-03-24
 
 Com fila persistida, perfis de busca, reenriquecimento Greenhouse, limpeza das heurísticas de
 stack, métricas/logs, health summary, gate de ativação, catálogo operacional e bootstrap de
-`TargetSite` já estabilizados, a próxima story mais defensável passa a ser:
+`TargetSite`/`CrawlJob` já estabilizados, a próxima story mais defensável passa a ser:
 
-- **Story 12.7 — bootstrap de `CrawlJob` a partir de `TargetSite` curado**
+- **Story 12.8 — bootstrap opcional de execução inicial / smoke run operacional**
 
 Razão:
 
-- a camada operacional básica já está entregue;
-- o próximo ganho passa a ser eliminar também o passo manual entre `TargetSite` persistido e job
-  executável;
-- isso aproxima o onboarding curado de um fluxo quase completo sem SQL/manual intervention.
+- a camada operacional básica já cria site e job sem SQL/manual intervention;
+- o próximo ganho passa a ser validar automaticamente o primeiro dispatch controlado da fonte;
+- isso aproxima o onboarding curado de um fluxo operacional quase fim a fim.
 
 ---
 
