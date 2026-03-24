@@ -25,6 +25,7 @@ public class GetTargetSiteOnboardingProfileUseCase {
         return new TargetSiteOnboardingProfileResponse(
                 template.profileKey(),
                 template.sourceFamily(),
+                "GREENHOUSE".equals(template.sourceFamily()) ? template.sourceIdentifier() : null,
                 template.sourceIdentifier(),
                 template.jobsApiUrl(),
                 template.targetSite().getSiteCode(),

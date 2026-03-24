@@ -18,7 +18,7 @@ class TargetSiteOnboardingProfileCatalogTest {
     void shouldExposeCuratedOnboardingProfilesForSupportedSources() {
         assertThat(catalog.list())
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
-                .contains("greenhouse_bitso");
+                .contains("greenhouse_bitso", "indeed-br", "dou-api", "pci_concursos");
     }
 
     @Test
@@ -30,6 +30,28 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(template.sourceFamily()).isEqualTo("GREENHOUSE");
         assertThat(template.targetSite().getSiteCode()).isEqualTo("greenhouse_bitso");
         assertThat(template.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.API_OFICIAL);
+    }
+
+    @Test
+    @DisplayName("should expose multiple onboarding families with consistent legal categories")
+    void shouldExposeMultipleOnboardingFamiliesWithConsistentLegalCategories() {
+        TargetSiteOnboardingProfileTemplate indeed = catalog.get("indeed-br");
+        TargetSiteOnboardingProfileTemplate dou = catalog.get("dou-api");
+        TargetSiteOnboardingProfileTemplate pci = catalog.get("pci_concursos");
+
+        assertThat(indeed.sourceFamily()).isEqualTo("INDEED");
+        assertThat(indeed.targetSite().getSiteCode()).isEqualTo("indeed-br");
+        assertThat(indeed.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.API_OFICIAL);
+        assertThat(indeed.jobsApiUrl()).isEqualTo("https://to.indeed.com");
+        assertThat(indeed.checklist().officialApiEndpointUrl()).isEqualTo("https://to.indeed.com");
+
+        assertThat(dou.sourceFamily()).isEqualTo("DOU");
+        assertThat(dou.targetSite().getSiteCode()).isEqualTo("dou-api");
+        assertThat(dou.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.API_OFICIAL);
+
+        assertThat(pci.sourceFamily()).isEqualTo("PCI_CONCURSOS");
+        assertThat(pci.targetSite().getSiteCode()).isEqualTo("pci_concursos");
+        assertThat(pci.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.DADOS_PUBLICOS);
     }
 
     @Test

@@ -7,6 +7,7 @@ public record TargetSiteOnboardingProfileResponse(
         String profileKey,
         String sourceFamily,
         String boardToken,
+        String sourceIdentifier,
         String jobsApiUrl,
         String siteCode,
         String displayName,

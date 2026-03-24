@@ -15,8 +15,14 @@ public class TargetSiteOnboardingProfileCatalog {
 
     public TargetSiteOnboardingProfileCatalog() {
         TargetSiteOnboardingProfileTemplate greenhouseBitso = fromGreenhouseProfile(GreenhouseBoardOnboardingProfiles.bitso());
+        TargetSiteOnboardingProfileTemplate indeedBr = CoreSourceOnboardingProfiles.indeedBr();
+        TargetSiteOnboardingProfileTemplate douApi = CoreSourceOnboardingProfiles.douApi();
+        TargetSiteOnboardingProfileTemplate pciConcursos = CoreSourceOnboardingProfiles.pciConcursos();
         this.templatesByKey = Map.of(
-                greenhouseBitso.profileKey(), greenhouseBitso
+                greenhouseBitso.profileKey(), greenhouseBitso,
+                indeedBr.profileKey(), indeedBr,
+                douApi.profileKey(), douApi,
+                pciConcursos.profileKey(), pciConcursos
         );
     }
 

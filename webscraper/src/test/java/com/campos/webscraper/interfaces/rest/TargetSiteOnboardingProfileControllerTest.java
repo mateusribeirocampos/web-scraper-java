@@ -72,6 +72,7 @@ class TargetSiteOnboardingProfileControllerTest {
                         "greenhouse_bitso",
                         "GREENHOUSE",
                         "bitso",
+                        "bitso",
                         "https://boards-api.greenhouse.io/v1/boards/bitso/jobs?content=true",
                         "greenhouse_bitso",
                         "Bitso Careers via Greenhouse",
@@ -109,6 +110,7 @@ class TargetSiteOnboardingProfileControllerTest {
                 .andExpect(jsonPath("$.profileKey").value("greenhouse_bitso"))
                 .andExpect(jsonPath("$.sourceFamily").value("GREENHOUSE"))
                 .andExpect(jsonPath("$.boardToken").value("bitso"))
+                .andExpect(jsonPath("$.sourceIdentifier").value("bitso"))
                 .andExpect(jsonPath("$.siteCode").value("greenhouse_bitso"))
                 .andExpect(jsonPath("$.legalCategory").value("API_OFICIAL"));
 
