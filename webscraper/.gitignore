@@ -37,3 +37,7 @@ build/
 # Cada desenvolvedor tem o seu proprio: nao vai para o repositorio.
 src/main/resources/application-dev.properties
 .env
+
+### claude and skill
+CLAUDE.md
+SKILL.md
