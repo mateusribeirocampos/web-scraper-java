@@ -21,6 +21,8 @@ ou browser somente quando permitido.
   pela camada idempotente de persistencia
 - Ativacao de `TargetSite` agora passa por endpoint/caso de uso dedicado que aplica o checklist de
   onboarding e bloqueia `enabled=true` sem compliance completa
+- Antes da ativacao, a aplicacao agora tambem consegue gerar um draft assistido de compliance com
+  evidencias curadas ou derivadas do `TargetSite`
 - Perfis curados agora podem materializar `TargetSite` persistido via bootstrap REST, reduzindo o
   passo manual entre catálogo e ativação
 - Perfis curados agora tambem podem orquestrar em uma chamada o bootstrap do `TargetSite`, o
@@ -117,6 +119,8 @@ curl "http://localhost:8080/api/v1/scraper/health"
 Gate operacional de ativacao de site:
 
 ```bash
+curl "http://localhost:8080/api/v1/target-sites/7/activation-assistance"
+
 curl -X POST "http://localhost:8080/api/v1/target-sites/7/activation" \
   -H "Content-Type: application/json" \
   -d '{
@@ -137,6 +141,12 @@ curl -X POST "http://localhost:8080/api/v1/target-sites/7/activation" \
     "discoveryEvidence": "Greenhouse public API reviewed."
   }'
 ```
+
+O endpoint de `activation-assistance` nao ativa o site. Ele devolve um draft assistido com:
+
+- evidencias curadas quando o `siteCode` bate com um perfil conhecido;
+- evidencias derivadas de `targetSite.baseUrl` e metadados tecnicos quando nao ha perfil curado;
+- `blockingReasonsIfActivatedNow`, calculadas pelo mesmo validator do gate de ativacao.
 
 Catalogo operacional de perfis de onboarding:
 

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * In-memory catalog of curated onboarding templates that can be consumed operationally by the app.
@@ -38,6 +39,12 @@ public class TargetSiteOnboardingProfileCatalog {
             throw new TargetSiteOnboardingProfileNotFoundException(profileKey);
         }
         return template;
+    }
+
+    public Optional<TargetSiteOnboardingProfileTemplate> findBySiteCode(String siteCode) {
+        return templatesByKey.values().stream()
+                .filter(template -> template.targetSite().getSiteCode().equals(siteCode))
+                .findFirst();
     }
 
     private static TargetSiteOnboardingProfileTemplate fromGreenhouseProfile(GreenhouseBoardOnboardingProfile profile) {

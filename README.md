@@ -113,6 +113,7 @@ web-scraper-java/
 - Fila persistida em Postgres com claim, ack, retry e dead-letter.
 - Retry, rate limiting, bulkhead e circuit breaker por fonte.
 - Gate operacional para ativacao de `TargetSite` via checklist consumido pela aplicacao.
+- Assistencia de compliance para prefill de evidencias de `robots.txt`, ToS e endpoint oficial antes da ativacao.
 - Bootstrap de `TargetSite` a partir de perfis curados para reduzir setup manual antes da ativacao.
 - Bootstrap de `CrawlJob` canônico a partir de `TargetSite` persistido.
 - Orquestracao unica por `profileKey` para bootstrap de `TargetSite` + `CrawlJob` + smoke run opcional.
@@ -125,6 +126,7 @@ web-scraper-java/
 |---|---|---|
 | `POST` | `/api/v1/crawl-jobs/{jobId}/execute` | Dispara execucao manual de um `CrawlJob` |
 | `POST` | `/api/v1/target-sites/{siteId}/activation` | Aplica o checklist de onboarding e so habilita o site se a compliance fechar |
+| `GET` | `/api/v1/target-sites/{siteId}/activation-assistance` | Gera um draft assistido de compliance com evidencias curadas ou derivadas e mostra os gaps que ainda bloqueiam a ativacao |
 | `POST` | `/api/v1/target-sites/{siteId}/bootstrap-crawl-job` | Cria ou atualiza o `CrawlJob` canônico do site persistido |
 | `POST` | `/api/v1/target-sites/{siteId}/smoke-run` | Executa um smoke run controlado one-off a partir do job canônico, com guarda contra duplicidade e retorno de `smokeRunStatus` |
 | `GET` | `/api/v1/onboarding-profiles` | Lista perfis operacionais de onboarding curados por fonte |

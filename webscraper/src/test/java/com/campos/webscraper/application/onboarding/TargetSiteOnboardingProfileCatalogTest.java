@@ -55,6 +55,18 @@ class TargetSiteOnboardingProfileCatalogTest {
     }
 
     @Test
+    @DisplayName("should find curated profile by target site code")
+    void shouldFindCuratedProfileByTargetSiteCode() {
+        assertThat(catalog.findBySiteCode("greenhouse_bitso"))
+                .isPresent()
+                .get()
+                .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
+                .isEqualTo("greenhouse_bitso");
+
+        assertThat(catalog.findBySiteCode("unknown-site")).isEmpty();
+    }
+
+    @Test
     @DisplayName("should fail when onboarding profile key is unknown")
     void shouldFailWhenOnboardingProfileKeyIsUnknown() {
         assertThatThrownBy(() -> catalog.get("unknown_profile"))

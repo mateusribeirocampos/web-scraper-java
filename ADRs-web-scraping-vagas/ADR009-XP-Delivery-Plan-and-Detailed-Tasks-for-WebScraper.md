@@ -555,6 +555,17 @@ ORDER BY
   - resposta consolidada com estados de bootstrap do site, bootstrap do job e smoke run opcional
   - `201 CREATED` quando o fluxo cria `TargetSite` ou `CrawlJob`; `200 OK` quando ambos ja existiam
 
+#### Story 12.10 — assistente de evidências de compliance
+- Reduzir o preenchimento manual antes da ativação.
+- Gerar draft assistido de `robots.txt`, ToS e endpoint oficial a partir de perfil curado ou do
+  `TargetSite` persistido.
+- **TDD:** use case/controller tests primeiro.
+- Status atual: implementado com:
+  - `GET /api/v1/target-sites/{siteId}/activation-assistance`
+  - prefill curado quando o `siteCode` corresponde a um perfil do catálogo
+  - fallback derivado de `targetSite.baseUrl` e metadados técnicos quando não há perfil curado
+  - retorno de `blockingReasonsIfActivatedNow` pelo mesmo validator usado na ativação real
+
 #### Próxima recomendação após 2026-03-25
 
 Com fila persistida, perfis de busca, reenriquecimento Greenhouse, limpeza das heurísticas de
@@ -562,13 +573,14 @@ stack, métricas/logs, health summary, gate de ativação, catálogo operacional
 `TargetSite`/`CrawlJob`, smoke run inicial e orquestração unificada por `profileKey` já
 estabilizados, a próxima story mais defensável passa a ser:
 
-- **Story 12.10 — assistente de evidências de compliance**
+- **Story 12.11 — teste operacional do usuário e automação de start-to-dispatch**
 
 Razão:
 
-- o gargalo operacional deixou de ser bootstrap e passou a ser coleta/validação de evidências;
-- `robots.txt`, ToS e endpoint oficial ainda dependem de preenchimento manual pelo operador;
-- o próximo ganho relevante agora é reduzir atrito antes da ativação, não antes do primeiro run.
+- a camada de onboarding operacional já cobre bootstrap, smoke run e draft de compliance;
+- o próximo ganho passa a ser validar o fluxo como usuário real e automatizar o ciclo local de
+  subir a aplicação, disparar execuções e inspecionar o resultado no banco;
+- isso prepara a expansão para novas buscas, incluindo vagas de TI em prefeituras próximas.
 
 ---
 
