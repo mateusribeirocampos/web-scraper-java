@@ -573,14 +573,29 @@ stack, métricas/logs, health summary, gate de ativação, catálogo operacional
 `TargetSite`/`CrawlJob`, smoke run inicial e orquestração unificada por `profileKey` já
 estabilizados, a próxima story mais defensável passa a ser:
 
-- **Story 12.11 — teste operacional do usuário e automação de start-to-dispatch**
+#### Story 12.11 — teste operacional do usuário e automação local de start-to-dispatch
+- Transformar o fluxo real do usuário em um caminho reproduzível ponta a ponta.
+- Consolidar bootstrap, execução observada e amostra de dados persistidos em um resumo único.
+- **TDD:** use case/controller tests primeiro; script local fino por cima do endpoint consolidado.
+- Status atual: implementado com:
+  - `POST /api/v1/onboarding-profiles/{profileKey}/operational-check`
+  - query params `smokeRun` e `daysBack`
+  - resumo único com bootstrap, execução observada e amostra de vagas recentes
+  - script `webscraper/scripts/run-local-operational-check.sh` para subir a app local, esperar
+    `health` e executar o fluxo
+
+#### Próxima recomendação após 2026-03-25
+
+Com o fluxo operacional do usuário já automatizado localmente, a próxima story mais defensável
+passa a ser:
+
+- **Story 13.1 — expansão para vagas de TI em prefeituras próximas**
 
 Razão:
 
-- a camada de onboarding operacional já cobre bootstrap, smoke run e draft de compliance;
-- o próximo ganho passa a ser validar o fluxo como usuário real e automatizar o ciclo local de
-  subir a aplicação, disparar execuções e inspecionar o resultado no banco;
-- isso prepara a expansão para novas buscas, incluindo vagas de TI em prefeituras próximas.
+- o gargalo deixa de ser operação local e passa a ser cobertura de fonte;
+- a automação local já permite validar rapidamente novas integrações;
+- agora faz sentido ampliar o projeto para fontes municipais/regionais de baixo risco legal.
 
 ---
 

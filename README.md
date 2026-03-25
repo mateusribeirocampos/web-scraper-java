@@ -133,6 +133,7 @@ web-scraper-java/
 | `GET` | `/api/v1/onboarding-profiles/{profileKey}` | Retorna o checklist operacional completo de um perfil curado |
 | `POST` | `/api/v1/onboarding-profiles/{profileKey}/bootstrap?smokeRun=false` | Orquestra em uma chamada o bootstrap do `TargetSite` e do `CrawlJob` canônico |
 | `POST` | `/api/v1/onboarding-profiles/{profileKey}/bootstrap?smokeRun=true` | Orquestra bootstrap do `TargetSite`, bootstrap do `CrawlJob` e smoke run one-off opcional |
+| `POST` | `/api/v1/onboarding-profiles/{profileKey}/operational-check?smokeRun=true&daysBack=60` | Executa o fluxo operacional ponta a ponta e devolve resumo único com bootstrap, execução observada e amostra de vagas recentes |
 | `POST` | `/api/v1/onboarding-profiles/{profileKey}/bootstrap-target-site` | Cria ou atualiza um `TargetSite` persistido a partir do perfil curado |
 | `GET` | `/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_JUNIOR_BACKEND` | Lista vagas privadas recentes usando um perfil explícito; `since` continua aceito e sobrescreve `daysBack` |
 | `GET` | `/api/v1/public-contests?status=...&orderBy=...` | Lista concursos publicos |
@@ -185,6 +186,33 @@ cd webscraper
 
 Observacao: testes com Testcontainers exigem Docker acessivel e com API compativel com a versao
 do Testcontainers usada pelo projeto.
+
+### 5. Rodar o check operacional local
+
+```bash
+cd webscraper
+./scripts/run-local-operational-check.sh
+```
+
+Esse script:
+
+- sobe a aplicacao local se ela ainda nao estiver respondendo;
+- espera `GET /actuator/health`;
+- executa `POST /api/v1/onboarding-profiles/{profileKey}/operational-check`;
+- consulta depois `GET /api/v1/job-postings`;
+- devolve um resumo unico com bootstrap, smoke run/execucao observada e leitura funcional da base.
+
+Para o teste real do usuario, o script agora usa por padrao:
+
+- `JOB_POSTINGS_PROFILE=JAVA_JUNIOR_BACKEND`
+- sem `seniority` explicito
+
+Esse recorte ja abre o mercado para `junior + pleno`, porque o perfil oficial corta `SENIOR/LEAD`,
+mas nao obriga `seniority=JUNIOR`. Se quiser voltar ao recorte estrito:
+
+```bash
+JOB_POSTINGS_SENIORITY=JUNIOR ./scripts/run-local-operational-check.sh
+```
 
 ## Validacao Manual Oficial
 

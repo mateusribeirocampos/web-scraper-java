@@ -27,6 +27,8 @@ ou browser somente quando permitido.
   passo manual entre catálogo e ativação
 - Perfis curados agora tambem podem orquestrar em uma chamada o bootstrap do `TargetSite`, o
   bootstrap do `CrawlJob` canônico e um smoke run opcional
+- O projeto agora expõe também um `operational-check` unificado e um script local para reproduzir
+  o fluxo ponta a ponta do usuário
 
 ## Validacao Manual Oficial
 
@@ -166,6 +168,49 @@ O endpoint unificado `/bootstrap` reduz o número de chamadas operacionais:
 - sem `smokeRun`, ele cria/atualiza `TargetSite` e `CrawlJob` canônico;
 - com `smokeRun=true`, ele também dispara a verificação one-off e devolve `smokeRunStatus` e
   `smokeRunDispatchStatus` no mesmo payload.
+
+Check operacional ponta a ponta por `profileKey`:
+
+```bash
+curl -X POST "http://localhost:8080/api/v1/onboarding-profiles/greenhouse_bitso/operational-check?smokeRun=true&daysBack=60"
+```
+
+Esse endpoint consolida:
+
+- bootstrap do `TargetSite`;
+- bootstrap do `CrawlJob`;
+- smoke run opcional;
+- última execução observada do job disparado;
+- contagem e amostra de vagas recentes persistidas para o `TargetSite`.
+
+Script local para reproduzir o fluxo do usuário:
+
+```bash
+cd webscraper
+./scripts/run-local-operational-check.sh
+```
+
+Variáveis úteis:
+
+- `PROFILE_KEY=greenhouse_bitso`
+- `SMOKE_RUN=true`
+- `DAYS_BACK=60`
+- `JOB_POSTINGS_PROFILE=JAVA_JUNIOR_BACKEND`
+- `JOB_POSTINGS_SENIORITY=` para deixar o recorte em `junior + pleno`
+- `KEEP_APP_RUNNING=true`
+
+O script agora fecha o fluxo ponta a ponta em duas visões:
+
+- check operacional do onboarding/bootstrap/execução;
+- consulta funcional via `/api/v1/job-postings`.
+
+Para o teste real do usuário, o default usa `JAVA_JUNIOR_BACKEND` sem `seniority` explícito. Na
+prática isso amplia o recorte para `junior + pleno`, sem abrir para `senior/lead`. Se precisar do
+filtro estrito:
+
+```bash
+JOB_POSTINGS_SENIORITY=JUNIOR ./scripts/run-local-operational-check.sh
+```
 
 Bootstrap do `CrawlJob` canônico a partir do `TargetSite` persistido:
 
