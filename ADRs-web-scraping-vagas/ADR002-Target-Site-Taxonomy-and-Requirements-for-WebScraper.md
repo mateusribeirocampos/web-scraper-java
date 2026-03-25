@@ -154,6 +154,65 @@ houses que publicam vagas via plataformas padronizadas em vez de manter um porta
 - PCI Concursos: candidato a Tipo A após revisão formal do robots.txt.
 - Bancas individuais: avaliar case-by-case, preferir fontes de divulgação consolidadas.
 
+#### 2.2.1 Inventário municipal inicial — Sul de Minas
+
+Para a expansão municipal prevista após a estabilização operacional local, o projeto passa a manter
+um inventário explícito de prefeituras próximas com foco em concursos e processos seletivos de TI.
+
+Regra de produto para esta família:
+
+- tratar essas fontes como `PUBLIC_CONTEST`;
+- priorizar requisitos de formação, cargo, escolaridade e evidência em edital;
+- **não** reutilizar a lógica de senioridade do mercado privado (`junior/pleno/senior`) como filtro
+  principal de relevância.
+
+| Município | Status API | URL da evidência | Dá para consultar concurso por API? | Estratégia recomendada |
+|---|---|---|---|---|
+| Ouro Fino | API não confirmada; página HTML de concursos | `https://ourofino.mg.gov.br/category/noticias/concurso/` | Não confirmado | HTML + PDF |
+| Inconfidentes | API confirmada (dados abertos) | `https://inconfidentes.mg.gov.br/portal-da-transparencia/dados-abertos/` | Talvez, indiretamente | API primeiro, fallback HTML/PDF |
+| Borda da Mata | API não confirmada | `https://bordadamata.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Jacutinga | API não confirmada | `http://jacutinga.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Andradas | API não confirmada; página HTML de processo seletivo | `https://www.andradas.mg.gov.br/concurso/categoria/24/processo-seletivo/` | Não confirmado | HTML + PDF |
+| Bueno Brandão | API não confirmada | `https://buenobrandao.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Ipuiúna | Portal oficial encontrado; API de concursos não confirmada | `https://ipuiuna.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Senador José Bento | API não confirmada | `https://senadorjosebento.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Santa Rita de Caldas | API não confirmada | `https://www.prefeiturasrc.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Ibitiúra de Minas | API não confirmada | `https://www.ibitiurademinas.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Albertina | API não confirmada | `https://www.albertina.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Monte Sião | API não confirmada; página HTML de processo seletivo | `https://www.montesiao.mg.gov.br/concurso/categoria/24/processo-seletivo/` | Não confirmado | HTML + PDF |
+| Caldas | API não confirmada | `https://caldas.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Congonhal | API não confirmada | `https://congonhal.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Tocos do Moji | API não confirmada | `https://tocosdomoji.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Pouso Alegre | API pública confirmada | `https://pousoalegre.mg.gov.br/api` | Endpoint específico de concursos não confirmado | API primeiro, fallback HTML/PDF |
+| Poços de Caldas | Portal com item “Concursos Públicos”; API de concursos não confirmada | `https://servicos.pocosdecaldas.mg.gov.br/termos` | Portal sim; API específica não confirmada | Portal/HTML + PDF |
+| Bandeira do Sul | API não confirmada | `https://bandeiradosul.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Campestre | API não confirmada | `https://campestre.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Botelhos | API não confirmada | `https://www.botelhos.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Bom Repouso | API não confirmada | `https://bomrepouso.mg.gov.br/` | Não confirmado | HTML + PDF |
+| São João da Mata | API não confirmada | `https://www.saojoaodamata.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Silvianópolis | API não confirmada | `https://www.silvianopolis.mg.gov.br/` | Não confirmado | HTML + PDF |
+| São Sebastião da Bela Vista | Portal oficial encontrado; API de concursos não confirmada | `https://saosebastiaodabelavista.mg.gov.br/portal-da-transparencia1/` | Não confirmado | HTML + PDF |
+| Espírito Santo do Dourado | API não confirmada | `https://www.espdourado.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Conceição dos Ouros | API não confirmada nesta checagem atual | `https://conceicaodosouros.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Careaçu | API não confirmada nesta checagem atual | `https://careacu.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Santa Rita do Sapucaí | Portal com “Dados abertos”; API de concursos não confirmada | `https://pmsrs.mg.gov.br/portal-da-transparencia/` | Não confirmado | HTML + PDF |
+| Cachoeira de Minas | API não confirmada | `https://www.cachoeirademinas.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Poço Fundo | API não confirmada | `https://www.pocofundo.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Córrego do Bom Jesus | API não confirmada | `https://www.corregodobomjesus.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Cambuí | API não confirmada | `https://www.prefeituradecambui.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Consolação | API não confirmada | `https://www.consolacao.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Paraisópolis | API não confirmada | `https://www.paraisopolis.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Brazópolis | API não confirmada | `https://www.brazopolis.mg.gov.br/` | Não confirmado | HTML + PDF |
+| São José do Alegre | API não confirmada | `https://www.saojosedoalegre.mg.gov.br/` | Não confirmado | HTML + PDF |
+| Munhoz | API pública confirmada | `https://www.munhoz.mg.gov.br/api` | Endpoint específico de concursos não confirmado | API primeiro, fallback HTML/PDF |
+
+Consequência prática:
+
+- `Inconfidentes`, `Pouso Alegre` e `Munhoz` entram como primeiros candidatos de menor atrito
+  técnico por terem sinal de API/dados abertos;
+- o restante entra como backlog `HTML + PDF`, dependente de onboarding formal e evidência legal por
+  domínio antes de qualquer ativação.
+
 ---
 
 ### 3. Processo Mandatório de Onboarding de Site

@@ -597,6 +597,41 @@ Razão:
 - a automação local já permite validar rapidamente novas integrações;
 - agora faz sentido ampliar o projeto para fontes municipais/regionais de baixo risco legal.
 
+Direção operacional desta expansão:
+
+- tratar prefeituras como família `PUBLIC_CONTEST`, não como mercado privado;
+- filtrar por cargo, escolaridade e formação exigida (`Ciência da Computação`, `Sistemas de
+  Informação`, `Tecnologia da Informação`, `Análise de Sistemas`, etc.);
+- não usar `seniority` (`junior/pleno/senior`) como eixo principal desta família;
+- priorizar municípios com sinal de API/dados abertos antes de cair para HTML/PDF.
+
+Inventário inicial já levantado:
+
+- candidatos com sinal melhor de API/dados abertos:
+  - `Inconfidentes`
+  - `Pouso Alegre`
+  - `Munhoz`
+- candidatos com estratégia provável `HTML + PDF`:
+  - `Ouro Fino`
+  - `Andradas`
+  - `Monte Sião`
+  - `Poços de Caldas`
+  - e o restante do inventário municipal documentado em `ADR002`
+
+#### Story 13.1 — expansão municipal `PUBLIC_CONTEST` (primeira fatia)
+- Registrar e priorizar os primeiros candidatos municipais de menor atrito técnico.
+- Preservar a família municipal separada da heurística de mercado privado.
+- **TDD:** catálogo/controller tests primeiro.
+- Status atual: inventário e priorização formal documentados para:
+  - `municipal_inconfidentes`
+  - `municipal_pouso_alegre`
+  - `municipal_munhoz`
+- Esses candidatos **não** entram no catálogo operacional runtime ainda, porque o executor municipal
+  real ainda não existe.
+- Próxima fatia da 13.1:
+  - validar endpoint reutilizável de dados abertos/API em cada município;
+  - só depois abrir importador municipal real.
+
 ---
 
 ## Definition of Done

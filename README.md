@@ -119,6 +119,8 @@ web-scraper-java/
 - Orquestracao unica por `profileKey` para bootstrap de `TargetSite` + `CrawlJob` + smoke run opcional.
 - Consulta REST para vagas privadas e concursos.
 - Story logs e ADRs sincronizados com o estado do projeto.
+- A expansão municipal `PUBLIC_CONTEST` já está documentada no backlog dos ADRs para `Inconfidentes`,
+  `Pouso Alegre` e `Munhoz`, mas ainda não foi exposta no catálogo operacional runtime.
 
 ## Endpoints Disponiveis
 
@@ -240,6 +242,13 @@ Resposta esperada:
 
 Esse retorno nao significa que a raspagem terminou. Ele apenas confirma que o comando foi aceito e
 encaminhado ao pipeline de execucao.
+
+Para a trilha municipal em construção:
+
+- a família é `PUBLIC_CONTEST`;
+- ela já está documentada nos ADRs para `Inconfidentes`, `Pouso Alegre` e `Munhoz`;
+- o próximo filtro funcional dessa família deve priorizar cargo, escolaridade e formação exigida,
+  não `junior/pleno/senior`.
 
 ### Consulta funcional no banco
 

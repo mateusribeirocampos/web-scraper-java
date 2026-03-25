@@ -29,6 +29,8 @@ ou browser somente quando permitido.
   bootstrap do `CrawlJob` canônico e um smoke run opcional
 - O projeto agora expõe também um `operational-check` unificado e um script local para reproduzir
   o fluxo ponta a ponta do usuário
+- A expansão municipal `PUBLIC_CONTEST` já está documentada no backlog/ADR, mas ainda não foi
+  exposta no catálogo operacional enquanto o runtime municipal não existir
 
 ## Validacao Manual Oficial
 
@@ -168,6 +170,12 @@ O endpoint unificado `/bootstrap` reduz o número de chamadas operacionais:
 - sem `smokeRun`, ele cria/atualiza `TargetSite` e `CrawlJob` canônico;
 - com `smokeRun=true`, ele também dispara a verificação one-off e devolve `smokeRunStatus` e
   `smokeRunDispatchStatus` no mesmo payload.
+
+Para a expansão municipal de concursos:
+
+- a família municipal está no backlog formal dos ADRs, não no catálogo runtime ainda;
+- ela deve ser tratada como `PUBLIC_CONTEST`;
+- o filtro principal será cargo, escolaridade e formação exigida em edital, e não `seniority`.
 
 Check operacional ponta a ponta por `profileKey`:
 
