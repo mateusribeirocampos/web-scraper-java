@@ -544,20 +544,31 @@ ORDER BY
   - coordenação com `InFlightCrawlJobRegistry` para evitar duplicidade
   - retorno com `bootstrapStatus` + `smokeRunStatus` + `dispatchStatus`
 
-#### Próxima recomendação após 2026-03-24
+#### Story 12.9 — orquestração unificada de onboarding por `profileKey`
+- Reduzir o número de chamadas do operador no onboarding curado.
+- Reaproveitar os casos de uso já estabilizados de bootstrap de `TargetSite`, bootstrap de
+  `CrawlJob` e smoke run.
+- **TDD:** use case/controller tests primeiro.
+- Status atual: implementado com:
+  - `POST /api/v1/onboarding-profiles/{profileKey}/bootstrap`
+  - query param opcional `smokeRun=true|false`
+  - resposta consolidada com estados de bootstrap do site, bootstrap do job e smoke run opcional
+  - `201 CREATED` quando o fluxo cria `TargetSite` ou `CrawlJob`; `200 OK` quando ambos ja existiam
+
+#### Próxima recomendação após 2026-03-25
 
 Com fila persistida, perfis de busca, reenriquecimento Greenhouse, limpeza das heurísticas de
 stack, métricas/logs, health summary, gate de ativação, catálogo operacional e bootstrap de
-`TargetSite`/`CrawlJob`, além de smoke run inicial, já estabilizados, a próxima story mais
-defensável passa a ser:
+`TargetSite`/`CrawlJob`, smoke run inicial e orquestração unificada por `profileKey` já
+estabilizados, a próxima story mais defensável passa a ser:
 
-- **Story 12.9 — orquestração unificada de onboarding por profileKey**
+- **Story 12.10 — assistente de evidências de compliance**
 
 Razão:
 
-- a camada operacional básica já cria site, cria job e dispara o primeiro run controlado;
-- o próximo ganho passa a ser reduzir também o número de chamadas do operador;
-- isso aproxima o onboarding curado de um fluxo operacional fim a fim por `profileKey`.
+- o gargalo operacional deixou de ser bootstrap e passou a ser coleta/validação de evidências;
+- `robots.txt`, ToS e endpoint oficial ainda dependem de preenchimento manual pelo operador;
+- o próximo ganho relevante agora é reduzir atrito antes da ativação, não antes do primeiro run.
 
 ---
 

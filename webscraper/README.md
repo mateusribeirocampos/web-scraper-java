@@ -23,6 +23,8 @@ ou browser somente quando permitido.
   onboarding e bloqueia `enabled=true` sem compliance completa
 - Perfis curados agora podem materializar `TargetSite` persistido via bootstrap REST, reduzindo o
   passo manual entre catálogo e ativação
+- Perfis curados agora tambem podem orquestrar em uma chamada o bootstrap do `TargetSite`, o
+  bootstrap do `CrawlJob` canônico e um smoke run opcional
 
 ## Validacao Manual Oficial
 
@@ -141,11 +143,19 @@ Catalogo operacional de perfis de onboarding:
 ```bash
 curl "http://localhost:8080/api/v1/onboarding-profiles"
 curl "http://localhost:8080/api/v1/onboarding-profiles/greenhouse_bitso"
+curl -X POST "http://localhost:8080/api/v1/onboarding-profiles/greenhouse_bitso/bootstrap"
+curl -X POST "http://localhost:8080/api/v1/onboarding-profiles/greenhouse_bitso/bootstrap?smokeRun=true"
 curl -X POST "http://localhost:8080/api/v1/onboarding-profiles/greenhouse_bitso/bootstrap-target-site"
 ```
 
 Esse bootstrap cria ou atualiza o `TargetSite` pelo `siteCode` do perfil curado e devolve o
 `siteId` persistido para o próximo passo de ativação.
+
+O endpoint unificado `/bootstrap` reduz o número de chamadas operacionais:
+
+- sem `smokeRun`, ele cria/atualiza `TargetSite` e `CrawlJob` canônico;
+- com `smokeRun=true`, ele também dispara a verificação one-off e devolve `smokeRunStatus` e
+  `smokeRunDispatchStatus` no mesmo payload.
 
 Bootstrap do `CrawlJob` canônico a partir do `TargetSite` persistido:
 

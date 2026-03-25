@@ -115,6 +115,7 @@ web-scraper-java/
 - Gate operacional para ativacao de `TargetSite` via checklist consumido pela aplicacao.
 - Bootstrap de `TargetSite` a partir de perfis curados para reduzir setup manual antes da ativacao.
 - Bootstrap de `CrawlJob` canônico a partir de `TargetSite` persistido.
+- Orquestracao unica por `profileKey` para bootstrap de `TargetSite` + `CrawlJob` + smoke run opcional.
 - Consulta REST para vagas privadas e concursos.
 - Story logs e ADRs sincronizados com o estado do projeto.
 
@@ -128,6 +129,8 @@ web-scraper-java/
 | `POST` | `/api/v1/target-sites/{siteId}/smoke-run` | Executa um smoke run controlado one-off a partir do job canônico, com guarda contra duplicidade e retorno de `smokeRunStatus` |
 | `GET` | `/api/v1/onboarding-profiles` | Lista perfis operacionais de onboarding curados por fonte |
 | `GET` | `/api/v1/onboarding-profiles/{profileKey}` | Retorna o checklist operacional completo de um perfil curado |
+| `POST` | `/api/v1/onboarding-profiles/{profileKey}/bootstrap?smokeRun=false` | Orquestra em uma chamada o bootstrap do `TargetSite` e do `CrawlJob` canônico |
+| `POST` | `/api/v1/onboarding-profiles/{profileKey}/bootstrap?smokeRun=true` | Orquestra bootstrap do `TargetSite`, bootstrap do `CrawlJob` e smoke run one-off opcional |
 | `POST` | `/api/v1/onboarding-profiles/{profileKey}/bootstrap-target-site` | Cria ou atualiza um `TargetSite` persistido a partir do perfil curado |
 | `GET` | `/api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_JUNIOR_BACKEND` | Lista vagas privadas recentes usando um perfil explícito; `since` continua aceito e sobrescreve `daysBack` |
 | `GET` | `/api/v1/public-contests?status=...&orderBy=...` | Lista concursos publicos |
