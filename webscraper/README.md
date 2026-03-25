@@ -156,6 +156,17 @@ curl -X POST "http://localhost:8080/api/v1/target-sites/7/bootstrap-crawl-job"
 Esse passo cria ou atualiza o `CrawlJob` operacional do site, reduzindo o setup manual antes da
 execução real.
 
+Smoke run operacional do `TargetSite`:
+
+```bash
+curl -X POST "http://localhost:8080/api/v1/target-sites/7/smoke-run"
+```
+
+Esse endpoint reutiliza o bootstrap do job canônico, coordena com o guard de jobs em voo e
+materializa um job transitório one-off para a verificação. Assim, devolve `smokeRunStatus`
+(`DISPATCHED` ou `SKIPPED_IN_FLIGHT`) junto com o `dispatchStatus` quando a execução realmente foi
+disparada, sem atrasar a agenda canônica do site.
+
 ## Notas de Qualidade de Busca
 
 - `tech_stack_tags` e deliberadamente conservador para reduzir falso positivo.

@@ -532,19 +532,32 @@ ORDER BY
   - `201 CREATED` para criação nova e `200 OK` para atualização
   - `V009` adicionando unicidade de `crawl_jobs.target_site_id`
 
+#### Story 12.8 — bootstrap opcional de execução inicial / smoke run operacional
+- Executar um primeiro dispatch controlado da fonte recém-bootstrapada.
+- Reutilizar o job canônico do site como referência, mas executar a verificação como job transitório
+  one-off.
+- **TDD:** use case/controller tests primeiro.
+- Status atual: implementado com:
+  - `POST /api/v1/target-sites/{siteId}/smoke-run`
+  - bootstrap implícito do `CrawlJob` canônico
+  - dispatch síncrono via `CrawlJobDispatcher` de um job transitório `schedulerManaged=false`
+  - coordenação com `InFlightCrawlJobRegistry` para evitar duplicidade
+  - retorno com `bootstrapStatus` + `smokeRunStatus` + `dispatchStatus`
+
 #### Próxima recomendação após 2026-03-24
 
 Com fila persistida, perfis de busca, reenriquecimento Greenhouse, limpeza das heurísticas de
 stack, métricas/logs, health summary, gate de ativação, catálogo operacional e bootstrap de
-`TargetSite`/`CrawlJob` já estabilizados, a próxima story mais defensável passa a ser:
+`TargetSite`/`CrawlJob`, além de smoke run inicial, já estabilizados, a próxima story mais
+defensável passa a ser:
 
-- **Story 12.8 — bootstrap opcional de execução inicial / smoke run operacional**
+- **Story 12.9 — orquestração unificada de onboarding por profileKey**
 
 Razão:
 
-- a camada operacional básica já cria site e job sem SQL/manual intervention;
-- o próximo ganho passa a ser validar automaticamente o primeiro dispatch controlado da fonte;
-- isso aproxima o onboarding curado de um fluxo operacional quase fim a fim.
+- a camada operacional básica já cria site, cria job e dispara o primeiro run controlado;
+- o próximo ganho passa a ser reduzir também o número de chamadas do operador;
+- isso aproxima o onboarding curado de um fluxo operacional fim a fim por `profileKey`.
 
 ---
 

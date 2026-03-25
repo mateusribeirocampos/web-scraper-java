@@ -111,6 +111,37 @@ class BootstrapCrawlJobFromTargetSiteUseCaseTest {
     }
 
     @Test
+    @DisplayName("should preserve provided schedule floor when updating existing scheduler-managed crawl job")
+    void shouldPreserveProvidedScheduleFloorWhenUpdatingExistingSchedulerManagedCrawlJob() {
+        TargetSiteEntity site = persistedSite(7L, "greenhouse_bitso", JobCategory.PRIVATE_SECTOR);
+        CrawlJobEntity existing = CrawlJobEntity.builder()
+                .id(11L)
+                .targetSite(site)
+                .scheduledAt(Instant.parse("2026-03-24T20:00:30Z"))
+                .jobCategory(null)
+                .schedulerManaged(true)
+                .createdAt(Instant.parse("2026-03-20T10:00:00Z"))
+                .build();
+
+        when(targetSiteRepository.findById(7L)).thenReturn(Optional.of(site));
+        when(crawlJobRepository.findFirstByTargetSiteIdAndSchedulerManagedTrueOrderByCreatedAtAsc(7L))
+                .thenReturn(Optional.of(existing));
+        when(crawlJobRepository.save(any(CrawlJobEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        BootstrapCrawlJobFromTargetSiteUseCase useCase = new BootstrapCrawlJobFromTargetSiteUseCase(
+                targetSiteRepository,
+                crawlJobRepository,
+                Clock.fixed(Instant.parse("2026-03-24T20:00:00Z"), ZoneOffset.UTC)
+        );
+
+        BootstrappedCrawlJob result = useCase.execute(7L, Instant.parse("2026-03-24T20:01:00Z"));
+
+        assertThat(result.bootstrapStatus()).isEqualTo(BootstrapStatus.UPDATED);
+        assertThat(result.crawlJob().getScheduledAt()).isEqualTo(Instant.parse("2026-03-24T20:01:00Z"));
+        assertThat(result.crawlJob().getCreatedAt()).isEqualTo(Instant.parse("2026-03-20T10:00:00Z"));
+    }
+
+    @Test
     @DisplayName("should treat duplicate create race as updated crawl job by reloading target site id")
     void shouldTreatDuplicateCreateRaceAsUpdatedCrawlJobByReloadingTargetSiteId() {
         TargetSiteEntity site = persistedSite(7L, "greenhouse_bitso", JobCategory.PRIVATE_SECTOR);
@@ -188,6 +219,28 @@ class BootstrapCrawlJobFromTargetSiteUseCaseTest {
         assertThat(result.bootstrapStatus()).isEqualTo(BootstrapStatus.CREATED);
         assertThat(result.crawlJob().isSchedulerManaged()).isTrue();
         assertThat(result.crawlJob().getId()).isEqualTo(111L);
+    }
+
+    @Test
+    @DisplayName("should keep createdAt at real creation time when using future initial schedule")
+    void shouldKeepCreatedAtAtRealCreationTimeWhenUsingFutureInitialSchedule() {
+        TargetSiteEntity site = persistedSite(7L, "greenhouse_bitso", JobCategory.PRIVATE_SECTOR);
+        when(targetSiteRepository.findById(7L)).thenReturn(Optional.of(site));
+        when(crawlJobRepository.findFirstByTargetSiteIdAndSchedulerManagedTrueOrderByCreatedAtAsc(7L))
+                .thenReturn(Optional.empty());
+        when(crawlJobRepository.save(any(CrawlJobEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        BootstrapCrawlJobFromTargetSiteUseCase useCase = new BootstrapCrawlJobFromTargetSiteUseCase(
+                targetSiteRepository,
+                crawlJobRepository,
+                Clock.fixed(Instant.parse("2026-03-24T20:00:00Z"), ZoneOffset.UTC)
+        );
+
+        BootstrappedCrawlJob result = useCase.execute(7L, Instant.parse("2026-03-24T20:01:00Z"));
+
+        assertThat(result.bootstrapStatus()).isEqualTo(BootstrapStatus.CREATED);
+        assertThat(result.crawlJob().getScheduledAt()).isEqualTo(Instant.parse("2026-03-24T20:01:00Z"));
+        assertThat(result.crawlJob().getCreatedAt()).isEqualTo(Instant.parse("2026-03-24T20:00:00Z"));
     }
 
     private static TargetSiteEntity persistedSite(Long id, String siteCode, JobCategory category) {

@@ -32,16 +32,33 @@ public class BootstrapCrawlJobFromTargetSiteUseCase {
     }
 
     public BootstrappedCrawlJob execute(Long siteId) {
+        Instant now = Instant.now(clock);
+        return execute(siteId, now, now, false);
+    }
+
+    public BootstrappedCrawlJob execute(Long siteId, Instant initialScheduledAt) {
+        return execute(siteId, initialScheduledAt, Instant.now(clock), true);
+    }
+
+    public BootstrappedCrawlJob executeForSmokeRun(Long siteId, Instant initialScheduledAt) {
+        return execute(siteId, initialScheduledAt, Instant.now(clock), false);
+    }
+
+    private BootstrappedCrawlJob execute(
+            Long siteId,
+            Instant initialScheduledAt,
+            Instant createdAt,
+            boolean preserveScheduleFloor
+    ) {
         TargetSiteEntity targetSite = targetSiteRepository.findById(siteId)
                 .orElseThrow(() -> new TargetSiteNotFoundException(siteId));
 
         Optional<CrawlJobEntity> existing = crawlJobRepository.findFirstByTargetSiteIdAndSchedulerManagedTrueOrderByCreatedAtAsc(siteId);
-        Instant now = Instant.now(clock);
 
         BootstrapStatus bootstrapStatus = existing.isPresent() ? BootstrapStatus.UPDATED : BootstrapStatus.CREATED;
         CrawlJobEntity materialized = existing
-                .map(persisted -> merge(targetSite, persisted))
-                .orElseGet(() -> create(targetSite, now));
+                .map(persisted -> merge(targetSite, persisted, initialScheduledAt, preserveScheduleFloor))
+                .orElseGet(() -> create(targetSite, initialScheduledAt, createdAt));
 
         try {
             CrawlJobEntity saved = crawlJobRepository.save(materialized);
@@ -56,21 +73,30 @@ public class BootstrapCrawlJobFromTargetSiteUseCase {
         }
     }
 
-    private static CrawlJobEntity create(TargetSiteEntity targetSite, Instant now) {
+    private static CrawlJobEntity create(TargetSiteEntity targetSite, Instant scheduledAt, Instant createdAt) {
         return CrawlJobEntity.builder()
                 .targetSite(targetSite)
-                .scheduledAt(now)
+                .scheduledAt(scheduledAt)
                 .jobCategory(null)
                 .schedulerManaged(true)
-                .createdAt(now)
+                .createdAt(createdAt)
                 .build();
     }
 
-    private static CrawlJobEntity merge(TargetSiteEntity targetSite, CrawlJobEntity existing) {
+    private static CrawlJobEntity merge(
+            TargetSiteEntity targetSite,
+            CrawlJobEntity existing,
+            Instant initialScheduledAt,
+            boolean preserveScheduleFloor
+    ) {
+        Instant scheduledAt = existing.getScheduledAt();
+        if (preserveScheduleFloor && scheduledAt.isBefore(initialScheduledAt)) {
+            scheduledAt = initialScheduledAt;
+        }
         return CrawlJobEntity.builder()
                 .id(existing.getId())
                 .targetSite(targetSite)
-                .scheduledAt(existing.getScheduledAt())
+                .scheduledAt(scheduledAt)
                 .jobCategory(null)
                 .schedulerManaged(existing.isSchedulerManaged())
                 .createdAt(existing.getCreatedAt())

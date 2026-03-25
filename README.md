@@ -125,6 +125,7 @@ web-scraper-java/
 | `POST` | `/api/v1/crawl-jobs/{jobId}/execute` | Dispara execucao manual de um `CrawlJob` |
 | `POST` | `/api/v1/target-sites/{siteId}/activation` | Aplica o checklist de onboarding e so habilita o site se a compliance fechar |
 | `POST` | `/api/v1/target-sites/{siteId}/bootstrap-crawl-job` | Cria ou atualiza o `CrawlJob` canônico do site persistido |
+| `POST` | `/api/v1/target-sites/{siteId}/smoke-run` | Executa um smoke run controlado one-off a partir do job canônico, com guarda contra duplicidade e retorno de `smokeRunStatus` |
 | `GET` | `/api/v1/onboarding-profiles` | Lista perfis operacionais de onboarding curados por fonte |
 | `GET` | `/api/v1/onboarding-profiles/{profileKey}` | Retorna o checklist operacional completo de um perfil curado |
 | `POST` | `/api/v1/onboarding-profiles/{profileKey}/bootstrap-target-site` | Cria ou atualiza um `TargetSite` persistido a partir do perfil curado |
