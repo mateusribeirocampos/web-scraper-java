@@ -8,6 +8,9 @@ package com.campos.webscraper.domain.enums;
  */
 public enum EducationLevel {
 
+    /** Escolaridade ainda não inferida pela fonte ou pelo parser. */
+    UNKNOWN,
+
     /** Ensino fundamental completo. */
     FUNDAMENTAL,
 

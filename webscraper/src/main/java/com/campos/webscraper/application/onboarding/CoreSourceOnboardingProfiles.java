@@ -132,4 +132,43 @@ public final class CoreSourceOnboardingProfiles {
         );
     }
 
+    public static TargetSiteOnboardingProfileTemplate municipalInconfidentes() {
+        String listingUrl = "https://inconfidentes.mg.gov.br/editais-concursos-e-processos-seletivos";
+        return new TargetSiteOnboardingProfileTemplate(
+                "municipal_inconfidentes",
+                "MUNICIPAL_HTML",
+                "inconfidentes",
+                listingUrl,
+                TargetSiteEntity.builder()
+                        .siteCode("municipal_inconfidentes")
+                        .displayName("Prefeitura de Inconfidentes - Editais")
+                        .baseUrl(listingUrl)
+                        .siteType(SiteType.TYPE_A)
+                        .extractionMode(ExtractionMode.STATIC_HTML)
+                        .jobCategory(JobCategory.PUBLIC_CONTEST)
+                        .legalStatus(LegalStatus.APPROVED)
+                        .selectorBundleVersion("inconfidentes_html_v1")
+                        .enabled(true)
+                        .createdAt(Instant.parse("2026-03-25T00:00:00Z"))
+                        .build(),
+                new SiteOnboardingChecklist(
+                        "https://inconfidentes.mg.gov.br/robots.txt",
+                        true,
+                        true,
+                        "https://inconfidentes.mg.gov.br/politica-de-privacidade",
+                        true,
+                        true,
+                        true,
+                        "",
+                        true,
+                        "Fonte oficial municipal para processos seletivos e editais locais, priorizando cargos e evidencias de escolaridade do proprio edital.",
+                        "1 request every 10 seconds",
+                        OnboardingLegalCategory.DADOS_PUBLICOS,
+                        "platform-team@local",
+                        "PUBLIC_ANONYMOUS",
+                        "Pagina oficial de editais validada em 2026-03-26; robots.txt permite acesso publico e politica de privacidade publica revisada."
+                )
+        );
+    }
+
 }

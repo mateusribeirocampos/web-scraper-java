@@ -169,7 +169,7 @@ Regra de produto para esta família:
 | Município | Status API | URL da evidência | Dá para consultar concurso por API? | Estratégia recomendada |
 |---|---|---|---|---|
 | Ouro Fino | API não confirmada; página HTML de concursos | `https://ourofino.mg.gov.br/category/noticias/concurso/` | Não confirmado | HTML + PDF |
-| Inconfidentes | API confirmada (dados abertos) | `https://inconfidentes.mg.gov.br/portal-da-transparencia/dados-abertos/` | Talvez, indiretamente | API primeiro, fallback HTML/PDF |
+| Inconfidentes | Dados abertos confirmados, mas sem endpoint de concursos reutilizável nesta checagem | `https://inconfidentes.mg.gov.br/editais-concursos-e-processos-seletivos` | Não confirmado diretamente | HTML + PDF oficial |
 | Borda da Mata | API não confirmada | `https://bordadamata.mg.gov.br/` | Não confirmado | HTML + PDF |
 | Jacutinga | API não confirmada | `http://jacutinga.mg.gov.br/` | Não confirmado | HTML + PDF |
 | Andradas | API não confirmada; página HTML de processo seletivo | `https://www.andradas.mg.gov.br/concurso/categoria/24/processo-seletivo/` | Não confirmado | HTML + PDF |
@@ -208,8 +208,10 @@ Regra de produto para esta família:
 
 Consequência prática:
 
-- `Inconfidentes`, `Pouso Alegre` e `Munhoz` entram como primeiros candidatos de menor atrito
-  técnico por terem sinal de API/dados abertos;
+- `Inconfidentes` passa a ser a primeira implementação municipal operacional via `HTML + PDF`
+  oficial;
+- `Pouso Alegre` e `Munhoz` continuam como próximos candidatos por terem sinal de API/dados
+  abertos, mas ainda sem endpoint específico de concursos confirmado;
 - o restante entra como backlog `HTML + PDF`, dependente de onboarding formal e evidência legal por
   domínio antes de qualquer ativação.
 

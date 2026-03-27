@@ -632,6 +632,29 @@ Inventário inicial já levantado:
   - validar endpoint reutilizável de dados abertos/API em cada município;
   - só depois abrir importador municipal real.
 
+#### Story 13.2 — validação técnica dos municípios prioritários
+- Verificar se `Inconfidentes`, `Pouso Alegre` e `Munhoz` expõem endpoint realmente reutilizável
+  para concursos.
+- Decidir API-first ou descida para `HTML + PDF` por domínio.
+- **TDD:** parser/normalizer/strategy tests primeiro para o primeiro domínio escolhido.
+- Status atual:
+  - `Inconfidentes`: API/dados abertos existem, mas o caminho útil real para concursos ficou na
+    página oficial de editais;
+  - `Pouso Alegre`: API pública confirmada, sem endpoint específico de concursos confirmado;
+  - `Munhoz`: API pública confirmada, sem endpoint específico de concursos confirmado.
+
+#### Story 13.2.1 — Inconfidentes HTML + PDF
+- Implementar a primeira fonte municipal operacional por HTML oficial + links de edital/anexos.
+- Modelar a fonte como `PUBLIC_CONTEST`, com foco em cargo, formação e escolaridade.
+- **TDD:** parser fixture, normalizer, strategy, runner e catálogo operacional primeiro.
+- Status atual: implementado com
+  - parser `InconfidentesEditaisFixtureParser`;
+  - normalizer `InconfidentesContestNormalizer`;
+  - strategy `InconfidentesContestScraperStrategy`;
+  - import use case `InconfidentesContestImportUseCase`;
+  - rota operacional no `ImportingCrawlJobExecutionRunner`;
+  - perfil curado operacional `municipal_inconfidentes`.
+
 ---
 
 ## Definition of Done

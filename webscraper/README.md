@@ -14,6 +14,7 @@ ou browser somente quando permitido.
   - Indeed
   - DOU
   - PCI Concursos
+  - Prefeitura de Inconfidentes (HTML + PDF oficial)
   - Greenhouse
   - Gupy
   - Playwright dinamico para sites Type C
@@ -29,8 +30,10 @@ ou browser somente quando permitido.
   bootstrap do `CrawlJob` canônico e um smoke run opcional
 - O projeto agora expõe também um `operational-check` unificado e um script local para reproduzir
   o fluxo ponta a ponta do usuário
-- A expansão municipal `PUBLIC_CONTEST` já está documentada no backlog/ADR, mas ainda não foi
-  exposta no catálogo operacional enquanto o runtime municipal não existir
+- A expansão municipal `PUBLIC_CONTEST` agora já tem a primeira fonte operacional:
+  `municipal_inconfidentes`
+- `Pouso Alegre` e `Munhoz` seguem no backlog técnico até confirmação de endpoint municipal
+  reaproveitável ou queda formal para HTML + PDF
 
 ## Validacao Manual Oficial
 
@@ -173,9 +176,10 @@ O endpoint unificado `/bootstrap` reduz o número de chamadas operacionais:
 
 Para a expansão municipal de concursos:
 
-- a família municipal está no backlog formal dos ADRs, não no catálogo runtime ainda;
-- ela deve ser tratada como `PUBLIC_CONTEST`;
-- o filtro principal será cargo, escolaridade e formação exigida em edital, e não `seniority`.
+- `municipal_inconfidentes` já entra como fonte runtime de `PUBLIC_CONTEST`;
+- o filtro principal continua sendo cargo, escolaridade e formação exigida em edital, e não
+  `seniority`;
+- `Pouso Alegre` e `Munhoz` permanecem em avaliação técnica.
 
 Check operacional ponta a ponta por `profileKey`:
 

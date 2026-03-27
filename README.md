@@ -43,6 +43,7 @@ Playwright e execucao assíncrona com fila persistida.
 | Indeed Brasil | API oficial | Implementada |
 | Diario Oficial da Uniao | API publica | Implementada |
 | PCI Concursos | HTML estatico | Implementada |
+| Prefeitura de Inconfidentes | HTML + PDF oficial | Implementada |
 | Greenhouse | ATS / board publico | Implementada |
 | Gupy | ATS / board publico | Implementada |
 | Playwright fallback | Site dinamico Type C | Implementado |
@@ -119,8 +120,10 @@ web-scraper-java/
 - Orquestracao unica por `profileKey` para bootstrap de `TargetSite` + `CrawlJob` + smoke run opcional.
 - Consulta REST para vagas privadas e concursos.
 - Story logs e ADRs sincronizados com o estado do projeto.
-- A expansão municipal `PUBLIC_CONTEST` já está documentada no backlog dos ADRs para `Inconfidentes`,
-  `Pouso Alegre` e `Munhoz`, mas ainda não foi exposta no catálogo operacional runtime.
+- A trilha municipal `PUBLIC_CONTEST` agora já tem a primeira fonte operacional:
+  `municipal_inconfidentes` via HTML + PDF oficial.
+- `Pouso Alegre` e `Munhoz` continuam no backlog técnico dos ADRs até confirmação de endpoint
+  municipal realmente reutilizável ou descida formal para HTML + PDF.
 
 ## Endpoints Disponiveis
 

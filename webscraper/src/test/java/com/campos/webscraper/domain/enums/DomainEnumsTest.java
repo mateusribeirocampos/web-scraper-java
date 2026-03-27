@@ -314,7 +314,13 @@ class DomainEnumsTest {
         @Test
         @DisplayName("deve ter exatamente 5 níveis de escolaridade")
         void shouldHaveFiveEducationLevels() {
-            assertThat(EducationLevel.values()).hasSize(5);
+            assertThat(EducationLevel.values()).hasSize(6);
+        }
+
+        @Test
+        @DisplayName("should include UNKNOWN")
+        void shouldIncludeUnknown() {
+            assertThatCode(() -> EducationLevel.valueOf("UNKNOWN")).doesNotThrowAnyException();
         }
 
         @Test

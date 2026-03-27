@@ -3,6 +3,7 @@ package com.campos.webscraper.application.orchestrator;
 import com.campos.webscraper.application.usecase.DouContestImportUseCase;
 import com.campos.webscraper.application.usecase.GreenhouseJobImportUseCase;
 import com.campos.webscraper.application.usecase.GupyJobImportUseCase;
+import com.campos.webscraper.application.usecase.InconfidentesContestImportUseCase;
 import com.campos.webscraper.application.usecase.IndeedJobImportUseCase;
 import com.campos.webscraper.application.usecase.PciConcursosImportUseCase;
 import com.campos.webscraper.domain.enums.JobCategory;
@@ -26,13 +27,15 @@ public class ImportingCrawlJobExecutionRunner implements CrawlJobExecutionRunner
     private final GupyJobImportUseCase gupyJobImportUseCase;
     private final DouContestImportUseCase douContestImportUseCase;
     private final PciConcursosImportUseCase pciConcursosImportUseCase;
+    private final InconfidentesContestImportUseCase inconfidentesContestImportUseCase;
 
     public ImportingCrawlJobExecutionRunner(
             IndeedJobImportUseCase indeedJobImportUseCase,
             GreenhouseJobImportUseCase greenhouseJobImportUseCase,
             GupyJobImportUseCase gupyJobImportUseCase,
             DouContestImportUseCase douContestImportUseCase,
-            PciConcursosImportUseCase pciConcursosImportUseCase
+            PciConcursosImportUseCase pciConcursosImportUseCase,
+            InconfidentesContestImportUseCase inconfidentesContestImportUseCase
     ) {
         this.indeedJobImportUseCase = Objects.requireNonNull(
                 indeedJobImportUseCase, "indeedJobImportUseCase must not be null");
@@ -44,6 +47,8 @@ public class ImportingCrawlJobExecutionRunner implements CrawlJobExecutionRunner
                 douContestImportUseCase, "douContestImportUseCase must not be null");
         this.pciConcursosImportUseCase = Objects.requireNonNull(
                 pciConcursosImportUseCase, "pciConcursosImportUseCase must not be null");
+        this.inconfidentesContestImportUseCase = Objects.requireNonNull(
+                inconfidentesContestImportUseCase, "inconfidentesContestImportUseCase must not be null");
     }
 
     @Override
@@ -70,6 +75,8 @@ public class ImportingCrawlJobExecutionRunner implements CrawlJobExecutionRunner
                 case "indeed-br"    -> indeedJobImportUseCase.execute(targetSite, crawlExecution, command).size();
                 case "dou-api"      -> douContestImportUseCase.execute(targetSite, crawlExecution, command).size();
                 case "pci_concursos"-> pciConcursosImportUseCase.execute(targetSite, crawlExecution, command).size();
+                case "municipal_inconfidentes" ->
+                        inconfidentesContestImportUseCase.execute(targetSite, crawlExecution, command).size();
                 default -> throw new UnsupportedSiteException("No import runner registered for site: " + siteCode);
             };
         }

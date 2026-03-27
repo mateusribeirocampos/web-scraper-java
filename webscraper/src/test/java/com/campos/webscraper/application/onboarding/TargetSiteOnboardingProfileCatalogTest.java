@@ -18,7 +18,7 @@ class TargetSiteOnboardingProfileCatalogTest {
     void shouldExposeCuratedOnboardingProfilesForSupportedSources() {
         assertThat(catalog.list())
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
-                .contains("greenhouse_bitso", "indeed-br", "dou-api", "pci_concursos");
+                .contains("greenhouse_bitso", "indeed-br", "dou-api", "pci_concursos", "municipal_inconfidentes");
     }
 
     @Test
@@ -38,6 +38,7 @@ class TargetSiteOnboardingProfileCatalogTest {
         TargetSiteOnboardingProfileTemplate indeed = catalog.get("indeed-br");
         TargetSiteOnboardingProfileTemplate dou = catalog.get("dou-api");
         TargetSiteOnboardingProfileTemplate pci = catalog.get("pci_concursos");
+        TargetSiteOnboardingProfileTemplate inconfidentes = catalog.get("municipal_inconfidentes");
 
         assertThat(indeed.sourceFamily()).isEqualTo("INDEED");
         assertThat(indeed.targetSite().getSiteCode()).isEqualTo("indeed-br");
@@ -52,6 +53,13 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(pci.sourceFamily()).isEqualTo("PCI_CONCURSOS");
         assertThat(pci.targetSite().getSiteCode()).isEqualTo("pci_concursos");
         assertThat(pci.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.DADOS_PUBLICOS);
+
+        assertThat(inconfidentes.sourceFamily()).isEqualTo("MUNICIPAL_HTML");
+        assertThat(inconfidentes.targetSite().getSiteCode()).isEqualTo("municipal_inconfidentes");
+        assertThat(inconfidentes.targetSite().getSelectorBundleVersion()).isEqualTo("inconfidentes_html_v1");
+        assertThat(inconfidentes.targetSite().getLegalStatus().name()).isEqualTo("APPROVED");
+        assertThat(inconfidentes.targetSite().isEnabled()).isTrue();
+        assertThat(inconfidentes.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.DADOS_PUBLICOS);
     }
 
     @Test
@@ -62,6 +70,12 @@ class TargetSiteOnboardingProfileCatalogTest {
                 .get()
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
                 .isEqualTo("greenhouse_bitso");
+
+        assertThat(catalog.findBySiteCode("municipal_inconfidentes"))
+                .isPresent()
+                .get()
+                .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
+                .isEqualTo("municipal_inconfidentes");
 
         assertThat(catalog.findBySiteCode("unknown-site")).isEmpty();
     }
