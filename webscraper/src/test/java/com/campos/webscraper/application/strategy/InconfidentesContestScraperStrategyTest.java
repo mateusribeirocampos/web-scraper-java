@@ -1,5 +1,7 @@
 package com.campos.webscraper.application.strategy;
 
+import com.campos.webscraper.application.enrichment.InconfidentesContestPdfEnricher;
+import com.campos.webscraper.application.enrichment.InconfidentesEditalPdfMetadataParser;
 import com.campos.webscraper.application.normalizer.InconfidentesContestNormalizer;
 import com.campos.webscraper.domain.enums.ExtractionMode;
 import com.campos.webscraper.domain.enums.JobCategory;
@@ -36,6 +38,7 @@ class InconfidentesContestScraperStrategyTest {
         InconfidentesContestScraperStrategy strategy = new InconfidentesContestScraperStrategy(
                 new FakeJobFetcher(Map.of()),
                 new InconfidentesEditaisFixtureParser(),
+                new InconfidentesContestPdfEnricher(pdfUrl -> "", new InconfidentesEditalPdfMetadataParser()),
                 new InconfidentesContestNormalizer()
         );
 
@@ -66,6 +69,12 @@ class InconfidentesContestScraperStrategyTest {
                                 "text/html", LocalDateTime.parse("2026-03-25T10:20:00"))
                 )),
                 new InconfidentesEditaisFixtureParser(),
+                new InconfidentesContestPdfEnricher(pdfUrl -> """
+                        Cargo: Analista de Sistemas
+                        Escolaridade: ensino superior completo em Sistemas de Informacao
+                        Inscricoes: de 10/04/2026 a 20/04/2026
+                        A prova objetiva sera realizada em 30/05/2026.
+                        """, new InconfidentesEditalPdfMetadataParser()),
                 new InconfidentesContestNormalizer()
         );
 
@@ -81,9 +90,13 @@ class InconfidentesContestScraperStrategyTest {
         assertThat(result.items()).singleElement().satisfies(item -> {
             assertThat(item.getContestName())
                     .isEqualTo("EDITAL 001/2026 - PROCESSO SELETIVO 001/2026 - CONTRATACAO DE PROFESSOR");
-            assertThat(item.getPositionTitle()).isEqualTo("Professor");
+            assertThat(item.getPositionTitle()).isEqualTo("Analista de Sistemas");
             assertThat(item.getGovernmentLevel().name()).isEqualTo("MUNICIPAL");
             assertThat(item.getState()).isEqualTo("MG");
+            assertThat(item.getRegistrationStartDate()).isEqualTo(java.time.LocalDate.parse("2026-04-10"));
+            assertThat(item.getRegistrationEndDate()).isEqualTo(java.time.LocalDate.parse("2026-04-20"));
+            assertThat(item.getExamDate()).isEqualTo(java.time.LocalDate.parse("2026-05-30"));
+            assertThat(item.getContestStatus().name()).isEqualTo("OPEN");
         });
     }
 
@@ -105,6 +118,7 @@ class InconfidentesContestScraperStrategyTest {
                         new FetchedPage(url, html, 200, "text/html", LocalDateTime.parse("2026-03-25T10:20:00"))
                 )),
                 new InconfidentesEditaisFixtureParser(),
+                new InconfidentesContestPdfEnricher(pdfUrl -> "", new InconfidentesEditalPdfMetadataParser()),
                 new InconfidentesContestNormalizer()
         );
 

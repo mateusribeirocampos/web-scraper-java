@@ -30,7 +30,7 @@ public class InconfidentesContestNormalizer {
     private final ObjectMapper objectMapper;
 
     public InconfidentesContestNormalizer() {
-        this(new ObjectMapper());
+        this(new ObjectMapper().findAndRegisterModules());
     }
 
     public InconfidentesContestNormalizer(ObjectMapper objectMapper) {
@@ -59,6 +59,9 @@ public class InconfidentesContestNormalizer {
                 .educationLevel(resolveEducationLevel(item.educationLevel()))
                 .editalUrl(item.editalUrl())
                 .publishedAt(resolvePublishedAt(item, fetchedAt))
+                .registrationStartDate(item.registrationStartDate())
+                .registrationEndDate(item.registrationEndDate())
+                .examDate(item.examDate())
                 .contestStatus(resolveContestStatus(item, fetchedAt))
                 .payloadJson(toJson(item))
                 .createdAt(Instant.now())
@@ -133,6 +136,16 @@ public class InconfidentesContestNormalizer {
                 || normalizedTitle.contains("gabarito");
         if (followUpSignal) {
             return ContestStatus.RESULT_PUBLISHED;
+        }
+
+        if (item.registrationEndDate() != null) {
+            if (!item.registrationEndDate().isBefore(fetchedAt.toLocalDate())) {
+                return ContestStatus.OPEN;
+            }
+            if (item.examDate() != null && !item.examDate().isBefore(fetchedAt.toLocalDate())) {
+                return ContestStatus.EXAM_SCHEDULED;
+            }
+            return ContestStatus.REGISTRATION_CLOSED;
         }
 
         if (item.editalYear() != null && item.editalYear() < fetchedAt.getYear()) {

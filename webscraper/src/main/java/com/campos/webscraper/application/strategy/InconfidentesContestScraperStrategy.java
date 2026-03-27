@@ -1,6 +1,7 @@
 package com.campos.webscraper.application.strategy;
 
 import com.campos.webscraper.application.normalizer.InconfidentesContestNormalizer;
+import com.campos.webscraper.application.enrichment.InconfidentesContestPdfEnricher;
 import com.campos.webscraper.domain.enums.ExtractionMode;
 import com.campos.webscraper.domain.enums.JobCategory;
 import com.campos.webscraper.domain.enums.LegalStatus;
@@ -29,15 +30,18 @@ public class InconfidentesContestScraperStrategy implements JobScraperStrategy<P
 
     private final JobFetcher jobFetcher;
     private final InconfidentesEditaisFixtureParser parser;
+    private final InconfidentesContestPdfEnricher pdfEnricher;
     private final InconfidentesContestNormalizer normalizer;
 
     public InconfidentesContestScraperStrategy(
             JobFetcher jobFetcher,
             InconfidentesEditaisFixtureParser parser,
+            InconfidentesContestPdfEnricher pdfEnricher,
             InconfidentesContestNormalizer normalizer
     ) {
         this.jobFetcher = Objects.requireNonNull(jobFetcher, "jobFetcher must not be null");
         this.parser = Objects.requireNonNull(parser, "parser must not be null");
+        this.pdfEnricher = Objects.requireNonNull(pdfEnricher, "pdfEnricher must not be null");
         this.normalizer = Objects.requireNonNull(normalizer, "normalizer must not be null");
     }
 
@@ -59,8 +63,9 @@ public class InconfidentesContestScraperStrategy implements JobScraperStrategy<P
         }
 
         InconfidentesParsePreview preview = parser.parse(page.htmlContent(), page.url());
+        List<InconfidentesContestPreviewItem> enrichedPreviewItems = pdfEnricher.enrichAll(preview.items());
         List<PublicContestPostingEntity> postings = new ArrayList<>();
-        for (InconfidentesContestPreviewItem item : preview.items()) {
+        for (InconfidentesContestPreviewItem item : enrichedPreviewItems) {
             try {
                 postings.add(normalizer.normalize(item, page.fetchedAt()));
             } catch (IllegalArgumentException ignored) {

@@ -28,9 +28,13 @@ class InconfidentesContestNormalizerTest {
                 "Prefeitura Municipal de Inconfidentes - DEPARTAMENTO DE EDUCACAO",
                 "Professor",
                 "SUPERIOR",
+                null,
                 2026,
                 "https://ecrie.com.br/edital-001-2026.pdf",
                 "https://ecrie.com.br/edital-001-2026.pdf",
+                java.time.LocalDate.parse("2026-04-10"),
+                java.time.LocalDate.parse("2026-04-20"),
+                java.time.LocalDate.parse("2026-05-30"),
                 List.of(
                         new InconfidentesContestAttachment("Edital", "https://ecrie.com.br/edital-001-2026.pdf"),
                         new InconfidentesContestAttachment("Resultado Final", "https://ecrie.com.br/resultado-final.pdf")
@@ -50,6 +54,9 @@ class InconfidentesContestNormalizerTest {
         assertThat(posting.getEducationLevel().name()).isEqualTo("SUPERIOR");
         assertThat(posting.getEditalUrl()).isEqualTo("https://ecrie.com.br/edital-001-2026.pdf");
         assertThat(posting.getPublishedAt()).isEqualTo(java.time.LocalDate.parse("2026-01-01"));
+        assertThat(posting.getRegistrationStartDate()).isEqualTo(java.time.LocalDate.parse("2026-04-10"));
+        assertThat(posting.getRegistrationEndDate()).isEqualTo(java.time.LocalDate.parse("2026-04-20"));
+        assertThat(posting.getExamDate()).isEqualTo(java.time.LocalDate.parse("2026-05-30"));
         assertThat(posting.getContestStatus().name()).isEqualTo("OPEN");
         assertThat(posting.getPayloadJson()).contains("Resultado Final");
     }
@@ -65,7 +72,11 @@ class InconfidentesContestNormalizerTest {
                 "Prefeitura Municipal de Inconfidentes - DEPARTAMENTO DE EDUCACAO",
                 "Professor",
                 "SUPERIOR",
+                null,
                 2026,
+                null,
+                null,
+                null,
                 null,
                 null,
                 List.of()
@@ -87,9 +98,13 @@ class InconfidentesContestNormalizerTest {
                 "Prefeitura Municipal de Inconfidentes - DEPARTAMENTO DE EDUCACAO",
                 "Professor",
                 "SUPERIOR",
+                null,
                 2026,
                 "https://ecrie.com.br/edital-original.pdf",
                 "https://ecrie.com.br/edital-original.pdf",
+                null,
+                null,
+                null,
                 List.of(new InconfidentesContestAttachment("Edital 008/2026", "https://ecrie.com.br/edital-original.pdf"))
         );
         InconfidentesContestPreviewItem republished = new InconfidentesContestPreviewItem(
@@ -98,9 +113,13 @@ class InconfidentesContestNormalizerTest {
                 "Prefeitura Municipal de Inconfidentes - DEPARTAMENTO DE EDUCACAO",
                 "Professor",
                 "SUPERIOR",
+                null,
                 2026,
                 "https://ecrie.com.br/edital-retificado.pdf",
                 "https://ecrie.com.br/edital-retificado.pdf",
+                null,
+                null,
+                null,
                 List.of(new InconfidentesContestAttachment("Edital retificado 008/2026", "https://ecrie.com.br/edital-retificado.pdf"))
         );
 
@@ -123,9 +142,13 @@ class InconfidentesContestNormalizerTest {
                 "Prefeitura Municipal de Inconfidentes - DEPARTAMENTO DE EDUCACAO",
                 "Professor",
                 "SUPERIOR",
+                null,
                 2026,
                 "https://ecrie.com.br/edital-011.pdf",
                 "https://ecrie.com.br/edital-011.pdf",
+                null,
+                null,
+                null,
                 List.of(new InconfidentesContestAttachment("Edital 011/2026", "https://ecrie.com.br/edital-011.pdf"))
         );
         InconfidentesContestPreviewItem retitled = new InconfidentesContestPreviewItem(
@@ -134,9 +157,13 @@ class InconfidentesContestNormalizerTest {
                 "Prefeitura Municipal de Inconfidentes - DEPARTAMENTO DE EDUCACAO",
                 "Professor",
                 "SUPERIOR",
+                null,
                 2026,
                 "https://ecrie.com.br/edital-011-retificado.pdf",
                 "https://ecrie.com.br/edital-011-retificado.pdf",
+                null,
+                null,
+                null,
                 List.of(new InconfidentesContestAttachment("Edital retificado 011/2026", "https://ecrie.com.br/edital-011-retificado.pdf"))
         );
 
@@ -159,8 +186,12 @@ class InconfidentesContestNormalizerTest {
                 "EDITAL EXTRAORDINARIO 2026",
                 null,
                 null,
+                null,
                 "https://ecrie.com.br/edital-extra.pdf",
                 "https://ecrie.com.br/edital-extra.pdf",
+                null,
+                null,
+                null,
                 List.of(new InconfidentesContestAttachment("Edital extraordinario", "https://ecrie.com.br/edital-extra.pdf"))
         );
 
@@ -182,9 +213,13 @@ class InconfidentesContestNormalizerTest {
                 "Prefeitura Municipal de Inconfidentes - DEPARTAMENTO DE EDUCACAO",
                 "Professor",
                 "SUPERIOR",
+                null,
                 2024,
                 "https://ecrie.com.br/edital-2024.pdf",
                 "https://ecrie.com.br/edital-2024.pdf",
+                null,
+                null,
+                null,
                 List.of(new InconfidentesContestAttachment("Edital 003/2024", "https://ecrie.com.br/edital-2024.pdf"))
         );
 
@@ -204,14 +239,70 @@ class InconfidentesContestNormalizerTest {
                 "Prefeitura Municipal de Inconfidentes - DEPARTAMENTO DE ADMINISTRACAO",
                 "EDITAL 015/2026",
                 null,
+                null,
                 2026,
                 "https://ecrie.com.br/edital-015.pdf",
                 "https://ecrie.com.br/edital-015.pdf",
+                null,
+                null,
+                null,
                 List.of(new InconfidentesContestAttachment("Edital 015/2026", "https://ecrie.com.br/edital-015.pdf"))
         );
 
         PublicContestPostingEntity posting = normalizer.normalize(item, LocalDateTime.parse("2026-03-25T10:15:00"));
 
         assertThat(posting.getEducationLevel().name()).isEqualTo("UNKNOWN");
+    }
+
+    @Test
+    @DisplayName("should mark contests as registration closed when parsed deadline is in the past")
+    void shouldMarkContestsAsRegistrationClosedWhenParsedDeadlineIsInThePast() {
+        InconfidentesContestNormalizer normalizer = new InconfidentesContestNormalizer();
+
+        InconfidentesContestPreviewItem item = new InconfidentesContestPreviewItem(
+                "DEPARTAMENTO DE ADMINISTRACAO",
+                "EDITAL 018/2026",
+                "Prefeitura Municipal de Inconfidentes - DEPARTAMENTO DE ADMINISTRACAO",
+                "Analista de Sistemas",
+                "SUPERIOR",
+                "Ensino superior completo em Ciencia da Computacao",
+                2026,
+                "https://ecrie.com.br/edital-018.pdf",
+                "https://ecrie.com.br/edital-018.pdf",
+                java.time.LocalDate.parse("2026-03-01"),
+                java.time.LocalDate.parse("2026-03-10"),
+                java.time.LocalDate.parse("2026-04-05"),
+                List.of(new InconfidentesContestAttachment("Edital 018/2026", "https://ecrie.com.br/edital-018.pdf"))
+        );
+
+        PublicContestPostingEntity posting = normalizer.normalize(item, LocalDateTime.parse("2026-03-25T10:15:00"));
+
+        assertThat(posting.getContestStatus().name()).isEqualTo("EXAM_SCHEDULED");
+    }
+
+    @Test
+    @DisplayName("should mark contests as registration closed after the scheduled exam date")
+    void shouldMarkContestsAsRegistrationClosedAfterTheScheduledExamDate() {
+        InconfidentesContestNormalizer normalizer = new InconfidentesContestNormalizer();
+
+        InconfidentesContestPreviewItem item = new InconfidentesContestPreviewItem(
+                "DEPARTAMENTO DE ADMINISTRACAO",
+                "EDITAL 018/2026",
+                "Prefeitura Municipal de Inconfidentes - DEPARTAMENTO DE ADMINISTRACAO",
+                "Analista de Sistemas",
+                "SUPERIOR",
+                "Ensino superior completo em Ciencia da Computacao",
+                2026,
+                "https://ecrie.com.br/edital-018.pdf",
+                "https://ecrie.com.br/edital-018.pdf",
+                java.time.LocalDate.parse("2026-03-01"),
+                java.time.LocalDate.parse("2026-03-10"),
+                java.time.LocalDate.parse("2026-03-20"),
+                List.of(new InconfidentesContestAttachment("Edital 018/2026", "https://ecrie.com.br/edital-018.pdf"))
+        );
+
+        PublicContestPostingEntity posting = normalizer.normalize(item, LocalDateTime.parse("2026-03-25T10:15:00"));
+
+        assertThat(posting.getContestStatus().name()).isEqualTo("REGISTRATION_CLOSED");
     }
 }

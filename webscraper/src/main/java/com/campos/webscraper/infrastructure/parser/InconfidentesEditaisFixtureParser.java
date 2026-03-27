@@ -105,9 +105,13 @@ public class InconfidentesEditaisFixtureParser {
                 organizer,
                 inferPositionTitle(title),
                 inferEducationLevel(title),
+                null,
                 inferEditalYear(title, normalizedAttachments),
                 editalAttachment.url(),
                 editalAttachment.url(),
+                null,
+                null,
+                null,
                 normalizedAttachments
         ));
     }

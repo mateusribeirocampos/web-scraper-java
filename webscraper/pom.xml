@@ -21,6 +21,7 @@
 		<!-- Dependencias NAO gerenciadas pelo Spring Boot BOM: versoes explicitas obrigatorias -->
 		<jsoup.version>1.18.3</jsoup.version>
 		<okhttp.version>4.12.0</okhttp.version>
+		<pdfbox.version>3.0.5</pdfbox.version>
 		<playwright.version>1.49.0</playwright.version>
 		<wiremock.version>3.10.0</wiremock.version>
 		<!-- Testcontainers: Spring Boot 4.x nao gerencia esta versao no BOM.  -->
@@ -119,6 +120,12 @@
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp</artifactId>
 			<version>${okhttp.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>${pdfbox.version}</version>
 		</dependency>
 
 		<!-- Playwright for Java: fallback para sites dinamicos (Tipo C)     -->

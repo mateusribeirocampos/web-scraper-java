@@ -1,5 +1,6 @@
 package com.campos.webscraper.infrastructure.parser;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -11,9 +12,13 @@ public record InconfidentesContestPreviewItem(
         String organizer,
         String positionTitle,
         String educationLevel,
+        String formationRequirements,
         Integer editalYear,
         String contestUrl,
         String editalUrl,
+        LocalDate registrationStartDate,
+        LocalDate registrationEndDate,
+        LocalDate examDate,
         List<InconfidentesContestAttachment> attachments
 ) {
 }
