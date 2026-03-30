@@ -18,7 +18,8 @@ class TargetSiteOnboardingProfileCatalogTest {
     void shouldExposeCuratedOnboardingProfilesForSupportedSources() {
         assertThat(catalog.list())
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
-                .contains("greenhouse_bitso", "indeed-br", "dou-api", "pci_concursos", "municipal_inconfidentes");
+                .contains("greenhouse_bitso", "indeed-br", "dou-api", "pci_concursos",
+                        "municipal_inconfidentes", "municipal_pouso_alegre");
     }
 
     @Test
@@ -39,6 +40,7 @@ class TargetSiteOnboardingProfileCatalogTest {
         TargetSiteOnboardingProfileTemplate dou = catalog.get("dou-api");
         TargetSiteOnboardingProfileTemplate pci = catalog.get("pci_concursos");
         TargetSiteOnboardingProfileTemplate inconfidentes = catalog.get("municipal_inconfidentes");
+        TargetSiteOnboardingProfileTemplate pousoAlegre = catalog.get("municipal_pouso_alegre");
 
         assertThat(indeed.sourceFamily()).isEqualTo("INDEED");
         assertThat(indeed.targetSite().getSiteCode()).isEqualTo("indeed-br");
@@ -60,6 +62,13 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(inconfidentes.targetSite().getLegalStatus().name()).isEqualTo("APPROVED");
         assertThat(inconfidentes.targetSite().isEnabled()).isTrue();
         assertThat(inconfidentes.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.DADOS_PUBLICOS);
+
+        assertThat(pousoAlegre.sourceFamily()).isEqualTo("MUNICIPAL_HTML");
+        assertThat(pousoAlegre.targetSite().getSiteCode()).isEqualTo("municipal_pouso_alegre");
+        assertThat(pousoAlegre.targetSite().getSelectorBundleVersion()).isEqualTo("pouso_alegre_html_v1");
+        assertThat(pousoAlegre.targetSite().getLegalStatus().name()).isEqualTo("APPROVED");
+        assertThat(pousoAlegre.targetSite().isEnabled()).isTrue();
+        assertThat(pousoAlegre.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.DADOS_PUBLICOS);
     }
 
     @Test
@@ -76,6 +85,12 @@ class TargetSiteOnboardingProfileCatalogTest {
                 .get()
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
                 .isEqualTo("municipal_inconfidentes");
+
+        assertThat(catalog.findBySiteCode("municipal_pouso_alegre"))
+                .isPresent()
+                .get()
+                .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
+                .isEqualTo("municipal_pouso_alegre");
 
         assertThat(catalog.findBySiteCode("unknown-site")).isEmpty();
     }

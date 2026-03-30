@@ -171,4 +171,43 @@ public final class CoreSourceOnboardingProfiles {
         );
     }
 
+    public static TargetSiteOnboardingProfileTemplate municipalPousoAlegre() {
+        String listingUrl = "https://www.pousoalegre.mg.gov.br/concursos-publicos";
+        return new TargetSiteOnboardingProfileTemplate(
+                "municipal_pouso_alegre",
+                "MUNICIPAL_HTML",
+                "pouso_alegre",
+                listingUrl,
+                TargetSiteEntity.builder()
+                        .siteCode("municipal_pouso_alegre")
+                        .displayName("Prefeitura de Pouso Alegre - Concursos")
+                        .baseUrl(listingUrl)
+                        .siteType(SiteType.TYPE_A)
+                        .extractionMode(ExtractionMode.STATIC_HTML)
+                        .jobCategory(JobCategory.PUBLIC_CONTEST)
+                        .legalStatus(LegalStatus.APPROVED)
+                        .selectorBundleVersion("pouso_alegre_html_v1")
+                        .enabled(true)
+                        .createdAt(Instant.parse("2026-03-30T00:00:00Z"))
+                        .build(),
+                new SiteOnboardingChecklist(
+                        "https://www.pousoalegre.mg.gov.br/robots.txt",
+                        true,
+                        true,
+                        "https://pousoalegre.mg.gov.br/politica_privacidade",
+                        true,
+                        true,
+                        true,
+                        "",
+                        true,
+                        "Fonte oficial municipal estruturada de concursos e processos seletivos, com detalhe por pagina e anexos do tipo edital.",
+                        "1 request every 10 seconds",
+                        OnboardingLegalCategory.DADOS_PUBLICOS,
+                        "platform-team@local",
+                        "PUBLIC_ANONYMOUS",
+                        "Portal oficial de concursos validado em 2026-03-30; robots.txt sem disallow e politica de privacidade publica revisada."
+                )
+        );
+    }
+
 }

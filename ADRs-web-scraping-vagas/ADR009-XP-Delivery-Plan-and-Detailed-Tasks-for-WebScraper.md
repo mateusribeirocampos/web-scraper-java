@@ -668,6 +668,21 @@ Inventário inicial já levantado:
   - propagação no preview via `InconfidentesContestPdfEnricher` e `InconfidentesContestPreviewItem`;
   - serialização desses detalhes no `payloadJson` do concurso.
 
+#### Story 13.2.4 — Pouso Alegre HTML + PDF
+- Implementar a segunda fonte municipal via portal estruturado de concursos.
+- Encadear:
+  - listagem `concursos-publicos`;
+  - detalhe `concursos_view/<id>`;
+  - seleção do anexo principal do tipo `Edital`;
+  - reaproveitamento do enrichment de PDF já usado em `Inconfidentes`.
+- **TDD:** parser da listagem e detalhe primeiro, depois strategy, import e catálogo.
+- Status atual: em progresso com
+  - parser `PousoAlegreConcursosParser`;
+  - strategy `PousoAlegreContestScraperStrategy`;
+  - import use case `PousoAlegreContestImportUseCase`;
+  - rota operacional no `ImportingCrawlJobExecutionRunner`;
+  - perfil curado `municipal_pouso_alegre` no catálogo operacional.
+
 ---
 
 ## Definition of Done

@@ -44,6 +44,7 @@ Playwright e execucao assíncrona com fila persistida.
 | Diario Oficial da Uniao | API publica | Implementada |
 | PCI Concursos | HTML estatico | Implementada |
 | Prefeitura de Inconfidentes | HTML + PDF oficial | Implementada |
+| Prefeitura de Pouso Alegre | HTML + PDF oficial | Em progresso |
 | Greenhouse | ATS / board publico | Implementada |
 | Gupy | ATS / board publico | Implementada |
 | Playwright fallback | Site dinamico Type C | Implementado |
@@ -126,8 +127,11 @@ web-scraper-java/
 - Story logs e ADRs sincronizados com o estado do projeto.
 - A trilha municipal `PUBLIC_CONTEST` agora já tem a primeira fonte operacional:
   `municipal_inconfidentes` via HTML + PDF oficial.
-- `Pouso Alegre` e `Munhoz` continuam no backlog técnico dos ADRs até confirmação de endpoint
-  municipal realmente reutilizável ou descida formal para HTML + PDF.
+- `Pouso Alegre` entrou na `13.2.4` como a segunda frente municipal via portal estruturado de
+  concursos (`concursos-publicos` + `concursos_view/<id>`), reaproveitando o enrichment de PDF já
+  maturado em `Inconfidentes`.
+- `Munhoz` continua no backlog técnico dos ADRs até confirmação de endpoint municipal realmente
+  reutilizável ou descida formal para HTML + PDF.
 
 ## Endpoints Disponiveis
 

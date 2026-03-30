@@ -6,6 +6,7 @@ import com.campos.webscraper.application.usecase.GupyJobImportUseCase;
 import com.campos.webscraper.application.usecase.InconfidentesContestImportUseCase;
 import com.campos.webscraper.application.usecase.IndeedJobImportUseCase;
 import com.campos.webscraper.application.usecase.PciConcursosImportUseCase;
+import com.campos.webscraper.application.usecase.PousoAlegreContestImportUseCase;
 import com.campos.webscraper.domain.enums.CrawlExecutionStatus;
 import com.campos.webscraper.domain.enums.ExtractionMode;
 import com.campos.webscraper.domain.enums.JobCategory;
@@ -56,6 +57,9 @@ class ImportingCrawlJobExecutionRunnerTest {
     @Mock
     private InconfidentesContestImportUseCase inconfidentesContestImportUseCase;
 
+    @Mock
+    private PousoAlegreContestImportUseCase pousoAlegreContestImportUseCase;
+
     @Test
     @DisplayName("should execute greenhouse import and return execution counters")
     void shouldExecuteGreenhouseImportAndReturnExecutionCounters() {
@@ -70,7 +74,8 @@ class ImportingCrawlJobExecutionRunnerTest {
                 gupyJobImportUseCase,
                 douContestImportUseCase,
                 pciConcursosImportUseCase,
-                inconfidentesContestImportUseCase
+                inconfidentesContestImportUseCase,
+                pousoAlegreContestImportUseCase
         );
 
         CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
@@ -94,7 +99,8 @@ class ImportingCrawlJobExecutionRunnerTest {
                 gupyJobImportUseCase,
                 douContestImportUseCase,
                 pciConcursosImportUseCase,
-                inconfidentesContestImportUseCase
+                inconfidentesContestImportUseCase,
+                pousoAlegreContestImportUseCase
         );
 
         CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
@@ -118,7 +124,8 @@ class ImportingCrawlJobExecutionRunnerTest {
                 gupyJobImportUseCase,
                 douContestImportUseCase,
                 pciConcursosImportUseCase,
-                inconfidentesContestImportUseCase
+                inconfidentesContestImportUseCase,
+                pousoAlegreContestImportUseCase
         );
 
         CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
@@ -140,7 +147,8 @@ class ImportingCrawlJobExecutionRunnerTest {
                 gupyJobImportUseCase,
                 douContestImportUseCase,
                 pciConcursosImportUseCase,
-                inconfidentesContestImportUseCase
+                inconfidentesContestImportUseCase,
+                pousoAlegreContestImportUseCase
         );
 
         assertThatThrownBy(() -> runner.run(crawlJob, crawlExecution))
@@ -162,7 +170,8 @@ class ImportingCrawlJobExecutionRunnerTest {
                 gupyJobImportUseCase,
                 douContestImportUseCase,
                 pciConcursosImportUseCase,
-                inconfidentesContestImportUseCase
+                inconfidentesContestImportUseCase,
+                pousoAlegreContestImportUseCase
         );
 
         CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
@@ -186,7 +195,8 @@ class ImportingCrawlJobExecutionRunnerTest {
                 gupyJobImportUseCase,
                 douContestImportUseCase,
                 pciConcursosImportUseCase,
-                inconfidentesContestImportUseCase
+                inconfidentesContestImportUseCase,
+                pousoAlegreContestImportUseCase
         );
 
         CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
@@ -194,6 +204,31 @@ class ImportingCrawlJobExecutionRunnerTest {
         assertThat(outcome.pagesVisited()).isEqualTo(1);
         assertThat(outcome.itemsFound()).isEqualTo(1);
         verify(inconfidentesContestImportUseCase).execute(any(), any(), any());
+    }
+
+    @Test
+    @DisplayName("should execute Pouso Alegre import for municipal static public contest jobs")
+    void shouldExecutePousoAlegreImportForMunicipalStaticPublicContestJobs() {
+        CrawlJobEntity crawlJob = buildStaticPublicJob("municipal_pouso_alegre");
+        CrawlExecutionEntity crawlExecution = buildExecution(crawlJob);
+        when(pousoAlegreContestImportUseCase.execute(any(), any(), any()))
+                .thenReturn(List.of(PublicContestPostingEntity.builder().externalId("pouso-alegre-1").build()));
+
+        ImportingCrawlJobExecutionRunner runner = new ImportingCrawlJobExecutionRunner(
+                indeedJobImportUseCase,
+                greenhouseJobImportUseCase,
+                gupyJobImportUseCase,
+                douContestImportUseCase,
+                pciConcursosImportUseCase,
+                inconfidentesContestImportUseCase,
+                pousoAlegreContestImportUseCase
+        );
+
+        CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
+
+        assertThat(outcome.pagesVisited()).isEqualTo(1);
+        assertThat(outcome.itemsFound()).isEqualTo(1);
+        verify(pousoAlegreContestImportUseCase).execute(any(), any(), any());
     }
 
     private static CrawlJobEntity buildPrivateJob(String siteCode) {

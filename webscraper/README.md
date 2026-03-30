@@ -35,8 +35,10 @@ ou browser somente quando permitido.
 - O enrichment de PDF de `municipal_inconfidentes` agora também preserva detalhe reutilizável de
   edital, como múltiplos cargos e referências de anexos, para servir de base às próximas
   prefeituras
-- `Pouso Alegre` e `Munhoz` seguem no backlog técnico até confirmação de endpoint municipal
-  reaproveitável ou queda formal para HTML + PDF
+- `Pouso Alegre` entrou na `13.2.4` como próxima prefeitura com portal mais estruturado
+  (`concursos-publicos` + `concursos_view/<id>`) e reaproveita o pipeline municipal de PDF
+- `Munhoz` segue no backlog técnico até confirmação de endpoint municipal reaproveitável ou queda
+  formal para HTML + PDF
 
 ## Validacao Manual Oficial
 

@@ -213,9 +213,13 @@ Consequência prática:
   - extração de prazo, escolaridade e prova;
   - preservação de múltiplos cargos e referências de anexos no `payloadJson`;
   - generalização preparada para próximas prefeituras sem migrar schema agora.
-  oficial;
-- `Pouso Alegre` e `Munhoz` continuam como próximos candidatos por terem sinal de API/dados
-  abertos, mas ainda sem endpoint específico de concursos confirmado;
+- `Pouso Alegre` passa a ser a segunda frente municipal em implementação por `HTML + PDF`:
+  - listagem estruturada em `concursos-publicos`;
+  - detalhe por página `concursos_view/<id>`;
+  - anexo principal do tipo `Edital`;
+  - reaproveitamento do enrichment de PDF e normalização `PUBLIC_CONTEST`.
+- `Munhoz` continua como próximo candidato por ter sinal de API/dados abertos, mas ainda sem
+  endpoint específico de concursos confirmado;
 - o restante entra como backlog `HTML + PDF`, dependente de onboarding formal e evidência legal por
   domínio antes de qualquer ativação.
 
