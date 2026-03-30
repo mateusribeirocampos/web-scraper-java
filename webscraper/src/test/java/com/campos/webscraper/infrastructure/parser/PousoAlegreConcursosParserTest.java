@@ -29,6 +29,38 @@ class PousoAlegreConcursosParserTest {
     }
 
     @Test
+    @DisplayName("should filter follow-up listing rows before fetching detail pages")
+    void shouldFilterFollowUpListingRowsBeforeFetchingDetailPages() {
+        String html = """
+                <html><body>
+                  <table>
+                    <tr class="text-center text-sm">
+                      <td class="d-none">23</td>
+                      <td class="d-none">2026</td>
+                      <td>23/2026</td>
+                      <td>Processo Seletivo</td>
+                      <td>EDITAL DE CONVOCAÇÃO Processo Seletivo Simplificado nº 023/2026</td>
+                      <td>24/03/2026</td>
+                      <td><a href="/concursos_view/2337">ver</a></td>
+                    </tr>
+                    <tr class="text-center text-sm">
+                      <td class="d-none">5</td>
+                      <td class="d-none">2026</td>
+                      <td>05/2026</td>
+                      <td>Processo Seletivo</td>
+                      <td>Processo Seletivo Simplificado nº 005/2026</td>
+                      <td>14/01/2026</td>
+                      <td><a href="/concursos_view/2314">ver</a></td>
+                    </tr>
+                  </table>
+                </body></html>
+                """;
+
+        assertThat(parser.parseListingUrls(html, "https://www.pousoalegre.mg.gov.br/concursos-publicos"))
+                .containsExactly("https://www.pousoalegre.mg.gov.br/concursos_view/2314");
+    }
+
+    @Test
     @DisplayName("should parse structured contest detail and select edital attachment")
     void shouldParseStructuredContestDetailAndSelectEditalAttachment() throws IOException {
         String sourceUrl = "https://www.pousoalegre.mg.gov.br/concursos_view/2314";

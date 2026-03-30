@@ -2,6 +2,7 @@ package com.campos.webscraper.application.enrichment;
 
 import com.campos.webscraper.infrastructure.parser.MunhozContestPreviewItem;
 import com.campos.webscraper.infrastructure.pdf.PdfTextExtractor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -30,6 +31,7 @@ public class MunhozContestPdfEnricher {
     private final InconfidentesEditalPdfMetadataParser metadataParser;
     private final Duration totalEnrichmentBudget;
 
+    @Autowired
     public MunhozContestPdfEnricher(
             PdfTextExtractor pdfTextExtractor,
             InconfidentesEditalPdfMetadataParser metadataParser

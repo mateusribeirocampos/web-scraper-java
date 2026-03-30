@@ -14,7 +14,10 @@ import java.text.Normalizer;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -75,10 +78,75 @@ public class PousoAlegreContestNormalizer {
 
     private String toJson(PousoAlegreContestPreviewItem item) {
         try {
-            return objectMapper.writeValueAsString(item);
+            return objectMapper.writeValueAsString(toPayload(item));
         } catch (JsonProcessingException exception) {
             throw new IllegalStateException("Failed to serialize Pouso Alegre preview payload for audit", exception);
         }
+    }
+
+    private Map<String, Object> toPayload(PousoAlegreContestPreviewItem item) {
+        Map<String, Object> payload = new LinkedHashMap<>();
+        payload.put("contestTitle", sanitizeText(item.contestTitle()));
+        payload.put("organizer", sanitizeText(item.organizer()));
+        payload.put("positionTitle", sanitizeText(item.positionTitle()));
+        payload.put("educationLevel", sanitizeText(item.educationLevel()));
+        payload.put("formationRequirements", sanitizeText(item.formationRequirements()));
+        payload.put("contestNumber", sanitizeText(item.contestNumber()));
+        payload.put("editalYear", item.editalYear());
+        payload.put("contestUrl", sanitizeText(item.contestUrl()));
+        payload.put("editalUrl", sanitizeText(item.editalUrl()));
+        payload.put("publishedAt", toIsoDate(item.publishedAt()));
+        payload.put("registrationStartDate", toIsoDate(item.registrationStartDate()));
+        payload.put("registrationEndDate", toIsoDate(item.registrationEndDate()));
+        payload.put("examDate", toIsoDate(item.examDate()));
+        payload.put("attachments", toAttachmentPayload(item.attachments()));
+        payload.put("pdfPositionTitles", sanitizeStrings(item.pdfPositionTitles()));
+        payload.put("pdfAnnexReferences", sanitizeStrings(item.pdfAnnexReferences()));
+        return payload;
+    }
+
+    private List<Map<String, String>> toAttachmentPayload(List<PousoAlegreContestAttachment> attachments) {
+        if (attachments == null) {
+            return List.of();
+        }
+        return attachments.stream()
+                .map(attachment -> Map.of(
+                        "type", sanitizeText(attachment.type()),
+                        "label", sanitizeText(attachment.label()),
+                        "url", sanitizeText(attachment.url())
+                ))
+                .toList();
+    }
+
+    private List<String> sanitizeStrings(List<String> values) {
+        if (values == null) {
+            return List.of();
+        }
+        return values.stream()
+                .map(this::sanitizeText)
+                .toList();
+    }
+
+    private String sanitizeText(String value) {
+        if (value == null || value.isBlank()) {
+            return "";
+        }
+        StringBuilder sanitized = new StringBuilder(value.length());
+        for (int index = 0; index < value.length(); index++) {
+            char current = value.charAt(index);
+            if (Character.isHighSurrogate(current) || Character.isLowSurrogate(current)) {
+                continue;
+            }
+            if (Character.isISOControl(current) && current != '\n' && current != '\r' && current != '\t') {
+                continue;
+            }
+            sanitized.append(current);
+        }
+        return sanitized.toString();
+    }
+
+    private String toIsoDate(LocalDate value) {
+        return value == null ? "" : value.toString();
     }
 
     private String buildStableContestId(PousoAlegreContestPreviewItem item) {

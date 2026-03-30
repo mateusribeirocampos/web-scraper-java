@@ -25,6 +25,8 @@ import java.util.regex.Pattern;
 @Component
 public class PousoAlegreConcursosParser {
 
+    private static final int MAX_LISTING_ROWS_SCANNED = 60;
+    private static final int MAX_DETAIL_URLS = 12;
     private static final DateTimeFormatter BRAZILIAN_DATE = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final Pattern CONTEST_NUMBER_PATTERN = Pattern.compile("(?i)(\\d{1,4})/(\\d{4})");
     private static final Pattern EDITAL_YEAR_PATTERN = Pattern.compile(
@@ -37,6 +39,37 @@ public class PousoAlegreConcursosParser {
 
         Document document = Jsoup.parse(html, sourceUrl);
         Set<String> urls = new LinkedHashSet<>();
+        int scannedRows = 0;
+        for (Element row : document.select("table tr")) {
+            if (scannedRows >= MAX_LISTING_ROWS_SCANNED || urls.size() >= MAX_DETAIL_URLS) {
+                break;
+            }
+            Elements cells = row.select("td");
+            if (cells.size() < 7) {
+                continue;
+            }
+            scannedRows++;
+
+            String contestType = cells.get(3).text().replaceAll("\\s+", " ").trim();
+            String contestTitle = cells.get(4).text().replaceAll("\\s+", " ").trim();
+            if (!isOperationalContest(contestType, contestTitle)) {
+                continue;
+            }
+
+            Element actionLink = cells.get(cells.size() - 1).selectFirst("a[href]");
+            if (actionLink == null) {
+                continue;
+            }
+            String href = actionLink.absUrl("href");
+            if (href.contains("/concursos_view/")) {
+                urls.add(href);
+            }
+        }
+
+        if (!urls.isEmpty()) {
+            return List.copyOf(urls);
+        }
+
         for (Element link : document.select("a[href]")) {
             String href = link.absUrl("href");
             if (href.contains("/concursos_view/")) {
