@@ -97,6 +97,12 @@ Exemplos de intenção já adotados como referência:
 Portanto, o projeto já suporta validação funcional real pelo usuário, mas ainda não expõe busca
 livre customizada como parâmetro público de produto. Isso continua como evolução futura.
 
+Atualização municipal em 2026-03-30:
+
+- `Inconfidentes` e `Pouso Alegre` já operam como fontes municipais `PUBLIC_CONTEST` com HTML + PDF.
+- A `13.2.6` consolidou a base comum de import municipal.
+- A `13.2.5` abre `Munhoz` como o terceiro município reutilizando esse pipeline.
+
 ---
 
 ## Detailed Tasks by Iteration

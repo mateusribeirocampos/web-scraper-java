@@ -19,7 +19,7 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(catalog.list())
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
                 .contains("greenhouse_bitso", "indeed-br", "dou-api", "pci_concursos",
-                        "municipal_inconfidentes", "municipal_pouso_alegre");
+                        "municipal_inconfidentes", "municipal_pouso_alegre", "municipal_munhoz");
     }
 
     @Test
@@ -41,6 +41,7 @@ class TargetSiteOnboardingProfileCatalogTest {
         TargetSiteOnboardingProfileTemplate pci = catalog.get("pci_concursos");
         TargetSiteOnboardingProfileTemplate inconfidentes = catalog.get("municipal_inconfidentes");
         TargetSiteOnboardingProfileTemplate pousoAlegre = catalog.get("municipal_pouso_alegre");
+        TargetSiteOnboardingProfileTemplate munhoz = catalog.get("municipal_munhoz");
 
         assertThat(indeed.sourceFamily()).isEqualTo("INDEED");
         assertThat(indeed.targetSite().getSiteCode()).isEqualTo("indeed-br");
@@ -69,6 +70,13 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(pousoAlegre.targetSite().getLegalStatus().name()).isEqualTo("APPROVED");
         assertThat(pousoAlegre.targetSite().isEnabled()).isTrue();
         assertThat(pousoAlegre.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.DADOS_PUBLICOS);
+
+        assertThat(munhoz.sourceFamily()).isEqualTo("MUNICIPAL_HTML");
+        assertThat(munhoz.targetSite().getSiteCode()).isEqualTo("municipal_munhoz");
+        assertThat(munhoz.targetSite().getSelectorBundleVersion()).isEqualTo("munhoz_html_v1");
+        assertThat(munhoz.targetSite().getLegalStatus().name()).isEqualTo("PENDING_REVIEW");
+        assertThat(munhoz.targetSite().isEnabled()).isFalse();
+        assertThat(munhoz.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.DADOS_PUBLICOS);
     }
 
     @Test
@@ -91,6 +99,12 @@ class TargetSiteOnboardingProfileCatalogTest {
                 .get()
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
                 .isEqualTo("municipal_pouso_alegre");
+
+        assertThat(catalog.findBySiteCode("municipal_munhoz"))
+                .isPresent()
+                .get()
+                .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
+                .isEqualTo("municipal_munhoz");
 
         assertThat(catalog.findBySiteCode("unknown-site")).isEmpty();
     }

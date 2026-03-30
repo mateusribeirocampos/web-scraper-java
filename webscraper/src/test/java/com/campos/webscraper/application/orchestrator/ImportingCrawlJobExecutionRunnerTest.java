@@ -7,6 +7,7 @@ import com.campos.webscraper.application.usecase.InconfidentesContestImportUseCa
 import com.campos.webscraper.application.usecase.IndeedJobImportUseCase;
 import com.campos.webscraper.application.usecase.PciConcursosImportUseCase;
 import com.campos.webscraper.application.usecase.PousoAlegreContestImportUseCase;
+import com.campos.webscraper.application.usecase.MunhozContestImportUseCase;
 import com.campos.webscraper.domain.enums.CrawlExecutionStatus;
 import com.campos.webscraper.domain.enums.ExtractionMode;
 import com.campos.webscraper.domain.enums.JobCategory;
@@ -60,6 +61,9 @@ class ImportingCrawlJobExecutionRunnerTest {
     @Mock
     private PousoAlegreContestImportUseCase pousoAlegreContestImportUseCase;
 
+    @Mock
+    private MunhozContestImportUseCase munhozContestImportUseCase;
+
     @Test
     @DisplayName("should execute greenhouse import and return execution counters")
     void shouldExecuteGreenhouseImportAndReturnExecutionCounters() {
@@ -75,7 +79,8 @@ class ImportingCrawlJobExecutionRunnerTest {
                 douContestImportUseCase,
                 pciConcursosImportUseCase,
                 inconfidentesContestImportUseCase,
-                pousoAlegreContestImportUseCase
+                pousoAlegreContestImportUseCase,
+                munhozContestImportUseCase
         );
 
         CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
@@ -100,7 +105,8 @@ class ImportingCrawlJobExecutionRunnerTest {
                 douContestImportUseCase,
                 pciConcursosImportUseCase,
                 inconfidentesContestImportUseCase,
-                pousoAlegreContestImportUseCase
+                pousoAlegreContestImportUseCase,
+                munhozContestImportUseCase
         );
 
         CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
@@ -125,7 +131,8 @@ class ImportingCrawlJobExecutionRunnerTest {
                 douContestImportUseCase,
                 pciConcursosImportUseCase,
                 inconfidentesContestImportUseCase,
-                pousoAlegreContestImportUseCase
+                pousoAlegreContestImportUseCase,
+                munhozContestImportUseCase
         );
 
         CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
@@ -148,7 +155,8 @@ class ImportingCrawlJobExecutionRunnerTest {
                 douContestImportUseCase,
                 pciConcursosImportUseCase,
                 inconfidentesContestImportUseCase,
-                pousoAlegreContestImportUseCase
+                pousoAlegreContestImportUseCase,
+                munhozContestImportUseCase
         );
 
         assertThatThrownBy(() -> runner.run(crawlJob, crawlExecution))
@@ -171,7 +179,8 @@ class ImportingCrawlJobExecutionRunnerTest {
                 douContestImportUseCase,
                 pciConcursosImportUseCase,
                 inconfidentesContestImportUseCase,
-                pousoAlegreContestImportUseCase
+                pousoAlegreContestImportUseCase,
+                munhozContestImportUseCase
         );
 
         CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
@@ -196,7 +205,8 @@ class ImportingCrawlJobExecutionRunnerTest {
                 douContestImportUseCase,
                 pciConcursosImportUseCase,
                 inconfidentesContestImportUseCase,
-                pousoAlegreContestImportUseCase
+                pousoAlegreContestImportUseCase,
+                munhozContestImportUseCase
         );
 
         CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
@@ -221,7 +231,8 @@ class ImportingCrawlJobExecutionRunnerTest {
                 douContestImportUseCase,
                 pciConcursosImportUseCase,
                 inconfidentesContestImportUseCase,
-                pousoAlegreContestImportUseCase
+                pousoAlegreContestImportUseCase,
+                munhozContestImportUseCase
         );
 
         CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
@@ -229,6 +240,32 @@ class ImportingCrawlJobExecutionRunnerTest {
         assertThat(outcome.pagesVisited()).isEqualTo(1);
         assertThat(outcome.itemsFound()).isEqualTo(1);
         verify(pousoAlegreContestImportUseCase).execute(any(), any(), any());
+    }
+
+    @Test
+    @DisplayName("should execute Munhoz import for municipal static public contest jobs")
+    void shouldExecuteMunhozImportForMunicipalStaticPublicContestJobs() {
+        CrawlJobEntity crawlJob = buildStaticPublicJob("municipal_munhoz");
+        CrawlExecutionEntity crawlExecution = buildExecution(crawlJob);
+        when(munhozContestImportUseCase.execute(any(), any(), any()))
+                .thenReturn(List.of(PublicContestPostingEntity.builder().externalId("munhoz-1").build()));
+
+        ImportingCrawlJobExecutionRunner runner = new ImportingCrawlJobExecutionRunner(
+                indeedJobImportUseCase,
+                greenhouseJobImportUseCase,
+                gupyJobImportUseCase,
+                douContestImportUseCase,
+                pciConcursosImportUseCase,
+                inconfidentesContestImportUseCase,
+                pousoAlegreContestImportUseCase,
+                munhozContestImportUseCase
+        );
+
+        CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
+
+        assertThat(outcome.pagesVisited()).isEqualTo(1);
+        assertThat(outcome.itemsFound()).isEqualTo(1);
+        verify(munhozContestImportUseCase).execute(any(), any(), any());
     }
 
     private static CrawlJobEntity buildPrivateJob(String siteCode) {

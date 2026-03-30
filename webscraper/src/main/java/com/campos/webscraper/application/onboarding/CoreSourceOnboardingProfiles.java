@@ -210,4 +210,43 @@ public final class CoreSourceOnboardingProfiles {
         );
     }
 
+    public static TargetSiteOnboardingProfileTemplate municipalMunhoz() {
+        String listingUrl = "https://www.munhoz.mg.gov.br/concursos-publicos";
+        return new TargetSiteOnboardingProfileTemplate(
+                "municipal_munhoz",
+                "MUNICIPAL_HTML",
+                "munhoz",
+                listingUrl,
+                TargetSiteEntity.builder()
+                        .siteCode("municipal_munhoz")
+                        .displayName("Prefeitura de Munhoz - Concursos")
+                        .baseUrl(listingUrl)
+                        .siteType(SiteType.TYPE_A)
+                        .extractionMode(ExtractionMode.STATIC_HTML)
+                        .jobCategory(JobCategory.PUBLIC_CONTEST)
+                        .legalStatus(LegalStatus.PENDING_REVIEW)
+                        .selectorBundleVersion("munhoz_html_v1")
+                        .enabled(false)
+                        .createdAt(Instant.parse("2026-03-30T00:00:00Z"))
+                        .build(),
+                new SiteOnboardingChecklist(
+                        "https://www.munhoz.mg.gov.br/robots.txt",
+                        false,
+                        false,
+                        "https://www.munhoz.mg.gov.br/politica-de-privacidade",
+                        false,
+                        false,
+                        false,
+                        "",
+                        true,
+                        "Fonte oficial municipal estruturada de concursos e processos seletivos, com pagina de detalhe e anexos do tipo edital.",
+                        "1 request every 10 seconds",
+                        OnboardingLegalCategory.DADOS_PUBLICOS,
+                        "platform-team@local",
+                        "PUBLIC_ANONYMOUS",
+                        "Portal de concursos de Munhoz identificado em 2026-03-30; implementação técnica iniciada e revisão legal/operacional ainda pendente."
+                )
+        );
+    }
+
 }

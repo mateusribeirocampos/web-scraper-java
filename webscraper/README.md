@@ -39,6 +39,9 @@ ou browser somente quando permitido.
   (`concursos-publicos` + `concursos_view/<id>`) e reaproveita o pipeline municipal de PDF
 - `Munhoz` segue no backlog técnico até confirmação de endpoint municipal reaproveitável ou queda
   formal para HTML + PDF
+- `Munhoz` agora também entra na `13.2.5` com portal estruturado e detalhe por `concursos_view/<id>`,
+  reaproveitando o mesmo pipeline municipal de HTML + PDF já maturado em `Inconfidentes` e
+  `Pouso Alegre`
 
 ## Validacao Manual Oficial
 
