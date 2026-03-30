@@ -38,7 +38,9 @@ class InconfidentesContestNormalizerTest {
                 List.of(
                         new InconfidentesContestAttachment("Edital", "https://ecrie.com.br/edital-001-2026.pdf"),
                         new InconfidentesContestAttachment("Resultado Final", "https://ecrie.com.br/resultado-final.pdf")
-                )
+                ),
+                List.of("Professor"),
+                List.of("ANEXO I - CRONOGRAMA")
         );
 
         PublicContestPostingEntity posting = normalizer.normalize(item, LocalDateTime.parse("2026-03-25T10:15:00"));
@@ -59,6 +61,7 @@ class InconfidentesContestNormalizerTest {
         assertThat(posting.getExamDate()).isEqualTo(java.time.LocalDate.parse("2026-05-30"));
         assertThat(posting.getContestStatus().name()).isEqualTo("OPEN");
         assertThat(posting.getPayloadJson()).contains("Resultado Final");
+        assertThat(posting.getPayloadJson()).contains("ANEXO I - CRONOGRAMA");
     }
 
     @Test
@@ -79,6 +82,8 @@ class InconfidentesContestNormalizerTest {
                 null,
                 null,
                 null,
+                List.of(),
+                List.of(),
                 List.of()
         );
 
@@ -105,7 +110,9 @@ class InconfidentesContestNormalizerTest {
                 null,
                 null,
                 null,
-                List.of(new InconfidentesContestAttachment("Edital 008/2026", "https://ecrie.com.br/edital-original.pdf"))
+                List.of(new InconfidentesContestAttachment("Edital 008/2026", "https://ecrie.com.br/edital-original.pdf")),
+                List.of(),
+                List.of()
         );
         InconfidentesContestPreviewItem republished = new InconfidentesContestPreviewItem(
                 "DEPARTAMENTO DE EDUCACAO",
@@ -120,7 +127,9 @@ class InconfidentesContestNormalizerTest {
                 null,
                 null,
                 null,
-                List.of(new InconfidentesContestAttachment("Edital retificado 008/2026", "https://ecrie.com.br/edital-retificado.pdf"))
+                List.of(new InconfidentesContestAttachment("Edital retificado 008/2026", "https://ecrie.com.br/edital-retificado.pdf")),
+                List.of(),
+                List.of()
         );
 
         PublicContestPostingEntity originalPosting = normalizer.normalize(original, LocalDateTime.parse("2026-03-25T10:15:00"));
@@ -149,7 +158,9 @@ class InconfidentesContestNormalizerTest {
                 null,
                 null,
                 null,
-                List.of(new InconfidentesContestAttachment("Edital 011/2026", "https://ecrie.com.br/edital-011.pdf"))
+                List.of(new InconfidentesContestAttachment("Edital 011/2026", "https://ecrie.com.br/edital-011.pdf")),
+                List.of(),
+                List.of()
         );
         InconfidentesContestPreviewItem retitled = new InconfidentesContestPreviewItem(
                 "DEPARTAMENTO DE EDUCACAO",
@@ -164,7 +175,9 @@ class InconfidentesContestNormalizerTest {
                 null,
                 null,
                 null,
-                List.of(new InconfidentesContestAttachment("Edital retificado 011/2026", "https://ecrie.com.br/edital-011-retificado.pdf"))
+                List.of(new InconfidentesContestAttachment("Edital retificado 011/2026", "https://ecrie.com.br/edital-011-retificado.pdf")),
+                List.of(),
+                List.of()
         );
 
         PublicContestPostingEntity originalPosting = normalizer.normalize(original, LocalDateTime.parse("2026-03-25T10:15:00"));
@@ -192,7 +205,9 @@ class InconfidentesContestNormalizerTest {
                 null,
                 null,
                 null,
-                List.of(new InconfidentesContestAttachment("Edital extraordinario", "https://ecrie.com.br/edital-extra.pdf"))
+                List.of(new InconfidentesContestAttachment("Edital extraordinario", "https://ecrie.com.br/edital-extra.pdf")),
+                List.of(),
+                List.of()
         );
 
         PublicContestPostingEntity posting = normalizer.normalize(item, LocalDateTime.parse("2026-03-25T10:15:00"));
@@ -220,7 +235,9 @@ class InconfidentesContestNormalizerTest {
                 null,
                 null,
                 null,
-                List.of(new InconfidentesContestAttachment("Edital 003/2024", "https://ecrie.com.br/edital-2024.pdf"))
+                List.of(new InconfidentesContestAttachment("Edital 003/2024", "https://ecrie.com.br/edital-2024.pdf")),
+                List.of(),
+                List.of()
         );
 
         PublicContestPostingEntity posting = normalizer.normalize(item, LocalDateTime.parse("2026-03-25T10:15:00"));
@@ -246,7 +263,9 @@ class InconfidentesContestNormalizerTest {
                 null,
                 null,
                 null,
-                List.of(new InconfidentesContestAttachment("Edital 015/2026", "https://ecrie.com.br/edital-015.pdf"))
+                List.of(new InconfidentesContestAttachment("Edital 015/2026", "https://ecrie.com.br/edital-015.pdf")),
+                List.of(),
+                List.of()
         );
 
         PublicContestPostingEntity posting = normalizer.normalize(item, LocalDateTime.parse("2026-03-25T10:15:00"));
@@ -272,7 +291,9 @@ class InconfidentesContestNormalizerTest {
                 java.time.LocalDate.parse("2026-03-01"),
                 java.time.LocalDate.parse("2026-03-10"),
                 java.time.LocalDate.parse("2026-04-05"),
-                List.of(new InconfidentesContestAttachment("Edital 018/2026", "https://ecrie.com.br/edital-018.pdf"))
+                List.of(new InconfidentesContestAttachment("Edital 018/2026", "https://ecrie.com.br/edital-018.pdf")),
+                List.of(),
+                List.of()
         );
 
         PublicContestPostingEntity posting = normalizer.normalize(item, LocalDateTime.parse("2026-03-25T10:15:00"));
@@ -298,7 +319,9 @@ class InconfidentesContestNormalizerTest {
                 java.time.LocalDate.parse("2026-03-01"),
                 java.time.LocalDate.parse("2026-03-10"),
                 java.time.LocalDate.parse("2026-03-20"),
-                List.of(new InconfidentesContestAttachment("Edital 018/2026", "https://ecrie.com.br/edital-018.pdf"))
+                List.of(new InconfidentesContestAttachment("Edital 018/2026", "https://ecrie.com.br/edital-018.pdf")),
+                List.of(),
+                List.of()
         );
 
         PublicContestPostingEntity posting = normalizer.normalize(item, LocalDateTime.parse("2026-03-25T10:15:00"));

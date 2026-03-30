@@ -48,6 +48,10 @@ Playwright e execucao assíncrona com fila persistida.
 | Gupy | ATS / board publico | Implementada |
 | Playwright fallback | Site dinamico Type C | Implementado |
 
+Detalhe importante da frente municipal:
+- `Inconfidentes` agora tambem serve como baseline de enrichment por PDF para futuras prefeituras,
+  preservando no `payloadJson` cargos multiplos e referencias de anexos sem mudar o schema atual.
+
 ## Visao de Arquitetura
 
 ```mermaid

@@ -27,11 +27,13 @@ class InconfidentesEditalPdfMetadataParserTest {
         InconfidentesEditalPdfMetadata metadata = parser.parse(pdfText);
 
         assertThat(metadata.positionTitle()).isEqualTo("Analista de Sistemas");
+        assertThat(metadata.positionTitles()).containsExactly("Analista de Sistemas");
         assertThat(metadata.educationLevel()).isEqualTo("SUPERIOR");
         assertThat(metadata.formationRequirements()).contains("ensino superior");
         assertThat(metadata.registrationStartDate()).isEqualTo(java.time.LocalDate.parse("2026-04-10"));
         assertThat(metadata.registrationEndDate()).isEqualTo(java.time.LocalDate.parse("2026-04-20"));
         assertThat(metadata.examDate()).isEqualTo(java.time.LocalDate.parse("2026-05-30"));
+        assertThat(metadata.annexReferences()).isEmpty();
     }
 
     @Test
@@ -51,6 +53,8 @@ class InconfidentesEditalPdfMetadataParserTest {
         assertThat(metadata.registrationStartDate()).isNull();
         assertThat(metadata.registrationEndDate()).isNull();
         assertThat(metadata.examDate()).isNull();
+        assertThat(metadata.positionTitles()).isEmpty();
+        assertThat(metadata.annexReferences()).isEmpty();
     }
 
     @Test
@@ -67,6 +71,7 @@ class InconfidentesEditalPdfMetadataParserTest {
                 """);
 
         assertThat(metadata.positionTitle()).isNull();
+        assertThat(metadata.positionTitles()).containsExactly("Analista de Sistemas", "Tecnico em Informatica");
         assertThat(metadata.educationLevel()).isEqualTo("SUPERIOR");
     }
 
@@ -83,7 +88,40 @@ class InconfidentesEditalPdfMetadataParserTest {
                 """);
 
         assertThat(metadata.positionTitle()).isEqualTo("Tecnico em Informatica");
+        assertThat(metadata.positionTitles()).containsExactly("Tecnico em Informatica");
         assertThat(metadata.educationLevel()).isNull();
         assertThat(metadata.formationRequirements()).isNull();
+    }
+
+    @Test
+    @DisplayName("should extract annex references for downstream municipal payload enrichment")
+    void shouldExtractAnnexReferencesForDownstreamMunicipalPayloadEnrichment() {
+        InconfidentesEditalPdfMetadataParser parser = new InconfidentesEditalPdfMetadataParser();
+
+        InconfidentesEditalPdfMetadata metadata = parser.parse("""
+                PREFEITURA MUNICIPAL DE INCONFIDENTES
+                EDITAL 021/2026
+                Cargo: Analista de Sistemas
+                ANEXO I - CRONOGRAMA
+                ANEXO II - CONTEUDO PROGRAMATICO
+                """);
+
+        assertThat(metadata.annexReferences())
+                .containsExactly("ANEXO I - CRONOGRAMA", "ANEXO II - CONTEUDO PROGRAMATICO");
+    }
+
+    @Test
+    @DisplayName("should extract unique annex references when the edital uses anexo unico label")
+    void shouldExtractUniqueAnnexReferencesWhenTheEditalUsesAnexoUnicoLabel() {
+        InconfidentesEditalPdfMetadataParser parser = new InconfidentesEditalPdfMetadataParser();
+
+        InconfidentesEditalPdfMetadata metadata = parser.parse("""
+                PREFEITURA MUNICIPAL DE INCONFIDENTES
+                EDITAL 021/2026
+                ANEXO ÚNICO - QUADRO DE VAGAS
+                """);
+
+        assertThat(metadata.annexReferences())
+                .containsExactly("ANEXO ÚNICO - QUADRO DE VAGAS");
     }
 }

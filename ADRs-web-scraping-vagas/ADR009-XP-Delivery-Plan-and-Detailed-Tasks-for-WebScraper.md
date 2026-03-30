@@ -655,6 +655,19 @@ Inventário inicial já levantado:
   - rota operacional no `ImportingCrawlJobExecutionRunner`;
   - perfil curado operacional `municipal_inconfidentes`.
 
+#### Story 13.2.3 — Inconfidentes PDF Enrichment Generalization
+- Aprofundar o parsing do edital PDF de `Inconfidentes` sem quebrar o pipeline municipal atual.
+- Preservar detalhe reutilizável para outras prefeituras:
+  - múltiplos cargos detectados no PDF;
+  - referências de anexos;
+  - manutenção desses detalhes no `payloadJson`.
+- **TDD:** parser, enricher e normalizer tests primeiro.
+- Status atual: implementado com
+  - metadata enriquecida em `InconfidentesEditalPdfMetadata`;
+  - parser de listas de cargos e anexos em `InconfidentesEditalPdfMetadataParser`;
+  - propagação no preview via `InconfidentesContestPdfEnricher` e `InconfidentesContestPreviewItem`;
+  - serialização desses detalhes no `payloadJson` do concurso.
+
 ---
 
 ## Definition of Done

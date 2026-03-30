@@ -92,14 +92,22 @@ public class InconfidentesContestPdfEnricher {
                     item.organizer(),
                     metadata.positionTitle() != null ? metadata.positionTitle() : item.positionTitle(),
                     metadata.educationLevel() != null ? metadata.educationLevel() : item.educationLevel(),
-                    metadata.formationRequirements(),
+                    metadata.formationRequirements() != null
+                            ? metadata.formationRequirements()
+                            : item.formationRequirements(),
                     item.editalYear(),
                     item.contestUrl(),
                     item.editalUrl(),
-                    metadata.registrationStartDate(),
-                    metadata.registrationEndDate(),
-                    metadata.examDate(),
-                    item.attachments()
+                    metadata.registrationStartDate() != null
+                            ? metadata.registrationStartDate()
+                            : item.registrationStartDate(),
+                    metadata.registrationEndDate() != null
+                            ? metadata.registrationEndDate()
+                            : item.registrationEndDate(),
+                    metadata.examDate() != null ? metadata.examDate() : item.examDate(),
+                    item.attachments(),
+                    metadata.positionTitles(),
+                    metadata.annexReferences()
             );
         } catch (RuntimeException ignored) {
             return item;

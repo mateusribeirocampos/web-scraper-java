@@ -209,6 +209,10 @@ Regra de produto para esta família:
 Consequência prática:
 
 - `Inconfidentes` passa a ser a primeira implementação municipal operacional via `HTML + PDF`
+- `Inconfidentes` também passa a ser a base de enrichment municipal por PDF:
+  - extração de prazo, escolaridade e prova;
+  - preservação de múltiplos cargos e referências de anexos no `payloadJson`;
+  - generalização preparada para próximas prefeituras sem migrar schema agora.
   oficial;
 - `Pouso Alegre` e `Munhoz` continuam como próximos candidatos por terem sinal de API/dados
   abertos, mas ainda sem endpoint específico de concursos confirmado;

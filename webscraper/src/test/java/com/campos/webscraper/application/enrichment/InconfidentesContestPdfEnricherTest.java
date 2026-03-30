@@ -45,7 +45,9 @@ class InconfidentesContestPdfEnricherTest {
                 null,
                 null,
                 null,
-                List.of(new InconfidentesContestAttachment("Edital 021/2026", "https://example.com/edital-021.pdf"))
+                List.of(new InconfidentesContestAttachment("Edital 021/2026", "https://example.com/edital-021.pdf")),
+                List.of(),
+                List.of()
         );
 
         InconfidentesContestPreviewItem enriched = enricher.enrich(original);
@@ -55,6 +57,8 @@ class InconfidentesContestPdfEnricherTest {
         assertThat(enriched.formationRequirements()).contains("ensino superior");
         assertThat(enriched.registrationStartDate()).isEqualTo(java.time.LocalDate.parse("2026-04-10"));
         assertThat(enriched.registrationEndDate()).isEqualTo(java.time.LocalDate.parse("2026-04-20"));
+        assertThat(enriched.pdfPositionTitles()).containsExactly("Analista de Sistemas");
+        assertThat(enriched.pdfAnnexReferences()).isEmpty();
     }
 
     @Test
@@ -79,7 +83,9 @@ class InconfidentesContestPdfEnricherTest {
                 null,
                 null,
                 null,
-                List.of(new InconfidentesContestAttachment("Edital 021/2026", "https://example.com/edital-021.pdf"))
+                List.of(new InconfidentesContestAttachment("Edital 021/2026", "https://example.com/edital-021.pdf")),
+                List.of(),
+                List.of()
         );
 
         InconfidentesContestPreviewItem enriched = enricher.enrich(original);
@@ -185,7 +191,32 @@ class InconfidentesContestPdfEnricherTest {
                 null,
                 null,
                 null,
-                List.of(new InconfidentesContestAttachment("Edital 021/2026", editalUrl))
+                List.of(new InconfidentesContestAttachment("Edital 021/2026", editalUrl)),
+                List.of(),
+                List.of()
         );
+    }
+
+    @Test
+    @DisplayName("should keep detailed pdf role and annex lists for downstream municipal payloads")
+    void shouldKeepDetailedPdfRoleAndAnnexListsForDownstreamMunicipalPayloads() {
+        PdfTextExtractor extractor = pdfUrl -> """
+                Cargo: Analista de Sistemas
+                Cargo: Tecnico em Informatica
+                Escolaridade: ensino superior completo em Sistemas de Informacao
+                ANEXO I - CRONOGRAMA
+                ANEXO II - CONTEUDO PROGRAMATICO
+                """;
+        InconfidentesContestPdfEnricher enricher = new InconfidentesContestPdfEnricher(
+                extractor,
+                new InconfidentesEditalPdfMetadataParser()
+        );
+
+        InconfidentesContestPreviewItem enriched = enricher.enrich(buildPreviewItem("https://example.com/edital-021.pdf"));
+
+        assertThat(enriched.positionTitle()).isEqualTo("EDITAL 021/2026");
+        assertThat(enriched.pdfPositionTitles()).containsExactly("Analista de Sistemas", "Tecnico em Informatica");
+        assertThat(enriched.pdfAnnexReferences())
+                .containsExactly("ANEXO I - CRONOGRAMA", "ANEXO II - CONTEUDO PROGRAMATICO");
     }
 }

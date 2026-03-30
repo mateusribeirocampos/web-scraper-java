@@ -6,6 +6,7 @@ import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Objects;
@@ -32,22 +33,28 @@ public class InconfidentesEditalPdfMetadataParser {
     private static final Pattern FORMATION_PATTERN = Pattern.compile(
             "(?is)(?:escolaridade|requisito(?:s)?|forma[cç][aã]o(?: exigida)?)\\s*:?\\s*([A-Za-zÀ-ÿ0-9,;()\\- /]{8,220})"
     );
+    private static final Pattern ANNEX_PATTERN = Pattern.compile(
+            "(?ium)^\\s*(anexo\\s+(?:[ivxlcdm0-9]+|[uú]nico)(?:\\s*[-–:]\\s*[^\\r\\n]{1,120})?)\\s*$"
+    );
 
     public InconfidentesEditalPdfMetadata parse(String pdfText) {
         Objects.requireNonNull(pdfText, "pdfText must not be null");
 
         String formationRequirements = parseFormationRequirements(pdfText);
+        List<String> positionTitles = parsePositionTitles(pdfText);
         return new InconfidentesEditalPdfMetadata(
-                parsePositionTitle(pdfText),
+                positionTitles.size() == 1 ? positionTitles.getFirst() : null,
+                positionTitles,
                 parseEducationLevel(formationRequirements),
                 formationRequirements,
                 parseRegistrationStartDate(pdfText),
                 parseRegistrationEndDate(pdfText),
-                parseExamDate(pdfText)
+                parseExamDate(pdfText),
+                parseAnnexReferences(pdfText)
         );
     }
 
-    private String parsePositionTitle(String text) {
+    private List<String> parsePositionTitles(String text) {
         Matcher matcher = POSITION_PATTERN.matcher(text);
         Set<String> distinctTitles = new LinkedHashSet<>();
         while (matcher.find()) {
@@ -56,10 +63,7 @@ public class InconfidentesEditalPdfMetadataParser {
                 distinctTitles.add(value);
             }
         }
-        if (distinctTitles.size() != 1) {
-            return null;
-        }
-        return distinctTitles.iterator().next();
+        return List.copyOf(distinctTitles);
     }
 
     private String parseEducationLevel(String formationRequirements) {
@@ -115,6 +119,18 @@ public class InconfidentesEditalPdfMetadataParser {
     private LocalDate parseExamDate(String text) {
         Matcher matcher = EXAM_DATE_PATTERN.matcher(text);
         return matcher.find() ? parseDate(matcher.group(1)) : null;
+    }
+
+    private List<String> parseAnnexReferences(String text) {
+        Matcher matcher = ANNEX_PATTERN.matcher(text);
+        Set<String> annexReferences = new LinkedHashSet<>();
+        while (matcher.find()) {
+            String value = matcher.group(1).replaceAll("\\s+", " ").trim();
+            if (!value.isBlank()) {
+                annexReferences.add(value);
+            }
+        }
+        return List.copyOf(annexReferences);
     }
 
     private LocalDate parseDate(String rawDate) {

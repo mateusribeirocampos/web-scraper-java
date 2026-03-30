@@ -32,6 +32,9 @@ ou browser somente quando permitido.
   o fluxo ponta a ponta do usuário
 - A expansão municipal `PUBLIC_CONTEST` agora já tem a primeira fonte operacional:
   `municipal_inconfidentes`
+- O enrichment de PDF de `municipal_inconfidentes` agora também preserva detalhe reutilizável de
+  edital, como múltiplos cargos e referências de anexos, para servir de base às próximas
+  prefeituras
 - `Pouso Alegre` e `Munhoz` seguem no backlog técnico até confirmação de endpoint municipal
   reaproveitável ou queda formal para HTML + PDF
 

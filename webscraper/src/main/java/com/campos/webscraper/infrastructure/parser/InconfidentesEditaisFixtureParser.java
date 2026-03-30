@@ -112,7 +112,9 @@ public class InconfidentesEditaisFixtureParser {
                 null,
                 null,
                 null,
-                normalizedAttachments
+                normalizedAttachments,
+                List.of(),
+                List.of()
         ));
     }
 

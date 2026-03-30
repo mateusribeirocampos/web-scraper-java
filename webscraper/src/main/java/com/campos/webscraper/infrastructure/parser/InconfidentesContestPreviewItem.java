@@ -19,6 +19,8 @@ public record InconfidentesContestPreviewItem(
         LocalDate registrationStartDate,
         LocalDate registrationEndDate,
         LocalDate examDate,
-        List<InconfidentesContestAttachment> attachments
+        List<InconfidentesContestAttachment> attachments,
+        List<String> pdfPositionTitles,
+        List<String> pdfAnnexReferences
 ) {
 }
