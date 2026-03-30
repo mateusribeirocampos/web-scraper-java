@@ -649,6 +649,16 @@ Inventário inicial já levantado:
   - `Pouso Alegre`: API pública confirmada, sem endpoint específico de concursos confirmado;
   - `Munhoz`: API pública confirmada, sem endpoint específico de concursos confirmado.
 
+#### Consolidação operacional municipal
+- Status atual dos templates curados no catálogo runtime:
+  - `municipal_inconfidentes`: `APPROVED/enabled=true`
+  - `municipal_pouso_alegre`: `APPROVED/enabled=true`
+  - `municipal_munhoz`: `APPROVED/enabled=true`
+- Evidência operacional mínima revisada:
+  - portais oficiais públicos;
+  - `robots.txt` público;
+  - página pública de LGPD/termo de uso revisada nos três domínios.
+
 #### Story 13.2.1 — Inconfidentes HTML + PDF
 - Implementar a primeira fonte municipal operacional por HTML oficial + links de edital/anexos.
 - Modelar a fonte como `PUBLIC_CONTEST`, com foco em cargo, formação e escolaridade.

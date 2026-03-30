@@ -19,8 +19,8 @@ pipeline estruturado de HTML + PDF já estabilizado em `Pouso Alegre`.
 
 - Em `Munhoz`, a tabela de anexos exige discriminar o edital principal pela descrição, não só pelo
   tipo do anexo.
-- O perfil curado entra como `PENDING_REVIEW/enabled=false` até o fechamento formal de evidências
-  legais/operacionais.
+- O perfil curado foi promovido para `APPROVED/enabled=true` após a revisão operacional do portal
+  oficial, com `robots.txt` público e página LGPD/termo de uso revisada.
 
 ## Validação
 

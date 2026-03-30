@@ -224,19 +224,19 @@ public final class CoreSourceOnboardingProfiles {
                         .siteType(SiteType.TYPE_A)
                         .extractionMode(ExtractionMode.STATIC_HTML)
                         .jobCategory(JobCategory.PUBLIC_CONTEST)
-                        .legalStatus(LegalStatus.PENDING_REVIEW)
+                        .legalStatus(LegalStatus.APPROVED)
                         .selectorBundleVersion("munhoz_html_v1")
-                        .enabled(false)
+                        .enabled(true)
                         .createdAt(Instant.parse("2026-03-30T00:00:00Z"))
                         .build(),
                 new SiteOnboardingChecklist(
                         "https://www.munhoz.mg.gov.br/robots.txt",
-                        false,
-                        false,
-                        "https://www.munhoz.mg.gov.br/politica-de-privacidade",
-                        false,
-                        false,
-                        false,
+                        true,
+                        true,
+                        "https://www.munhoz.mg.gov.br/termo_de_uso",
+                        true,
+                        true,
+                        true,
                         "",
                         true,
                         "Fonte oficial municipal estruturada de concursos e processos seletivos, com pagina de detalhe e anexos do tipo edital.",
@@ -244,7 +244,7 @@ public final class CoreSourceOnboardingProfiles {
                         OnboardingLegalCategory.DADOS_PUBLICOS,
                         "platform-team@local",
                         "PUBLIC_ANONYMOUS",
-                        "Portal de concursos de Munhoz identificado em 2026-03-30; implementação técnica iniciada e revisão legal/operacional ainda pendente."
+                        "Portal oficial de concursos validado em 2026-03-30; robots.txt publico respondeu 200 OK e a pagina LGPD/termo de uso publica foi revisada."
                 )
         );
     }

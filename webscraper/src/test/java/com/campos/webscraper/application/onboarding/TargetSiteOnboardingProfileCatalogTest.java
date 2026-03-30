@@ -74,8 +74,8 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(munhoz.sourceFamily()).isEqualTo("MUNICIPAL_HTML");
         assertThat(munhoz.targetSite().getSiteCode()).isEqualTo("municipal_munhoz");
         assertThat(munhoz.targetSite().getSelectorBundleVersion()).isEqualTo("munhoz_html_v1");
-        assertThat(munhoz.targetSite().getLegalStatus().name()).isEqualTo("PENDING_REVIEW");
-        assertThat(munhoz.targetSite().isEnabled()).isFalse();
+        assertThat(munhoz.targetSite().getLegalStatus().name()).isEqualTo("APPROVED");
+        assertThat(munhoz.targetSite().isEnabled()).isTrue();
         assertThat(munhoz.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.DADOS_PUBLICOS);
     }
 
