@@ -16,6 +16,7 @@ public class TargetSiteOnboardingProfileCatalog {
 
     public TargetSiteOnboardingProfileCatalog() {
         TargetSiteOnboardingProfileTemplate greenhouseBitso = fromGreenhouseProfile(GreenhouseBoardOnboardingProfiles.bitso());
+        TargetSiteOnboardingProfileTemplate leverCiandt = fromLeverProfile(LeverBoardOnboardingProfiles.ciandt());
         TargetSiteOnboardingProfileTemplate indeedBr = CoreSourceOnboardingProfiles.indeedBr();
         TargetSiteOnboardingProfileTemplate douApi = CoreSourceOnboardingProfiles.douApi();
         TargetSiteOnboardingProfileTemplate pciConcursos = CoreSourceOnboardingProfiles.pciConcursos();
@@ -24,6 +25,7 @@ public class TargetSiteOnboardingProfileCatalog {
         TargetSiteOnboardingProfileTemplate municipalMunhoz = CoreSourceOnboardingProfiles.municipalMunhoz();
         this.templatesByKey = Map.of(
                 greenhouseBitso.profileKey(), greenhouseBitso,
+                leverCiandt.profileKey(), leverCiandt,
                 indeedBr.profileKey(), indeedBr,
                 douApi.profileKey(), douApi,
                 pciConcursos.profileKey(), pciConcursos,
@@ -57,6 +59,17 @@ public class TargetSiteOnboardingProfileCatalog {
         return new TargetSiteOnboardingProfileTemplate(
                 "greenhouse_" + profile.boardToken(),
                 "GREENHOUSE",
+                profile.boardToken(),
+                profile.jobsApiUrl(),
+                profile.targetSite(),
+                profile.checklist()
+        );
+    }
+
+    private static TargetSiteOnboardingProfileTemplate fromLeverProfile(LeverBoardOnboardingProfile profile) {
+        return new TargetSiteOnboardingProfileTemplate(
+                "lever_" + profile.boardToken(),
+                "LEVER",
                 profile.boardToken(),
                 profile.jobsApiUrl(),
                 profile.targetSite(),

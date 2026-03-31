@@ -18,7 +18,7 @@ class TargetSiteOnboardingProfileCatalogTest {
     void shouldExposeCuratedOnboardingProfilesForSupportedSources() {
         assertThat(catalog.list())
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
-                .contains("greenhouse_bitso", "indeed-br", "dou-api", "pci_concursos",
+                .contains("greenhouse_bitso", "lever_ciandt", "indeed-br", "dou-api", "pci_concursos",
                         "municipal_inconfidentes", "municipal_pouso_alegre", "municipal_munhoz");
     }
 
@@ -37,6 +37,7 @@ class TargetSiteOnboardingProfileCatalogTest {
     @DisplayName("should expose multiple onboarding families with consistent legal categories")
     void shouldExposeMultipleOnboardingFamiliesWithConsistentLegalCategories() {
         TargetSiteOnboardingProfileTemplate indeed = catalog.get("indeed-br");
+        TargetSiteOnboardingProfileTemplate lever = catalog.get("lever_ciandt");
         TargetSiteOnboardingProfileTemplate dou = catalog.get("dou-api");
         TargetSiteOnboardingProfileTemplate pci = catalog.get("pci_concursos");
         TargetSiteOnboardingProfileTemplate inconfidentes = catalog.get("municipal_inconfidentes");
@@ -48,6 +49,13 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(indeed.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.API_OFICIAL);
         assertThat(indeed.jobsApiUrl()).isEqualTo("https://to.indeed.com");
         assertThat(indeed.checklist().officialApiEndpointUrl()).isEqualTo("https://to.indeed.com");
+
+        assertThat(lever.sourceFamily()).isEqualTo("LEVER");
+        assertThat(lever.targetSite().getSiteCode()).isEqualTo("lever_ciandt");
+        assertThat(lever.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.API_OFICIAL);
+        assertThat(lever.jobsApiUrl()).isEqualTo("https://api.lever.co/v0/postings/ciandt?mode=json");
+        assertThat(lever.targetSite().getLegalStatus().name()).isEqualTo("PENDING_REVIEW");
+        assertThat(lever.targetSite().isEnabled()).isFalse();
 
         assertThat(dou.sourceFamily()).isEqualTo("DOU");
         assertThat(dou.targetSite().getSiteCode()).isEqualTo("dou-api");
@@ -87,6 +95,12 @@ class TargetSiteOnboardingProfileCatalogTest {
                 .get()
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
                 .isEqualTo("greenhouse_bitso");
+
+        assertThat(catalog.findBySiteCode("lever_ciandt"))
+                .isPresent()
+                .get()
+                .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
+                .isEqualTo("lever_ciandt");
 
         assertThat(catalog.findBySiteCode("municipal_inconfidentes"))
                 .isPresent()

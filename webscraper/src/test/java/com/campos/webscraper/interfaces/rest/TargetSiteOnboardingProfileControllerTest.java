@@ -118,6 +118,57 @@ class TargetSiteOnboardingProfileControllerTest {
     }
 
     @Test
+    @DisplayName("should return board token for Lever onboarding profile too")
+    void shouldReturnBoardTokenForLeverOnboardingProfileToo() throws Exception {
+        when(getTargetSiteOnboardingProfileUseCase.execute("lever_ciandt")).thenReturn(
+                new TargetSiteOnboardingProfileResponse(
+                        "lever_ciandt",
+                        "LEVER",
+                        "ciandt",
+                        "ciandt",
+                        "https://api.lever.co/v0/postings/ciandt?mode=json",
+                        "lever_ciandt",
+                        "CI&T Careers via Lever",
+                        "https://api.lever.co/v0/postings/ciandt?mode=json",
+                        "TYPE_E",
+                        "API",
+                        "PRIVATE_SECTOR",
+                        "PENDING_REVIEW",
+                        false,
+                        "n/a",
+                        "https://jobs.lever.co/robots.txt",
+                        true,
+                        true,
+                        "",
+                        true,
+                        true,
+                        true,
+                        "https://api.lever.co/v0/postings/ciandt?mode=json",
+                        true,
+                        "Primeira trilha privada de Campinas; board publico Lever da CI&T validado para expansao hybrid tech hubs.",
+                        "Lever public postings API: 60 rpm conservative profile",
+                        "API_OFICIAL",
+                        "platform-team@local",
+                        "PUBLIC_ANONYMOUS",
+                        "Lever public postings endpoint da CI&T revisado em 2026-03-31."
+                )
+        );
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new RestExceptionHandler())
+                .build();
+
+        mockMvc.perform(get("/api/v1/onboarding-profiles/lever_ciandt"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.profileKey").value("lever_ciandt"))
+                .andExpect(jsonPath("$.sourceFamily").value("LEVER"))
+                .andExpect(jsonPath("$.boardToken").value("ciandt"))
+                .andExpect(jsonPath("$.sourceIdentifier").value("ciandt"));
+
+        verify(getTargetSiteOnboardingProfileUseCase).execute("lever_ciandt");
+    }
+
+    @Test
     @DisplayName("should return not found for unknown onboarding profile")
     void shouldReturnNotFoundForUnknownOnboardingProfile() throws Exception {
         when(getTargetSiteOnboardingProfileUseCase.execute("unknown"))

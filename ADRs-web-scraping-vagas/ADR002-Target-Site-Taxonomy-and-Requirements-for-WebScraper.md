@@ -251,6 +251,13 @@ Diretriz operacional para esse backlog:
 - abrir implementação apenas quando houver ao menos uma trilha concreta de captura útil, pública
   ou privada, para a cidade.
 
+Primeira abertura escolhida para execução:
+
+- `Campinas`
+  - trilha privada candidata: `CI&T` via `Lever` público
+  - trilha pública candidata: portal oficial `Concursos e Empregos` da Prefeitura de Campinas
+  - racional: cidade com sinal técnico claro nos dois lados e maior potencial de retorno híbrido
+
 ---
 
 ### 3. Processo Mandatório de Onboarding de Site

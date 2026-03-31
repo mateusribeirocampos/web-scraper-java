@@ -54,13 +54,23 @@ public class IdempotentJobPostingPersistenceService {
 
         Map<String, JobPostingEntity> savedByFingerprint = jobPostingRepository.saveAll(newItems).stream()
                 .collect(LinkedHashMap::new, (map, item) -> map.put(item.getFingerprintHash(), item), Map::putAll);
-        Map<String, JobPostingEntity> updatedByFingerprint = jobPostingRepository.saveAll(mergedExistingItems).stream()
-                .collect(LinkedHashMap::new, (map, item) -> map.put(item.getFingerprintHash(), item), Map::putAll);
+        Map<String, JobPostingEntity> updatedByCandidateFingerprint = new LinkedHashMap<>();
+        if (!mergedExistingItems.isEmpty()) {
+            List<JobPostingEntity> savedUpdatedItems = jobPostingRepository.saveAll(mergedExistingItems);
+            int index = 0;
+            for (String candidateFingerprint : mergedExistingByFingerprint.keySet()) {
+                JobPostingEntity merged = mergedExistingByFingerprint.get(candidateFingerprint);
+                if (!sameContent(existingByFingerprint.get(candidateFingerprint), merged)) {
+                    updatedByCandidateFingerprint.put(candidateFingerprint, savedUpdatedItems.get(index));
+                    index++;
+                }
+            }
+        }
 
         return candidates.stream()
                 .map(candidate -> {
                     String fingerprintHash = candidate.getFingerprintHash();
-                    JobPostingEntity updated = updatedByFingerprint.get(fingerprintHash);
+                    JobPostingEntity updated = updatedByCandidateFingerprint.get(fingerprintHash);
                     if (updated != null) {
                         return updated;
                     }
@@ -78,6 +88,30 @@ public class IdempotentJobPostingPersistenceService {
             Map<String, JobPostingEntity> existingByFingerprint
     ) {
         String fingerprintHash = fingerprintOf(candidate);
+        if (candidate.getTargetSite() != null && candidate.getExternalId() != null && !candidate.getExternalId().isBlank()) {
+            List<JobPostingEntity> existingByExternalId = jobPostingRepository
+                    .findByTargetSiteAndExternalIdOrderByPublishedAtDescCreatedAtDesc(
+                            candidate.getTargetSite(),
+                            candidate.getExternalId()
+                    );
+            JobPostingEntity exactFingerprintMatch = existingByExternalId.stream()
+                    .filter(existing -> Objects.equals(existing.getFingerprintHash(), fingerprintHash))
+                    .findFirst()
+                    .orElse(null);
+            if (exactFingerprintMatch != null) {
+                existingByFingerprint.put(fingerprintHash, exactFingerprintMatch);
+                return exactFingerprintMatch;
+            }
+            if (usesStableExternalIdIdentity(candidate)) {
+                JobPostingEntity latestExternalIdMatch = existingByExternalId.stream()
+                        .findFirst()
+                        .orElse(null);
+                if (latestExternalIdMatch != null) {
+                    existingByFingerprint.put(fingerprintHash, latestExternalIdMatch);
+                    return latestExternalIdMatch;
+                }
+            }
+        }
         return jobPostingRepository.findByFingerprintHash(fingerprintHash)
                 .map(existing -> {
                     existingByFingerprint.put(fingerprintHash, existing);
@@ -104,7 +138,7 @@ public class IdempotentJobPostingPersistenceService {
                 .description(firstNonBlank(candidate.getDescription(), existing.getDescription()))
                 .publishedAt(firstNonNull(candidate.getPublishedAt(), existing.getPublishedAt()))
                 .applicationDeadline(firstNonNull(candidate.getApplicationDeadline(), existing.getApplicationDeadline()))
-                .fingerprintHash(existing.getFingerprintHash())
+                .fingerprintHash(firstNonBlank(candidate.getFingerprintHash(), existing.getFingerprintHash()))
                 .dedupStatus(firstNonNull(existing.getDedupStatus(), candidate.getDedupStatus()))
                 .payloadJson(firstNonBlank(candidate.getPayloadJson(), existing.getPayloadJson()))
                 .createdAt(firstNonNull(existing.getCreatedAt(), candidate.getCreatedAt()))
@@ -113,7 +147,12 @@ public class IdempotentJobPostingPersistenceService {
     }
 
     private static boolean sameContent(JobPostingEntity existing, JobPostingEntity merged) {
-        return Objects.equals(existing.getLocation(), merged.getLocation())
+        return Objects.equals(existing.getExternalId(), merged.getExternalId())
+                && Objects.equals(existing.getCanonicalUrl(), merged.getCanonicalUrl())
+                && Objects.equals(existing.getTitle(), merged.getTitle())
+                && Objects.equals(existing.getCompany(), merged.getCompany())
+                && Objects.equals(existing.getPublishedAt(), merged.getPublishedAt())
+                && Objects.equals(existing.getLocation(), merged.getLocation())
                 && existing.isRemote() == merged.isRemote()
                 && Objects.equals(existing.getSeniority(), merged.getSeniority())
                 && Objects.equals(existing.getApplicationDeadline(), merged.getApplicationDeadline())
@@ -159,5 +198,11 @@ public class IdempotentJobPostingPersistenceService {
                 candidate.getFingerprintHash(),
                 "candidate.fingerprintHash must not be null"
         );
+    }
+
+    private static boolean usesStableExternalIdIdentity(JobPostingEntity candidate) {
+        return candidate.getTargetSite() != null
+                && candidate.getTargetSite().getSiteCode() != null
+                && candidate.getTargetSite().getSiteCode().startsWith("lever_");
     }
 }

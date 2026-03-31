@@ -14,6 +14,8 @@ public record LeverPostingResponse(
         String hostedUrl,
         @JsonProperty("applyUrl")
         String applyUrl,
+        @JsonProperty("workplaceType")
+        String workplaceType,
         LeverCategoriesResponse categories,
         String description
 ) {

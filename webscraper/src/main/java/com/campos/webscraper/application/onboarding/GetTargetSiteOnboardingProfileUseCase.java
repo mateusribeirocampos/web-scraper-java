@@ -25,7 +25,7 @@ public class GetTargetSiteOnboardingProfileUseCase {
         return new TargetSiteOnboardingProfileResponse(
                 template.profileKey(),
                 template.sourceFamily(),
-                "GREENHOUSE".equals(template.sourceFamily()) ? template.sourceIdentifier() : null,
+                supportsBoardToken(template.sourceFamily()) ? template.sourceIdentifier() : null,
                 template.sourceIdentifier(),
                 template.jobsApiUrl(),
                 template.targetSite().getSiteCode(),
@@ -53,5 +53,9 @@ public class GetTargetSiteOnboardingProfileUseCase {
                 template.checklist().authenticationStatus(),
                 template.checklist().discoveryEvidence()
         );
+    }
+
+    private static boolean supportsBoardToken(String sourceFamily) {
+        return "GREENHOUSE".equals(sourceFamily) || "LEVER".equals(sourceFamily);
     }
 }

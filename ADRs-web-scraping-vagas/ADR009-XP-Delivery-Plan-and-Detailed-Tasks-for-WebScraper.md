@@ -291,6 +291,26 @@ Exemplo de fixture de resposta JSON do Indeed MCP:
   - critério mínimo de entrada: pelo menos uma rota privada ou pública com sinal técnico/legal real.
 - **TDD/documentação:** story curta de priorização antes de abrir a próxima implementação.
 
+#### Story 13.3.2 — Campinas híbrido: abertura por trilha privada + pública oficial
+- Abrir `Campinas` como primeira cidade do backlog híbrido.
+- Definir as duas trilhas iniciais:
+  - privada: `CI&T` via `Lever` público (`jobs.lever.co/ciandt`)
+  - pública: portal oficial `Concursos e Empregos` da Prefeitura de Campinas
+- Ordem recomendada de implementação:
+  1. implementar onboarding privado `Lever` da CI&T
+  2. validar onboarding público do portal oficial de concursos
+  3. decidir se a primeira fatia executável sai:
+     - só privada;
+     - só pública;
+     - ou mista, dependendo do menor atrito técnico
+- Critério de entrada:
+  - fonte privada `lever_ciandt` implementada
+  - fonte pública oficial com edital/processo seletivo navegável sem autenticação
+
+Status atual:
+- trilha privada `Lever` da `CI&T` implementada
+- trilha pública oficial de `Campinas` ainda pendente
+
 ---
 
 ### Iteration 7 — Baseline de resiliência

@@ -73,4 +73,9 @@ public interface JobPostingRepository extends JpaRepository<JobPostingEntity, Lo
      * Returns a posting by its deduplication fingerprint hash.
      */
     Optional<JobPostingEntity> findByFingerprintHash(String fingerprintHash);
+
+    List<JobPostingEntity> findByTargetSiteAndExternalIdOrderByPublishedAtDescCreatedAtDesc(
+            TargetSiteEntity targetSite,
+            String externalId
+    );
 }
