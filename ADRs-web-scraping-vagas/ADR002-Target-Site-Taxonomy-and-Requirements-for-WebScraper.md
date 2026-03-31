@@ -223,6 +223,34 @@ Consequência prática:
 - o restante entra como backlog `HTML + PDF`, dependente de onboarding formal e evidência legal por
   domínio antes de qualquer ativação.
 
+#### 2.2.2 Priorização híbrida por polos tecnológicos
+
+Depois da estabilização operacional de `Inconfidentes`, `Pouso Alegre` e `Munhoz`, a expansão
+passa a considerar explicitamente cidades com maior chance de retorno combinado em:
+
+- vagas privadas de tecnologia;
+- concursos e processos seletivos públicos ligados a TI;
+- ecossistemas locais com empresas, incubadoras, parques tecnológicos, IFs/universidades ou
+  estruturas públicas que justifiquem manutenção contínua da cidade no catálogo.
+
+Backlog híbrido priorizado em 2026-03-31:
+
+1. `Campinas`
+2. `Santa Rita do Sapucaí`
+3. `Itajubá`
+4. `Poços de Caldas`
+5. `Extrema`
+
+Diretriz operacional para esse backlog:
+
+- não assumir que a cidade será tratada só como fonte municipal;
+- mapear primeiro o mix de:
+  - prefeituras e portais públicos;
+  - empresas com ATS público (`Greenhouse`, `Lever`, `Ashby`, etc.);
+  - páginas de carreira próprias com `robots.txt` permissivo e sinal de `JobPosting`;
+- abrir implementação apenas quando houver ao menos uma trilha concreta de captura útil, pública
+  ou privada, para a cidade.
+
 ---
 
 ### 3. Processo Mandatório de Onboarding de Site

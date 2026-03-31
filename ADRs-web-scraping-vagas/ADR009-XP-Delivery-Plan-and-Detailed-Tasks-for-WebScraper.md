@@ -103,6 +103,23 @@ Atualização municipal em 2026-03-30:
 - A `13.2.6` consolidou a base comum de import municipal.
 - A `13.2.5` abre `Munhoz` como o terceiro município reutilizando esse pipeline.
 
+Atualização de priorização híbrida em 2026-03-31:
+
+- após estabilizar `Inconfidentes`, `Pouso Alegre` e `Munhoz`, o próximo backlog deixa de ser
+  apenas municipal isolado e passa a priorizar polos com chance real de gerar:
+  - vagas privadas em empresas de tecnologia;
+  - concursos e processos seletivos públicos relevantes para TI.
+- backlog híbrido priorizado:
+  1. `Campinas`
+  2. `Santa Rita do Sapucaí`
+  3. `Itajubá`
+  4. `Poços de Caldas`
+  5. `Extrema`
+- racional:
+  - `Campinas` tem o maior potencial combinado de mercado privado + setor público;
+  - `Santa Rita do Sapucaí` e `Itajubá` são polos tecnológicos claros no Sul de Minas;
+  - `Poços de Caldas` e `Extrema` permanecem fortes, mas ficam logo depois na fila.
+
 ---
 
 ## Detailed Tasks by Iteration
@@ -255,6 +272,24 @@ Exemplo de fixture de resposta JSON do Indeed MCP:
 - `GET /api/v1/job-postings?category=PRIVATE_SECTOR&daysBack=60&profile=JAVA_JUNIOR_BACKEND&seniority=JUNIOR`
 - `GET /api/v1/public-contests?status=OPEN&orderBy=registrationEndDate`
 - **TDD:** testes de endpoint com consulta por `publishedAt` primeiro.
+
+---
+
+### Iteration 13.3 — Backlog híbrido de polos tecnológicos
+
+#### Story 13.3.1 — Priorizar polos com oferta mista de privado + público
+- Formalizar backlog híbrido para expansão depois do trio municipal inicial.
+- Registrar ordem de ataque:
+  - `Campinas`
+  - `Santa Rita do Sapucaí`
+  - `Itajubá`
+  - `Poços de Caldas`
+  - `Extrema`
+- Definir para cada cidade:
+  - hipótese de fontes privadas (ATS públicos, páginas de carreira, hubs locais);
+  - hipótese de fontes públicas (prefeitura, autarquias, câmaras, consórcios, IFs/universidades);
+  - critério mínimo de entrada: pelo menos uma rota privada ou pública com sinal técnico/legal real.
+- **TDD/documentação:** story curta de priorização antes de abrir a próxima implementação.
 
 ---
 
