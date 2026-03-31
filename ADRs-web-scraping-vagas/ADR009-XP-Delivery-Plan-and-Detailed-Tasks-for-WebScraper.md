@@ -309,7 +309,8 @@ Exemplo de fixture de resposta JSON do Indeed MCP:
 
 Status atual:
 - trilha privada `Lever` da `CI&T` implementada
-- trilha pública oficial de `Campinas` ainda pendente
+- trilha pública oficial de `Campinas` implementada via JSONAPI oficial do portal (`municipal_campinas`)
+- ativação operacional/legal da trilha pública ainda pendente
 
 ---
 

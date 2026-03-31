@@ -234,6 +234,48 @@ class TargetSiteOnboardingValidatorTest {
     }
 
     @Test
+    @DisplayName("should keep Campinas public contests source pending until final activation review")
+    void shouldKeepCampinasPublicContestsSourcePendingUntilFinalActivationReview() {
+        TargetSiteEntity campinas = TargetSiteEntity.builder()
+                .siteCode("municipal_campinas")
+                .displayName("Prefeitura de Campinas - Concursos")
+                .baseUrl("https://portal-api.campinas.sp.gov.br/jsonapi/node/site?filter%5Bdrupal_internal__nid%5D=113658")
+                .siteType(SiteType.TYPE_E)
+                .extractionMode(ExtractionMode.API)
+                .jobCategory(JobCategory.PUBLIC_CONTEST)
+                .legalStatus(LegalStatus.PENDING_REVIEW)
+                .selectorBundleVersion("campinas_jsonapi_v1")
+                .enabled(false)
+                .createdAt(Instant.parse("2026-03-31T00:00:00Z"))
+                .build();
+
+        SiteOnboardingChecklist checklist = new SiteOnboardingChecklist(
+                "https://campinas.sp.gov.br/robots.txt",
+                true,
+                true,
+                "https://campinas.sp.gov.br/sites/concursos/",
+                false,
+                false,
+                true,
+                "https://portal-api.campinas.sp.gov.br/jsonapi/node/site?filter%5Bdrupal_internal__nid%5D=113658",
+                true,
+                "Fonte oficial da Prefeitura de Campinas para concursos e processos seletivos.",
+                "1 request every 10 seconds",
+                OnboardingLegalCategory.API_OFICIAL,
+                "platform-team@local",
+                "PUBLIC_ANONYMOUS",
+                "JSONAPI oficial do portal Campinas revisado, com ativacao final ainda pendente."
+        );
+
+        TargetSiteOnboardingDecision decision = validator.assess(campinas, checklist);
+
+        assertThat(decision.productionReady()).isFalse();
+        assertThat(decision.targetSite().getLegalStatus()).isEqualTo(LegalStatus.PENDING_REVIEW);
+        assertThat(decision.targetSite().isEnabled()).isFalse();
+        assertThat(decision.blockingReasons()).contains("terms of service not reviewed");
+    }
+
+    @Test
     @DisplayName("should keep api official onboarding pending when official endpoint is not documented")
     void shouldKeepApiOfficialOnboardingPendingWhenOfficialEndpointIsNotDocumented() {
         TargetSiteEntity apiSite = buildApiTargetSite(false, LegalStatus.PENDING_REVIEW);

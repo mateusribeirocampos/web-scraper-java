@@ -19,7 +19,8 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(catalog.list())
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
                 .contains("greenhouse_bitso", "lever_ciandt", "indeed-br", "dou-api", "pci_concursos",
-                        "municipal_inconfidentes", "municipal_pouso_alegre", "municipal_munhoz");
+                        "municipal_inconfidentes", "municipal_pouso_alegre", "municipal_munhoz",
+                        "municipal_campinas");
     }
 
     @Test
@@ -43,6 +44,7 @@ class TargetSiteOnboardingProfileCatalogTest {
         TargetSiteOnboardingProfileTemplate inconfidentes = catalog.get("municipal_inconfidentes");
         TargetSiteOnboardingProfileTemplate pousoAlegre = catalog.get("municipal_pouso_alegre");
         TargetSiteOnboardingProfileTemplate munhoz = catalog.get("municipal_munhoz");
+        TargetSiteOnboardingProfileTemplate campinas = catalog.get("municipal_campinas");
 
         assertThat(indeed.sourceFamily()).isEqualTo("INDEED");
         assertThat(indeed.targetSite().getSiteCode()).isEqualTo("indeed-br");
@@ -85,6 +87,14 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(munhoz.targetSite().getLegalStatus().name()).isEqualTo("APPROVED");
         assertThat(munhoz.targetSite().isEnabled()).isTrue();
         assertThat(munhoz.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.DADOS_PUBLICOS);
+
+        assertThat(campinas.sourceFamily()).isEqualTo("MUNICIPAL_API");
+        assertThat(campinas.targetSite().getSiteCode()).isEqualTo("municipal_campinas");
+        assertThat(campinas.targetSite().getSelectorBundleVersion()).isEqualTo("campinas_jsonapi_v1");
+        assertThat(campinas.targetSite().getLegalStatus().name()).isEqualTo("PENDING_REVIEW");
+        assertThat(campinas.targetSite().isEnabled()).isFalse();
+        assertThat(campinas.jobsApiUrl()).contains("portal-api.campinas.sp.gov.br/jsonapi/node/site");
+        assertThat(campinas.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.API_OFICIAL);
     }
 
     @Test
@@ -119,6 +129,12 @@ class TargetSiteOnboardingProfileCatalogTest {
                 .get()
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
                 .isEqualTo("municipal_munhoz");
+
+        assertThat(catalog.findBySiteCode("municipal_campinas"))
+                .isPresent()
+                .get()
+                .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
+                .isEqualTo("municipal_campinas");
 
         assertThat(catalog.findBySiteCode("unknown-site")).isEmpty();
     }

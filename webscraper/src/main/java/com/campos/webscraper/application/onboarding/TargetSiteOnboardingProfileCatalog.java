@@ -23,6 +23,7 @@ public class TargetSiteOnboardingProfileCatalog {
         TargetSiteOnboardingProfileTemplate municipalInconfidentes = CoreSourceOnboardingProfiles.municipalInconfidentes();
         TargetSiteOnboardingProfileTemplate municipalPousoAlegre = CoreSourceOnboardingProfiles.municipalPousoAlegre();
         TargetSiteOnboardingProfileTemplate municipalMunhoz = CoreSourceOnboardingProfiles.municipalMunhoz();
+        TargetSiteOnboardingProfileTemplate municipalCampinas = CoreSourceOnboardingProfiles.municipalCampinas();
         this.templatesByKey = Map.of(
                 greenhouseBitso.profileKey(), greenhouseBitso,
                 leverCiandt.profileKey(), leverCiandt,
@@ -31,7 +32,8 @@ public class TargetSiteOnboardingProfileCatalog {
                 pciConcursos.profileKey(), pciConcursos,
                 municipalInconfidentes.profileKey(), municipalInconfidentes,
                 municipalPousoAlegre.profileKey(), municipalPousoAlegre,
-                municipalMunhoz.profileKey(), municipalMunhoz
+                municipalMunhoz.profileKey(), municipalMunhoz,
+                municipalCampinas.profileKey(), municipalCampinas
         );
     }
 

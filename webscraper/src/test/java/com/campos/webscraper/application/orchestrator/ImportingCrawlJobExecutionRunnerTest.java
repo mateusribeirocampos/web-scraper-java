@@ -9,6 +9,7 @@ import com.campos.webscraper.application.usecase.LeverJobImportUseCase;
 import com.campos.webscraper.application.usecase.PciConcursosImportUseCase;
 import com.campos.webscraper.application.usecase.PousoAlegreContestImportUseCase;
 import com.campos.webscraper.application.usecase.MunhozContestImportUseCase;
+import com.campos.webscraper.application.usecase.CampinasContestImportUseCase;
 import com.campos.webscraper.domain.enums.CrawlExecutionStatus;
 import com.campos.webscraper.domain.enums.ExtractionMode;
 import com.campos.webscraper.domain.enums.JobCategory;
@@ -67,6 +68,9 @@ class ImportingCrawlJobExecutionRunnerTest {
 
     @Mock
     private MunhozContestImportUseCase munhozContestImportUseCase;
+
+    @Mock
+    private CampinasContestImportUseCase campinasContestImportUseCase;
 
     @Test
     @DisplayName("should execute greenhouse import and return execution counters")
@@ -217,6 +221,23 @@ class ImportingCrawlJobExecutionRunnerTest {
         verify(munhozContestImportUseCase).execute(any(), any(), any());
     }
 
+    @Test
+    @DisplayName("should execute Campinas import for municipal official public contest api jobs")
+    void shouldExecuteCampinasImportForMunicipalOfficialPublicContestApiJobs() {
+        CrawlJobEntity crawlJob = buildPublicJob("municipal_campinas");
+        CrawlExecutionEntity crawlExecution = buildExecution(crawlJob);
+        when(campinasContestImportUseCase.execute(any(), any(), any()))
+                .thenReturn(List.of(PublicContestPostingEntity.builder().externalId("campinas-1").build()));
+
+        ImportingCrawlJobExecutionRunner runner = newRunner();
+
+        CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
+
+        assertThat(outcome.pagesVisited()).isEqualTo(1);
+        assertThat(outcome.itemsFound()).isEqualTo(1);
+        verify(campinasContestImportUseCase).execute(any(), any(), any());
+    }
+
     private ImportingCrawlJobExecutionRunner newRunner() {
         return new ImportingCrawlJobExecutionRunner(
                 indeedJobImportUseCase,
@@ -227,7 +248,8 @@ class ImportingCrawlJobExecutionRunnerTest {
                 pciConcursosImportUseCase,
                 inconfidentesContestImportUseCase,
                 pousoAlegreContestImportUseCase,
-                munhozContestImportUseCase
+                munhozContestImportUseCase,
+                campinasContestImportUseCase
         );
     }
 

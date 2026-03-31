@@ -249,4 +249,43 @@ public final class CoreSourceOnboardingProfiles {
         );
     }
 
+    public static TargetSiteOnboardingProfileTemplate municipalCampinas() {
+        String apiUrl = "https://portal-api.campinas.sp.gov.br/jsonapi/node/site?filter%5Bdrupal_internal__nid%5D=113658";
+        return new TargetSiteOnboardingProfileTemplate(
+                "municipal_campinas",
+                "MUNICIPAL_API",
+                "campinas",
+                apiUrl,
+                TargetSiteEntity.builder()
+                        .siteCode("municipal_campinas")
+                        .displayName("Prefeitura de Campinas - Concursos Públicos e Processos Seletivos")
+                        .baseUrl(apiUrl)
+                        .siteType(SiteType.TYPE_E)
+                        .extractionMode(ExtractionMode.API)
+                        .jobCategory(JobCategory.PUBLIC_CONTEST)
+                        .legalStatus(LegalStatus.PENDING_REVIEW)
+                        .selectorBundleVersion("campinas_jsonapi_v1")
+                        .enabled(false)
+                        .createdAt(Instant.parse("2026-03-31T00:00:00Z"))
+                        .build(),
+                new SiteOnboardingChecklist(
+                        "https://campinas.sp.gov.br/robots.txt",
+                        true,
+                        true,
+                        "https://campinas.sp.gov.br/sites/concursos/",
+                        false,
+                        false,
+                        true,
+                        apiUrl,
+                        true,
+                        "Fonte oficial da Prefeitura de Campinas para concursos e processos seletivos, atualmente exposta por node JSONAPI com alerta oficial outbound.",
+                        "1 request every 10 seconds",
+                        OnboardingLegalCategory.API_OFICIAL,
+                        "platform-team@local",
+                        "PUBLIC_ANONYMOUS",
+                        "JSONAPI oficial do portal Campinas validado em 2026-03-31; ativacao operacional/legal ainda pendente de revisao final antes de permitir enable em producao."
+                )
+        );
+    }
+
 }

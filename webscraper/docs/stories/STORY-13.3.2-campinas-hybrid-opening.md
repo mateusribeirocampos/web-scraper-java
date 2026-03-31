@@ -2,7 +2,7 @@
 
 ## Status
 
-Private track implemented; public track pending
+Private track implemented; public official track implemented with pending operational activation
 
 ## Context
 
@@ -39,6 +39,10 @@ A abertura de `Campinas` parte de duas trilhas concretas:
 - strategy, normalizer, import use case e runner foram implementados
 - testes unitários focados ficaram verdes
 - validação de integração com Testcontainers ficou pendente do ambiente local de Docker
+- `municipal_campinas` entrou como fonte `PUBLIC_CONTEST` oficial da prefeitura
+- a trilha pública usa o JSONAPI oficial do portal Campinas filtrado pelo node `113658`
+- o parser atual modela o alerta oficial ativo como posting canônico e ignora alertas expirados
+- a trilha pública ficou `PENDING_REVIEW/enabled=false` até a ativação operacional final
 
 ## Why This Order
 
@@ -49,5 +53,6 @@ A abertura de `Campinas` parte de duas trilhas concretas:
 ## Exit Criteria
 
 - trilha privada `Lever` da `CI&T` implementada;
-- trilha pública oficial de `Campinas` ainda pendente;
-- próxima story pronta para abrir `PUBLIC_CONTEST` oficial ou a combinação híbrida completa.
+- trilha pública oficial de `Campinas` implementada;
+- ativação operacional/legal da trilha pública ainda pendente;
+- próxima story pronta para ativar operacionalmente `municipal_campinas` ou aprofundar a descoberta de páginas-filhas/menus do hub oficial.

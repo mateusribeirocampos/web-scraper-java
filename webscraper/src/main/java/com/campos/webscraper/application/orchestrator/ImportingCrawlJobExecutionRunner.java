@@ -9,6 +9,7 @@ import com.campos.webscraper.application.usecase.LeverJobImportUseCase;
 import com.campos.webscraper.application.usecase.PciConcursosImportUseCase;
 import com.campos.webscraper.application.usecase.PousoAlegreContestImportUseCase;
 import com.campos.webscraper.application.usecase.MunhozContestImportUseCase;
+import com.campos.webscraper.application.usecase.CampinasContestImportUseCase;
 import com.campos.webscraper.domain.enums.JobCategory;
 import com.campos.webscraper.domain.model.CrawlExecutionEntity;
 import com.campos.webscraper.domain.model.CrawlJobEntity;
@@ -34,6 +35,7 @@ public class ImportingCrawlJobExecutionRunner implements CrawlJobExecutionRunner
     private final InconfidentesContestImportUseCase inconfidentesContestImportUseCase;
     private final PousoAlegreContestImportUseCase pousoAlegreContestImportUseCase;
     private final MunhozContestImportUseCase munhozContestImportUseCase;
+    private final CampinasContestImportUseCase campinasContestImportUseCase;
 
     public ImportingCrawlJobExecutionRunner(
             IndeedJobImportUseCase indeedJobImportUseCase,
@@ -44,7 +46,8 @@ public class ImportingCrawlJobExecutionRunner implements CrawlJobExecutionRunner
             PciConcursosImportUseCase pciConcursosImportUseCase,
             InconfidentesContestImportUseCase inconfidentesContestImportUseCase,
             PousoAlegreContestImportUseCase pousoAlegreContestImportUseCase,
-            MunhozContestImportUseCase munhozContestImportUseCase
+            MunhozContestImportUseCase munhozContestImportUseCase,
+            CampinasContestImportUseCase campinasContestImportUseCase
     ) {
         this.indeedJobImportUseCase = Objects.requireNonNull(
                 indeedJobImportUseCase, "indeedJobImportUseCase must not be null");
@@ -64,6 +67,8 @@ public class ImportingCrawlJobExecutionRunner implements CrawlJobExecutionRunner
                 pousoAlegreContestImportUseCase, "pousoAlegreContestImportUseCase must not be null");
         this.munhozContestImportUseCase = Objects.requireNonNull(
                 munhozContestImportUseCase, "munhozContestImportUseCase must not be null");
+        this.campinasContestImportUseCase = Objects.requireNonNull(
+                campinasContestImportUseCase, "campinasContestImportUseCase must not be null");
     }
 
     @Override
@@ -98,6 +103,8 @@ public class ImportingCrawlJobExecutionRunner implements CrawlJobExecutionRunner
                         pousoAlegreContestImportUseCase.execute(targetSite, crawlExecution, command).size();
                 case "municipal_munhoz" ->
                         munhozContestImportUseCase.execute(targetSite, crawlExecution, command).size();
+                case "municipal_campinas" ->
+                        campinasContestImportUseCase.execute(targetSite, crawlExecution, command).size();
                 default -> throw new UnsupportedSiteException("No import runner registered for site: " + siteCode);
             };
         }
