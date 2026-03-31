@@ -5,20 +5,17 @@ import com.campos.webscraper.application.onboarding.BootstrappedOnboardingWorkfl
 import com.campos.webscraper.application.onboarding.BootstrappedTargetSite;
 import com.campos.webscraper.application.onboarding.OnboardingOperationalCheckExecutionSummary;
 import com.campos.webscraper.application.onboarding.OnboardingOperationalCheckResult;
+import com.campos.webscraper.application.onboarding.OnboardingRecentPostingSample;
 import com.campos.webscraper.application.onboarding.RunOnboardingOperationalCheckUseCase;
 import com.campos.webscraper.application.onboarding.TargetSiteOnboardingProfileNotFoundException;
 import com.campos.webscraper.application.usecase.BootstrappedCrawlJob;
 import com.campos.webscraper.application.usecase.TargetSiteSmokeRunResult;
 import com.campos.webscraper.domain.enums.CrawlExecutionStatus;
-import com.campos.webscraper.domain.enums.DedupStatus;
 import com.campos.webscraper.domain.enums.ExtractionMode;
 import com.campos.webscraper.domain.enums.JobCategory;
-import com.campos.webscraper.domain.enums.JobContractType;
 import com.campos.webscraper.domain.enums.LegalStatus;
 import com.campos.webscraper.domain.enums.SiteType;
-import com.campos.webscraper.domain.model.CrawlExecutionEntity;
 import com.campos.webscraper.domain.model.CrawlJobEntity;
-import com.campos.webscraper.domain.model.JobPostingEntity;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -148,29 +145,13 @@ class OnboardingOperationalCheckControllerTest {
                         Instant.parse("2026-03-25T12:00:10Z")
                 ),
                 1,
-                List.of(JobPostingEntity.builder()
-                        .id(1L)
-                        .targetSite(site)
-                        .crawlExecution(CrawlExecutionEntity.builder()
-                                .id(501L)
-                                .crawlJob(crawlJob)
-                                .status(CrawlExecutionStatus.SUCCEEDED)
-                                .createdAt(Instant.parse("2026-03-25T12:00:10Z"))
-                                .build())
-                        .externalId("job-1")
-                        .canonicalUrl("https://example.org/jobs/1")
-                        .title("Java Backend Developer")
-                        .company("Example Co")
-                        .location("Remote")
-                        .remote(true)
-                        .contractType(JobContractType.CLT)
-                        .description("desc")
-                        .techStackTags("Java,Spring")
-                        .publishedAt(LocalDate.now().minusDays(1))
-                        .fingerprintHash("fingerprint-1")
-                        .dedupStatus(DedupStatus.NEW)
-                        .createdAt(Instant.parse("2026-03-25T12:00:10Z"))
-                        .build())
+                List.of(new OnboardingRecentPostingSample(
+                        1L,
+                        "Java Backend Developer",
+                        "Example Co",
+                        "https://example.org/jobs/1",
+                        LocalDate.now().minusDays(1)
+                ))
         );
     }
 }

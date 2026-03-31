@@ -3,6 +3,7 @@ package com.campos.webscraper.application.onboarding;
 import com.campos.webscraper.application.usecase.BootstrappedCrawlJob;
 import com.campos.webscraper.application.usecase.TargetSiteSmokeRunResult;
 import com.campos.webscraper.domain.enums.CrawlExecutionStatus;
+import com.campos.webscraper.domain.enums.ContestStatus;
 import com.campos.webscraper.domain.enums.DedupStatus;
 import com.campos.webscraper.domain.enums.ExtractionMode;
 import com.campos.webscraper.domain.enums.JobCategory;
@@ -12,10 +13,12 @@ import com.campos.webscraper.domain.enums.SiteType;
 import com.campos.webscraper.domain.model.CrawlExecutionEntity;
 import com.campos.webscraper.domain.model.CrawlJobEntity;
 import com.campos.webscraper.domain.model.JobPostingEntity;
+import com.campos.webscraper.domain.model.PublicContestPostingEntity;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
 import com.campos.webscraper.domain.repository.CrawlExecutionRepository;
 import com.campos.webscraper.domain.repository.CrawlJobRepository;
 import com.campos.webscraper.domain.repository.JobPostingRepository;
+import com.campos.webscraper.domain.repository.PublicContestPostingRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -49,6 +52,9 @@ class RunOnboardingOperationalCheckUseCaseTest {
 
     @Mock
     private JobPostingRepository jobPostingRepository;
+
+    @Mock
+    private PublicContestPostingRepository publicContestPostingRepository;
 
     private final Clock clock = Clock.fixed(Instant.parse("2026-03-25T12:00:00Z"), ZoneOffset.UTC);
 
@@ -102,6 +108,7 @@ class RunOnboardingOperationalCheckUseCaseTest {
                 crawlJobRepository,
                 crawlExecutionRepository,
                 jobPostingRepository,
+                publicContestPostingRepository,
                 clock
         );
 
@@ -112,7 +119,7 @@ class RunOnboardingOperationalCheckUseCaseTest {
         assertThat(result.executionSummary().crawlJobId()).isEqualTo(101L);
         assertThat(result.executionSummary().status()).isEqualTo("SUCCEEDED");
         assertThat(result.recentPostingsCount()).isEqualTo(2);
-        assertThat(result.recentPostingsSample()).extracting(JobPostingEntity::getTitle)
+        assertThat(result.recentPostingsSample()).extracting(OnboardingRecentPostingSample::title)
                 .containsExactly("Java Backend Developer", "Software Engineer");
     }
 
@@ -137,6 +144,7 @@ class RunOnboardingOperationalCheckUseCaseTest {
                 crawlJobRepository,
                 crawlExecutionRepository,
                 jobPostingRepository,
+                publicContestPostingRepository,
                 clock
         );
 
@@ -201,6 +209,7 @@ class RunOnboardingOperationalCheckUseCaseTest {
                 crawlJobRepository,
                 crawlExecutionRepository,
                 jobPostingRepository,
+                publicContestPostingRepository,
                 clock
         );
 
@@ -251,6 +260,7 @@ class RunOnboardingOperationalCheckUseCaseTest {
                 crawlJobRepository,
                 crawlExecutionRepository,
                 jobPostingRepository,
+                publicContestPostingRepository,
                 clock
         );
 
@@ -261,15 +271,74 @@ class RunOnboardingOperationalCheckUseCaseTest {
         assertThat(result.recentPostingsSample()).isEmpty();
     }
 
+    @Test
+    @DisplayName("should use public contest postings for public contest operational checks")
+    void shouldUsePublicContestPostingsForPublicContestOperationalChecks() {
+        TargetSiteEntity site = targetSite(JobCategory.PUBLIC_CONTEST, "municipal_pouso_alegre");
+        CrawlJobEntity canonicalJob = canonicalJob(site);
+        BootstrappedOnboardingWorkflowResult workflow = new BootstrappedOnboardingWorkflowResult(
+                "municipal_pouso_alegre",
+                new BootstrappedTargetSite("municipal_pouso_alegre", BootstrapStatus.UPDATED, site),
+                new BootstrappedCrawlJob(BootstrapStatus.UPDATED, canonicalJob),
+                false,
+                null
+        );
+        CrawlExecutionEntity execution = CrawlExecutionEntity.builder()
+                .id(888L)
+                .crawlJob(canonicalJob)
+                .status(CrawlExecutionStatus.SUCCEEDED)
+                .itemsFound(6)
+                .startedAt(Instant.parse("2026-03-25T12:00:00Z"))
+                .finishedAt(Instant.parse("2026-03-25T12:00:08Z"))
+                .createdAt(Instant.parse("2026-03-25T12:00:01Z"))
+                .build();
+
+        when(bootstrapOnboardingProfileWorkflowUseCase.execute("municipal_pouso_alegre", false)).thenReturn(workflow);
+        when(crawlJobRepository.findById(11L)).thenReturn(Optional.of(canonicalJob));
+        when(crawlExecutionRepository.findByCrawlJob(canonicalJob)).thenReturn(List.of(execution));
+        when(publicContestPostingRepository.findTop5ByCrawlExecutionAndPublishedAtGreaterThanEqualOrderByPublishedAtDesc(
+                org.mockito.ArgumentMatchers.eq(execution),
+                org.mockito.ArgumentMatchers.any(LocalDate.class)
+        )).thenReturn(List.of(
+                publicContestPosting(site, execution, 10L, "Processo Seletivo 005/2026", "Prefeitura de Pouso Alegre")
+        ));
+        when(publicContestPostingRepository.countByCrawlExecutionAndPublishedAtGreaterThanEqual(
+                org.mockito.ArgumentMatchers.eq(execution),
+                org.mockito.ArgumentMatchers.any(LocalDate.class)
+        )).thenReturn(1L);
+
+        RunOnboardingOperationalCheckUseCase useCase = new RunOnboardingOperationalCheckUseCase(
+                bootstrapOnboardingProfileWorkflowUseCase,
+                crawlJobRepository,
+                crawlExecutionRepository,
+                jobPostingRepository,
+                publicContestPostingRepository,
+                clock
+        );
+
+        OnboardingOperationalCheckResult result = useCase.execute("municipal_pouso_alegre", false, 60);
+
+        assertThat(result.executionSummary()).isNotNull();
+        assertThat(result.recentPostingsCount()).isEqualTo(1);
+        assertThat(result.recentPostingsSample()).extracting(OnboardingRecentPostingSample::title)
+                .containsExactly("Processo Seletivo 005/2026");
+        assertThat(result.recentPostingsSample()).extracting(OnboardingRecentPostingSample::organization)
+                .containsExactly("Prefeitura de Pouso Alegre");
+    }
+
     private static TargetSiteEntity targetSite() {
+        return targetSite(JobCategory.PRIVATE_SECTOR, "greenhouse_bitso");
+    }
+
+    private static TargetSiteEntity targetSite(JobCategory jobCategory, String siteCode) {
         return TargetSiteEntity.builder()
                 .id(7L)
-                .siteCode("greenhouse_bitso")
-                .displayName("Bitso Careers via Greenhouse")
-                .baseUrl("https://boards-api.greenhouse.io/v1/boards/bitso/jobs?content=true")
+                .siteCode(siteCode)
+                .displayName("Target Site")
+                .baseUrl("https://example.org")
                 .siteType(SiteType.TYPE_E)
                 .extractionMode(ExtractionMode.API)
-                .jobCategory(JobCategory.PRIVATE_SECTOR)
+                .jobCategory(jobCategory)
                 .legalStatus(LegalStatus.PENDING_REVIEW)
                 .selectorBundleVersion("n/a")
                 .enabled(false)
@@ -319,6 +388,29 @@ class RunOnboardingOperationalCheckUseCaseTest {
                 .techStackTags("Java,Spring")
                 .publishedAt(java.time.LocalDate.now().minusDays(90))
                 .fingerprintHash("fingerprint-" + id)
+                .dedupStatus(DedupStatus.NEW)
+                .createdAt(Instant.parse("2026-03-25T12:00:00Z"))
+                .build();
+    }
+
+    private static PublicContestPostingEntity publicContestPosting(
+            TargetSiteEntity site,
+            CrawlExecutionEntity crawlExecution,
+            Long id,
+            String contestName,
+            String organizer
+    ) {
+        return PublicContestPostingEntity.builder()
+                .id(id)
+                .targetSite(site)
+                .crawlExecution(crawlExecution)
+                .externalId("contest-" + id)
+                .canonicalUrl("https://example.org/contests/" + id)
+                .contestName(contestName)
+                .organizer(organizer)
+                .contestStatus(ContestStatus.OPEN)
+                .publishedAt(LocalDate.parse("2026-03-20"))
+                .fingerprintHash("contest-fingerprint-" + id)
                 .dedupStatus(DedupStatus.NEW)
                 .createdAt(Instant.parse("2026-03-25T12:00:00Z"))
                 .build();

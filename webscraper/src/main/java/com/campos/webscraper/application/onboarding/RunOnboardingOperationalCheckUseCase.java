@@ -3,9 +3,12 @@ package com.campos.webscraper.application.onboarding;
 import com.campos.webscraper.domain.model.CrawlExecutionEntity;
 import com.campos.webscraper.domain.model.CrawlJobEntity;
 import com.campos.webscraper.domain.model.JobPostingEntity;
+import com.campos.webscraper.domain.model.PublicContestPostingEntity;
+import com.campos.webscraper.domain.enums.JobCategory;
 import com.campos.webscraper.domain.repository.CrawlExecutionRepository;
 import com.campos.webscraper.domain.repository.CrawlJobRepository;
 import com.campos.webscraper.domain.repository.JobPostingRepository;
+import com.campos.webscraper.domain.repository.PublicContestPostingRepository;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
@@ -22,6 +25,7 @@ public class RunOnboardingOperationalCheckUseCase {
     private final CrawlJobRepository crawlJobRepository;
     private final CrawlExecutionRepository crawlExecutionRepository;
     private final JobPostingRepository jobPostingRepository;
+    private final PublicContestPostingRepository publicContestPostingRepository;
     private final Clock clock;
 
     public RunOnboardingOperationalCheckUseCase(
@@ -29,6 +33,7 @@ public class RunOnboardingOperationalCheckUseCase {
             CrawlJobRepository crawlJobRepository,
             CrawlExecutionRepository crawlExecutionRepository,
             JobPostingRepository jobPostingRepository,
+            PublicContestPostingRepository publicContestPostingRepository,
             Clock clock
     ) {
         this.bootstrapOnboardingProfileWorkflowUseCase = Objects.requireNonNull(
@@ -38,6 +43,10 @@ public class RunOnboardingOperationalCheckUseCase {
         this.crawlJobRepository = Objects.requireNonNull(crawlJobRepository, "crawlJobRepository must not be null");
         this.crawlExecutionRepository = Objects.requireNonNull(crawlExecutionRepository, "crawlExecutionRepository must not be null");
         this.jobPostingRepository = Objects.requireNonNull(jobPostingRepository, "jobPostingRepository must not be null");
+        this.publicContestPostingRepository = Objects.requireNonNull(
+                publicContestPostingRepository,
+                "publicContestPostingRepository must not be null"
+        );
         this.clock = Objects.requireNonNull(clock, "clock must not be null");
     }
 
@@ -49,22 +58,48 @@ public class RunOnboardingOperationalCheckUseCase {
         CrawlExecutionEntity observedExecution = resolveObservedExecution(workflow, requestStartedAt);
         OnboardingOperationalCheckExecutionSummary executionSummary = toExecutionSummary(observedExecution);
         LocalDate since = LocalDate.now().minusDays(daysBack);
-        List<JobPostingEntity> recentPostings = observedExecution == null
-                ? List.of()
-                : jobPostingRepository.findTop5ByCrawlExecutionAndPublishedAtGreaterThanEqualOrderByPublishedAtDesc(
-                        observedExecution,
-                        since
-                );
-        long recentPostingsCount = observedExecution == null
-                ? 0L
-                : jobPostingRepository.countByCrawlExecutionAndPublishedAtGreaterThanEqual(observedExecution, since);
+        RecentPostingsSnapshot recentPostingsSnapshot = resolveRecentPostings(observedExecution, since);
 
         return new OnboardingOperationalCheckResult(
                 profileKey,
                 workflow,
                 executionSummary,
-                Math.toIntExact(recentPostingsCount),
-                recentPostings.stream().limit(5).toList()
+                Math.toIntExact(recentPostingsSnapshot.totalCount()),
+                recentPostingsSnapshot.samples()
+        );
+    }
+
+    private RecentPostingsSnapshot resolveRecentPostings(CrawlExecutionEntity observedExecution, LocalDate since) {
+        if (observedExecution == null) {
+            return new RecentPostingsSnapshot(0L, List.of());
+        }
+
+        JobCategory jobCategory = observedExecution.getCrawlJob() == null || observedExecution.getCrawlJob().getTargetSite() == null
+                ? null
+                : observedExecution.getCrawlJob().getTargetSite().getJobCategory();
+        if (jobCategory == JobCategory.PUBLIC_CONTEST) {
+            List<PublicContestPostingEntity> recentPostings =
+                    publicContestPostingRepository.findTop5ByCrawlExecutionAndPublishedAtGreaterThanEqualOrderByPublishedAtDesc(
+                            observedExecution,
+                            since
+                    );
+            long recentPostingsCount =
+                    publicContestPostingRepository.countByCrawlExecutionAndPublishedAtGreaterThanEqual(observedExecution, since);
+            return new RecentPostingsSnapshot(
+                    recentPostingsCount,
+                    recentPostings.stream().map(RunOnboardingOperationalCheckUseCase::toSample).toList()
+            );
+        }
+
+        List<JobPostingEntity> recentPostings =
+                jobPostingRepository.findTop5ByCrawlExecutionAndPublishedAtGreaterThanEqualOrderByPublishedAtDesc(
+                        observedExecution,
+                        since
+                );
+        long recentPostingsCount = jobPostingRepository.countByCrawlExecutionAndPublishedAtGreaterThanEqual(observedExecution, since);
+        return new RecentPostingsSnapshot(
+                recentPostingsCount,
+                recentPostings.stream().map(RunOnboardingOperationalCheckUseCase::toSample).toList()
         );
     }
 
@@ -110,5 +145,31 @@ public class RunOnboardingOperationalCheckUseCase {
                 execution.getStartedAt(),
                 execution.getFinishedAt()
         );
+    }
+
+    private static OnboardingRecentPostingSample toSample(JobPostingEntity posting) {
+        return new OnboardingRecentPostingSample(
+                posting.getId(),
+                posting.getTitle(),
+                posting.getCompany(),
+                posting.getCanonicalUrl(),
+                posting.getPublishedAt()
+        );
+    }
+
+    private static OnboardingRecentPostingSample toSample(PublicContestPostingEntity posting) {
+        return new OnboardingRecentPostingSample(
+                posting.getId(),
+                posting.getContestName(),
+                posting.getOrganizer(),
+                posting.getCanonicalUrl(),
+                posting.getPublishedAt()
+        );
+    }
+
+    private record RecentPostingsSnapshot(
+            long totalCount,
+            List<OnboardingRecentPostingSample> samples
+    ) {
     }
 }

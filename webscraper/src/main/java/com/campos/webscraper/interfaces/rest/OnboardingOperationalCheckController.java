@@ -2,8 +2,8 @@ package com.campos.webscraper.interfaces.rest;
 
 import com.campos.webscraper.application.onboarding.OnboardingOperationalCheckExecutionSummary;
 import com.campos.webscraper.application.onboarding.OnboardingOperationalCheckResult;
+import com.campos.webscraper.application.onboarding.OnboardingRecentPostingSample;
 import com.campos.webscraper.application.onboarding.RunOnboardingOperationalCheckUseCase;
-import com.campos.webscraper.domain.model.JobPostingEntity;
 import com.campos.webscraper.interfaces.dto.JobPostingSummaryResponse;
 import com.campos.webscraper.interfaces.dto.OnboardingOperationalCheckExecutionResponse;
 import com.campos.webscraper.interfaces.dto.OnboardingOperationalCheckResponse;
@@ -91,13 +91,13 @@ public class OnboardingOperationalCheckController {
         );
     }
 
-    private static JobPostingSummaryResponse toPostingResponse(JobPostingEntity posting) {
+    private static JobPostingSummaryResponse toPostingResponse(OnboardingRecentPostingSample posting) {
         return new JobPostingSummaryResponse(
-                posting.getId(),
-                posting.getTitle(),
-                posting.getCompany(),
-                posting.getCanonicalUrl(),
-                posting.getPublishedAt()
+                posting.id(),
+                posting.title(),
+                posting.organization(),
+                posting.canonicalUrl(),
+                posting.publishedAt()
         );
     }
 }

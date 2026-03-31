@@ -1,6 +1,7 @@
 package com.campos.webscraper.domain.repository;
 
 import com.campos.webscraper.domain.enums.ContestStatus;
+import com.campos.webscraper.domain.model.CrawlExecutionEntity;
 import com.campos.webscraper.domain.model.PublicContestPostingEntity;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -39,4 +40,11 @@ public interface PublicContestPostingRepository extends JpaRepository<PublicCont
      * Returns contests by status ordered by nearest registration end date first.
      */
     List<PublicContestPostingEntity> findByContestStatusOrderByRegistrationEndDateAsc(ContestStatus contestStatus);
+
+    List<PublicContestPostingEntity> findTop5ByCrawlExecutionAndPublishedAtGreaterThanEqualOrderByPublishedAtDesc(
+            CrawlExecutionEntity crawlExecution,
+            LocalDate publishedAt
+    );
+
+    long countByCrawlExecutionAndPublishedAtGreaterThanEqual(CrawlExecutionEntity crawlExecution, LocalDate publishedAt);
 }
