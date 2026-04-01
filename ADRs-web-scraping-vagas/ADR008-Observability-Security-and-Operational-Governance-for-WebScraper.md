@@ -6,7 +6,7 @@ Observability baseline, security controls, and governance rules for scraping ope
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

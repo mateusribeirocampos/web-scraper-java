@@ -6,7 +6,7 @@ Operational resilience design for external-site scraping workloads.
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

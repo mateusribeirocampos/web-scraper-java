@@ -1,6 +1,6 @@
 # STORY 10.3 — Idempotência e prevenção de duplicatas
 
-**Status:** 🚧 Em andamento
+**Status:** ✅ Concluída
 **Iteration:** 10 — Processamento assíncrono
 **Data:** 2026-03-13
 **Referência ADR:** ADR009 Story 10.3
@@ -112,23 +112,16 @@ persistente, evitando duplicação entre use cases.
 Primeira fatia da 10.3 implementada e validada, incluindo idempotência de persistência e claim
 em memória para handoff do scheduler.
 
-## Bloqueio arquitetural para próximas sessões
+## Resolução do bloqueio arquitetural
 
-Esta story **não elimina** o problema estrutural de durabilidade do handoff `scheduler -> queue`.
+O bloqueio de durabilidade do handoff `scheduler -> queue` foi resolvido pela **Story 10.4**
+(`PersistentCrawlJobQueue` no Postgres), concluída em sequência.
 
-Estado real após a 10.3:
+Estado final consolidado após 10.3 + 10.4:
 
-- duplicatas de persistência agora estão mitigadas por `fingerprintHash`
-- reenfileiramento infinito do mesmo job dentro do mesmo processo está mitigado por
-  `InFlightCrawlJobRegistry`
-- porém o sistema ainda depende de `InMemoryCrawlJobQueue`, então restart/crash pode perder fila
-  pendente e o claim em memória não sobrevive ao processo
-
-Decisão registrada para continuidade do projeto:
-
-- antes de seguir outras tasks funcionais, abrir e fechar uma story técnica de **fila persistida ou
-  outbox no Postgres**
-- a recomendação atual é implementar primeiro uma fila persistida no banco do próprio projeto,
-  porque reduz complexidade operacional em relação a broker externo
-- até isso existir, qualquer evolução posterior carrega risco operacional conhecido e deve assumir
-  esse limite explicitamente
+- duplicatas de persistência mitigadas por `fingerprintHash` (`IdempotentJobPostingPersistenceService`,
+  `IdempotentPublicContestPersistenceService`)
+- reenfileiramento infinito do mesmo job dentro do mesmo processo mitigado por `InFlightCrawlJobRegistry`
+- durabilidade do handoff garantida pela fila persistida em Postgres (`PersistentQueueMessageEntity`,
+  estados `READY → CLAIMED → DONE / RETRY_WAIT / DEAD_LETTER`)
+- `InMemoryCrawlJobQueue` restrita a testes de contrato e cenários sem Spring

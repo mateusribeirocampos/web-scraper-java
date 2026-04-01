@@ -45,9 +45,11 @@ Playwright e execucao assíncrona com fila persistida.
 | PCI Concursos | HTML estatico | Implementada |
 | Prefeitura de Inconfidentes | HTML + PDF oficial | Implementada |
 | Prefeitura de Pouso Alegre | HTML + PDF oficial | Implementada |
-| Prefeitura de Munhoz | HTML + PDF oficial | Em progresso |
+| Prefeitura de Munhoz | HTML + PDF oficial | Implementada |
+| Prefeitura de Campinas | JSONAPI oficial | Implementada tecnicamente |
 | Greenhouse | ATS / board publico | Implementada |
 | Gupy | ATS / board publico | Implementada |
+| Lever (CI&T Campinas) | ATS / board publico | Implementada |
 | Playwright fallback | Site dinamico Type C | Implementado |
 
 Detalhe importante da frente municipal:
@@ -134,6 +136,11 @@ web-scraper-java/
 - `Munhoz` entrou na `13.2.5` como a terceira frente municipal, usando o mesmo padrão de portal
   estruturado (`concursos-publicos` + `concursos_view/<id>`) e reaproveitando a camada comum de
   import municipal consolidada na `13.2.6`.
+- `Campinas` agora tem duas trilhas abertas no backlog híbrido:
+  - privada via `Lever` público da `CI&T`;
+  - pública via JSONAPI oficial do portal municipal de concursos.
+- a trilha pública de `Campinas` já está implementada tecnicamente, mas continua bloqueada em
+  onboarding até o fechamento operacional/legal final.
 
 ## Endpoints Disponiveis
 

@@ -65,7 +65,7 @@ Exemplos:
 | 9.6 — Generalizar provider ATS para Lever | [STORY-9.6-lever-postings-client.md](STORY-9.6-lever-postings-client.md) | ✅ Concluída |
 | 10.1 — Abstração de fila | [STORY-10.1-crawl-job-queue-abstraction.md](STORY-10.1-crawl-job-queue-abstraction.md) | ✅ Concluída |
 | 10.2 — Worker de execução | [STORY-10.2-crawl-job-worker.md](STORY-10.2-crawl-job-worker.md) | ✅ Concluída |
-| 10.3 — Idempotência e prevenção de duplicatas | [STORY-10.3-idempotency-and-duplicate-prevention.md](STORY-10.3-idempotency-and-duplicate-prevention.md) | 🚧 Em andamento |
+| 10.3 — Idempotência e prevenção de duplicatas | [STORY-10.3-idempotency-and-duplicate-prevention.md](STORY-10.3-idempotency-and-duplicate-prevention.md) | ✅ Concluída |
 | 10.4 — PersistentCrawlJobQueue no Postgres | [STORY-10.4-persistent-crawl-job-queue.md](STORY-10.4-persistent-crawl-job-queue.md) | ✅ Concluída |
 | 11.1 — PlaywrightJobFetcher | [STORY-11.1-playwright-job-fetcher.md](STORY-11.1-playwright-job-fetcher.md) | ✅ Concluída |
 | 11.2 — Playwright dynamic strategy | [STORY-11.2-playwright-dynamic-strategy.md](STORY-11.2-playwright-dynamic-strategy.md) | ✅ Concluída |
@@ -74,3 +74,11 @@ Exemplos:
 | 12.2 — Checklist de habilitação de site em produção | [STORY-12.2-target-site-production-enablement-checklist.md](STORY-12.2-target-site-production-enablement-checklist.md) | ✅ Concluída |
 | 12.3 — Endpoint de health summary | [STORY-12.3-scraper-health-summary-endpoint.md](STORY-12.3-scraper-health-summary-endpoint.md) | ✅ Concluída |
 | 12.4 — Catálogo operacional de onboarding por fonte | [STORY-12.4-operational-onboarding-profile-catalog.md](STORY-12.4-operational-onboarding-profile-catalog.md) | ✅ Concluída |
+| 13.1 — Expansão municipal PUBLIC_CONTEST: primeira abertura documental | [STORY-13.1-municipal-public-contest-expansion.md](STORY-13.1-municipal-public-contest-expansion.md) | ✅ Concluída |
+| 13.2.1 — Inconfidentes HTML + PDF | [STORY-13.2.1-inconfidentes-html-pdf.md](STORY-13.2.1-inconfidentes-html-pdf.md) | ✅ Concluída |
+| 13.2.3 — Inconfidentes PDF enrichment generalization | [STORY-13.2.3-inconfidentes-pdf-enrichment-generalization.md](STORY-13.2.3-inconfidentes-pdf-enrichment-generalization.md) | ✅ Concluída |
+| 13.2.4 — Pouso Alegre HTML + PDF | [STORY-13.2.4-pouso-alegre-html-pdf.md](STORY-13.2.4-pouso-alegre-html-pdf.md) | ✅ Concluída |
+| 13.2.5 — Munhoz HTML + PDF | [STORY-13.2.5-munhoz-html-pdf.md](STORY-13.2.5-munhoz-html-pdf.md) | ✅ Concluída |
+| 13.3.1 — Priorização do backlog híbrido de polos tecnológicos | [STORY-13.3.1-hybrid-tech-hubs-prioritization.md](STORY-13.3.1-hybrid-tech-hubs-prioritization.md) | ✅ Concluída |
+| 13.3.2 — Campinas híbrido: abertura privada + pública | [STORY-13.3.2-campinas-hybrid-opening.md](STORY-13.3.2-campinas-hybrid-opening.md) | ✅ Concluída |
+| 13.3.3 — Campinas público oficial via JSONAPI | [STORY-13.3.3-campinas-public-official-jsonapi.md](STORY-13.3.3-campinas-public-official-jsonapi.md) | ✅ Concluída |

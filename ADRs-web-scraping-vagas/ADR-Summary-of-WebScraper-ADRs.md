@@ -40,9 +40,9 @@ da implementação.
 | ADR003 | Avaliação Stack Java vs Python e Open Source | Accepted |
 | ADR004 | Arquitetura de Extração e Strategy/Factory | Accepted |
 | ADR005 | Modelo de Domínio JPA e Persistência | Accepted |
-| ADR006 | Resiliência, Rate Limiting e Processamento Assíncrono | Proposed |
+| ADR006 | Resiliência, Rate Limiting e Processamento Assíncrono | Accepted |
 | ADR007 | TDD e Quality Gates | Accepted |
-| ADR008 | Observabilidade, Segurança e Governança | Proposed |
+| ADR008 | Observabilidade, Segurança e Governança | Accepted |
 | ADR009 | Plano de Entrega XP com Tarefas Detalhadas | Accepted |
 | ADR010 | Pesquisa Open Source e Projetos GitHub | Accepted |
 
