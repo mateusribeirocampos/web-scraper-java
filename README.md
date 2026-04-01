@@ -118,6 +118,8 @@ web-scraper-java/
 - Strategies por familia de fonte, resolvidas por factory.
 - Persistencia idempotente para evitar duplicatas em `job_postings` e `public_contest_postings`.
 - Reenriquecimento idempotente de `job_postings` existentes quando reruns trazem payload mais rico.
+- Baseline de persistência para `raw_snapshots`, preparando auditoria de respostas HTTP brutas por
+  `siteCode` e `crawlExecutionId` quando a captura for ligada ao runtime.
 - Scheduler, trigger manual via REST e worker assíncrono.
 - Fila persistida em Postgres com claim, ack, retry e dead-letter.
 - Retry, rate limiting, bulkhead e circuit breaker por fonte.

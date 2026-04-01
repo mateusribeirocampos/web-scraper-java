@@ -404,12 +404,18 @@ Estrutura de migrations sugerida:
 db/migration/
   V001__create_target_sites.sql
   V002__create_crawl_jobs_and_executions.sql
-  V003__create_raw_snapshots.sql
   V004__create_job_postings.sql
   V005__create_public_contest_postings.sql
   V006__create_selector_bundles.sql
   V007__add_indexes_job_published_at.sql
+  V010__create_raw_snapshots.sql
 ```
+
+Observação:
+
+- `RawSnapshot` foi introduzido depois da sequência inicial de migrations da fase 1.
+- Por isso, a materialização real no repositório segue `V010__create_raw_snapshots.sql`, e não
+  uma inserção retroativa antes de migrations já publicadas.
 
 ---
 

@@ -177,6 +177,15 @@ Atualização de priorização híbrida em 2026-03-31:
 - Implementar `ContestPostingFingerprintCalculator`.
 - **TDD:** entity mapping test + repository test + test de consulta por `registrationEndDate` primeiro.
 
+#### Story 2.5 — Baseline de persistência para `RawSnapshot`
+- Materializar a entidade `RawSnapshotEntity` e seu repository para snapshots HTTP brutos.
+- Persistir `siteCode`, `crawlExecutionId` opcional, `fetchedAt`, `responseStatus` e `responseBody`.
+- Adicionar migration real no topo da sequência publicada, sem renumerar migrations já distribuídas.
+- Escopo desta fatia:
+  - baseline de persistência e testes de repositório;
+  - sem prometer captura automática no runtime ainda.
+- **TDD:** repository integration test primeiro.
+
 ---
 
 ### Iteration 3 — Contratos de Strategy e Factory
