@@ -8,6 +8,29 @@ O projeto foi construido com TDD e evoluido por iteracoes documentadas em ADRs e
 ele ja cobre fontes oficiais/publicas, fontes ATS, scraping HTML estatico, fallback dinamico com
 Playwright e execucao assíncrona com fila persistida.
 
+## Fluxo Oficial de Entrega
+
+Toda nova task deve seguir este fluxo, sem pular etapas:
+
+1. verificar se a task esta coerente com o projeto atual, ADRs, stories, commits recentes e
+   `README.md`;
+2. escrever ou ajustar os testes primeiro, seguindo Extreme Programming e o ciclo Red → Green →
+   Refactor;
+3. implementar a feature ate os testes automatizados relevantes ficarem verdes;
+4. executar tambem validacao real com a aplicacao rodando, para observar erros de runtime,
+   integracao e comportamento operacional;
+5. somente depois de testes aprovados enviar para review;
+6. somente depois da review aprovada fazer `commit` e `push` para `main`;
+7. antes do `push`, sincronizar codigo, ADRs, stories/tasks, `README.md` e mensagem de commit.
+
+Regra operacional atual de testes:
+
+- nao depender de Testcontainers como gate de entrega da equipe;
+- priorizar fixtures, testes unitarios, testes de integracao controlados no proprio projeto e
+  validacao real com a aplicacao em execucao;
+- quando houver referencias antigas a Testcontainers nos ADRs ou stories, trate isso como contexto
+  historico, nao como obrigacao do fluxo atual.
+
 ## Objetivos
 
 - Coletar vagas de tecnologia e concursos publicos com foco pratico em Java / Spring Boot.
@@ -26,7 +49,7 @@ Playwright e execucao assíncrona com fila persistida.
 - Resilience4j
 - OkHttp + jsoup
 - Playwright for Java
-- JUnit 5, Spring Boot Test, WireMock e Testcontainers
+- JUnit 5, Spring Boot Test e WireMock
 
 ## Principios Arquiteturais
 
@@ -35,6 +58,8 @@ Playwright e execucao assíncrona com fila persistida.
 - Gate legal: onboarding exige classificacao tecnica e validacao legal.
 - Persistencia separada da extracao: strategies, normalizers e use cases tem papeis distintos.
 - Operacao rastreavel: `CrawlJob`, `CrawlExecution`, fila persistida e dead-letter fazem parte do modelo.
+- Review obrigatoria antes de `commit/push` para `main`.
+- Validacao real com a aplicacao rodando faz parte do criterio de pronto.
 
 ## Fontes Atualmente Cobertas
 
@@ -170,7 +195,8 @@ web-scraper-java/
 - JDK 21
 - Maven Wrapper do projeto
 - PostgreSQL local
-- Docker funcional apenas se voce for rodar testes de integracao com Testcontainers
+- Docker e opcional para este fluxo atual; a validacao oficial da equipe nao depende de
+  Testcontainers
 
 ### 2. Banco local
 
@@ -208,8 +234,9 @@ cd webscraper
 ./mvnw -Dtest=IndeedJobImportUseCaseTest test
 ```
 
-Observacao: testes com Testcontainers exigem Docker acessivel e com API compativel com a versao
-do Testcontainers usada pelo projeto.
+Observacao: se algum teste legado ainda usar Testcontainers, ele nao deve ser tratado como unico
+gate de entrega. O gate atual exige principalmente testes automatizados locais e validacao real com
+o aplicativo em execucao.
 
 ### 5. Rodar o check operacional local
 

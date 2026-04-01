@@ -4,6 +4,22 @@ Backend Java 21 + Spring Boot para coleta, normalizacao e disponibilizacao de va
 concursos publicos, com prioridade para fontes API-first e fallback controlado para scraping HTML
 ou browser somente quando permitido.
 
+## Fluxo Oficial de Trabalho
+
+Toda entrega deve seguir esta ordem:
+
+1. revisar a task contra o estado atual do projeto, ADRs, stories, commits e `README.md`;
+2. começar por testes seguindo XP/TDD;
+3. implementar até os testes focados passarem;
+4. validar também com a aplicação em execução, observando erros reais;
+5. só então mandar para review;
+6. só depois da review aprovada fazer `commit/push` para `main`.
+
+Regra atual de testes:
+
+- não usar Testcontainers como dependência obrigatória do fluxo de entrega;
+- preferir fixtures, testes automatizados focados e validação real da aplicação rodando.
+
 ## Estado Atual
 
 - Java 21 + Maven

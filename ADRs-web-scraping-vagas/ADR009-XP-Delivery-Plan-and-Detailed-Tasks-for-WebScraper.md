@@ -37,6 +37,31 @@ mais alto.
 - Refatoração faz parte do critério de pronto, não é cleanup opcional.
 - Toda nova família de fonte deve fechar também um teste manual de aceite orientado ao usuário.
 
+### Fluxo Oficial de Execução das Tasks
+
+Toda task deve seguir a mesma ordem operacional:
+
+1. verificar se a task continua coerente com o estado atual do projeto, ADRs, stories, commits
+   recentes e `README.md`;
+2. abrir a implementação por teste, seguindo XP/TDD;
+3. aplicar Red → Green → Refactor até os testes focados ficarem aprovados;
+4. executar validação real com a aplicação rodando para observar erros de runtime e comportamento
+   operacional;
+5. só depois enviar para review;
+6. só depois de review aprovada fazer `commit/push` para `main`;
+7. antes do `push`, sincronizar documentação e histórico da entrega.
+
+### Regra Atual de Testes
+
+- o projeto continua TDD-first;
+- mas o fluxo oficial da equipe não depende de Testcontainers como gate obrigatório;
+- a validação principal deve combinar:
+  - testes automatizados focados;
+  - fixtures e mocks controlados quando fizer sentido;
+  - testes reais com o aplicativo em execução;
+- menções antigas a Testcontainers neste ADR representam contexto histórico de desenho, não uma
+  exigência operacional atual.
+
 ### Manual User Acceptance Rule
 
 Além dos testes automatizados, cada nova integração de fonte deve prever um cenário manual
@@ -128,7 +153,7 @@ Atualização de priorização híbrida em 2026-03-31:
 
 #### Story 1.1 — Bootstrap do projeto Spring Boot
 - Criar projeto base Spring Boot com Maven (módulos ou estrutura de pacotes).
-- Adicionar dependências: Web, Validation, Data JPA, Actuator, Test, Testcontainers, jsoup,
+- Adicionar dependências: Web, Validation, Data JPA, Actuator, Test, jsoup,
   OkHttp, Resilience4j.
 - Configurar `application.properties` base.
 - Configurar Flyway para migrations.
@@ -157,7 +182,7 @@ Atualização de priorização híbrida em 2026-03-31:
 - Criar entidade e repository.
 - Adicionar migration V001.
 - Adicionar campos `jobCategory`, `legalStatus`, `selectorBundleVersion`.
-- **TDD:** repository integration test com Testcontainers primeiro.
+- **TDD:** repository test/controlado primeiro, sem depender de Testcontainers como gate.
 
 #### Story 2.2 — Implementar `CrawlJobEntity` e `CrawlExecutionEntity`
 - Criar entidades, relacionamentos, índices.
@@ -168,7 +193,7 @@ Atualização de priorização híbrida em 2026-03-31:
 - Criar entidade com `publishedAt`, `fingerprintHash`, `contractType`, `seniority`, `techStackTags`.
 - Adicionar migration V004.
 - Implementar `JobPostingFingerprintCalculator`.
-- **TDD:** entity mapping test + repository test com Testcontainers + dedup rule test primeiro.
+- **TDD:** entity mapping test + repository test + dedup rule test primeiro.
 
 #### Story 2.4 — Implementar `PublicContestPostingEntity`
 - Criar entidade com `contestName`, `organizer`, `registrationEndDate`, `numberOfVacancies`,

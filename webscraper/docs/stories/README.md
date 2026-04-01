@@ -3,6 +3,24 @@
 Cada arquivo nesta pasta documenta a implementação de uma story do plano XP (ADR009),
 capturando tentativas, erros encontrados, decisões tomadas e o resultado final.
 
+## Fluxo Oficial de Entrega
+
+Antes de uma story ser considerada pronta, ela deve registrar ou obedecer a este fluxo:
+
+1. task conferida contra projeto, ADRs, stories relacionadas, commits recentes e `README.md`;
+2. implementação aberta por TDD;
+3. testes focados aprovados;
+4. validação real com a aplicação em execução;
+5. review aprovada;
+6. só depois `commit/push` para `main`.
+
+Regra atual:
+
+- não depender de Testcontainers como gate padrão da story;
+- quando houver menção a Testcontainers em stories antigas, interpretar como contexto histórico;
+- a validação operacional real da aplicação deve aparecer explicitamente quando a story mexer em
+  runtime, parser, integração externa ou persistência.
+
 ## Convenção de arquivo
 
 ```
@@ -23,6 +41,7 @@ Exemplos:
 | **Problemas encontrados** | Erros, breaking changes, comportamentos inesperados |
 | **Causa raiz** | Por que o problema aconteceu |
 | **Solução aplicada** | O que foi mudado para resolver |
+| **Validação** | Testes automatizados executados e validação real com a aplicação rodando quando aplicável |
 | **Lições aprendidas** | O que este projeto agora sabe que não sabia antes |
 | **Estado final** | Compilação, testes, banco — tudo verde? |
 
