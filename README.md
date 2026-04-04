@@ -175,6 +175,11 @@ web-scraper-java/
 - a próxima cidade híbrida aberta no backlog é `Santa Rita do Sapucaí`, com:
   - trilha privada candidata via `WatchGuard` no `Lever`;
   - trilha pública oficial candidata via Câmara Municipal.
+- a próxima implementação já foi escolhida:
+  - primeiro `WatchGuard` via `Lever`
+  - depois a trilha pública oficial da Câmara de Santa Rita do Sapucaí
+- a trilha privada `WatchGuard` de Santa Rita já entrou como implementação no catálogo curado
+  via `lever_watchguard`, reaproveitando o pipeline genérico de `Lever`
 
 ## Endpoints Disponiveis
 

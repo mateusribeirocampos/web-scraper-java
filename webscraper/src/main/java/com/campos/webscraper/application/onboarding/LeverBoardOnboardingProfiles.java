@@ -57,4 +57,46 @@ public final class LeverBoardOnboardingProfiles {
                 checklist
         );
     }
+
+    public static LeverBoardOnboardingProfile watchguard() {
+        String apiUrl = "https://api.lever.co/v0/postings/watchguard?mode=json";
+
+        TargetSiteEntity targetSite = TargetSiteEntity.builder()
+                .siteCode("lever_watchguard")
+                .displayName("WatchGuard Careers via Lever")
+                .baseUrl(apiUrl)
+                .siteType(SiteType.TYPE_E)
+                .extractionMode(ExtractionMode.API)
+                .jobCategory(JobCategory.PRIVATE_SECTOR)
+                .legalStatus(LegalStatus.PENDING_REVIEW)
+                .selectorBundleVersion("n/a")
+                .enabled(false)
+                .createdAt(Instant.parse("2026-04-04T00:00:00Z"))
+                .build();
+
+        SiteOnboardingChecklist checklist = new SiteOnboardingChecklist(
+                "https://jobs.lever.co/robots.txt",
+                true,
+                true,
+                "",
+                true,
+                true,
+                true,
+                apiUrl,
+                true,
+                "Primeira trilha privada de Santa Rita do Sapucai; board publico Lever da WatchGuard com vagas ligadas ao polo local.",
+                "Lever public postings API: 60 rpm conservative profile",
+                OnboardingLegalCategory.API_OFICIAL,
+                "platform-team@local",
+                "PUBLIC_ANONYMOUS",
+                "Lever public postings endpoint da WatchGuard revisado em 2026-04-04."
+        );
+
+        return new LeverBoardOnboardingProfile(
+                "watchguard",
+                apiUrl,
+                targetSite,
+                checklist
+        );
+    }
 }

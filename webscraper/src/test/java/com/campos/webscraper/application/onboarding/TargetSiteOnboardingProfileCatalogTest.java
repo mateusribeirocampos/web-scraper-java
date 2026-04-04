@@ -18,7 +18,7 @@ class TargetSiteOnboardingProfileCatalogTest {
     void shouldExposeCuratedOnboardingProfilesForSupportedSources() {
         assertThat(catalog.list())
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
-                .contains("greenhouse_bitso", "lever_ciandt", "indeed-br", "dou-api", "pci_concursos",
+                .contains("greenhouse_bitso", "lever_ciandt", "lever_watchguard", "indeed-br", "dou-api", "pci_concursos",
                         "municipal_inconfidentes", "municipal_pouso_alegre", "municipal_munhoz",
                         "municipal_campinas");
     }
@@ -39,6 +39,7 @@ class TargetSiteOnboardingProfileCatalogTest {
     void shouldExposeMultipleOnboardingFamiliesWithConsistentLegalCategories() {
         TargetSiteOnboardingProfileTemplate indeed = catalog.get("indeed-br");
         TargetSiteOnboardingProfileTemplate lever = catalog.get("lever_ciandt");
+        TargetSiteOnboardingProfileTemplate watchguard = catalog.get("lever_watchguard");
         TargetSiteOnboardingProfileTemplate dou = catalog.get("dou-api");
         TargetSiteOnboardingProfileTemplate pci = catalog.get("pci_concursos");
         TargetSiteOnboardingProfileTemplate inconfidentes = catalog.get("municipal_inconfidentes");
@@ -58,6 +59,14 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(lever.jobsApiUrl()).isEqualTo("https://api.lever.co/v0/postings/ciandt?mode=json");
         assertThat(lever.targetSite().getLegalStatus().name()).isEqualTo("PENDING_REVIEW");
         assertThat(lever.targetSite().isEnabled()).isFalse();
+
+        assertThat(watchguard.sourceFamily()).isEqualTo("LEVER");
+        assertThat(watchguard.targetSite().getSiteCode()).isEqualTo("lever_watchguard");
+        assertThat(watchguard.targetSite().getDisplayName()).isEqualTo("WatchGuard Careers via Lever");
+        assertThat(watchguard.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.API_OFICIAL);
+        assertThat(watchguard.jobsApiUrl()).isEqualTo("https://api.lever.co/v0/postings/watchguard?mode=json");
+        assertThat(watchguard.targetSite().getLegalStatus().name()).isEqualTo("PENDING_REVIEW");
+        assertThat(watchguard.targetSite().isEnabled()).isFalse();
 
         assertThat(dou.sourceFamily()).isEqualTo("DOU");
         assertThat(dou.targetSite().getSiteCode()).isEqualTo("dou-api");
@@ -111,6 +120,12 @@ class TargetSiteOnboardingProfileCatalogTest {
                 .get()
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
                 .isEqualTo("lever_ciandt");
+
+        assertThat(catalog.findBySiteCode("lever_watchguard"))
+                .isPresent()
+                .get()
+                .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
+                .isEqualTo("lever_watchguard");
 
         assertThat(catalog.findBySiteCode("municipal_inconfidentes"))
                 .isPresent()

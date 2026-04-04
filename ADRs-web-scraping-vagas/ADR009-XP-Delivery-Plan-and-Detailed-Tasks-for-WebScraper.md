@@ -378,9 +378,26 @@ Status atual:
 Status atual:
 - trilha privada `WatchGuard` mapeada com vagas on-site e híbridas ligadas a `Santa Rita Do Sapucai, Brazil`
 - trilha pública oficial da Câmara Municipal mapeada com `Processos Seletivos 2025`
-- próxima decisão técnica ainda aberta:
-  - implementar primeiro a trilha privada `Lever`;
-  - ou abrir primeiro a trilha pública oficial
+- decisão tomada para a próxima implementação:
+  - abrir primeiro a trilha privada `WatchGuard` via `Lever`
+  - deixar a trilha pública oficial da Câmara para a fatia seguinte
+
+#### Story 13.3.6 — Santa Rita do Sapucaí privada via `WatchGuard` no `Lever`
+- Implementar a primeira fatia executável de `Santa Rita do Sapucaí` reaproveitando o pipeline
+  genérico de `Lever`.
+- Entrega mínima:
+  - novo perfil curado `lever_watchguard`
+  - catálogo operacional atualizado
+  - runner validado para o novo `siteCode`
+- Critério de saída:
+  - `lever_watchguard` acessível via onboarding profile catalog
+  - pipeline `Lever` reutilizado sem duplicação de strategy/import/normalizer
+  - validação operacional real fica como próximo passo antes de ativação
+
+Status atual:
+- `lever_watchguard` implementado no catálogo curado
+- runner continua roteando `lever_*` pelo `LeverJobImportUseCase`
+- a validação real da aplicação para `WatchGuard` ainda é a próxima etapa
 
 ---
 

@@ -66,6 +66,11 @@ Regra atual de testes:
   validação técnica já fechou, mas a revisão final de termos/base legal ainda não foi concluída
 - a próxima frente híbrida aberta no backlog é `Santa Rita do Sapucaí`, com hipótese privada via
   `WatchGuard` no `Lever` e hipótese pública oficial via página de processos seletivos da Câmara
+- a próxima implementação desse backlog já ficou decidida:
+  - primeiro a trilha privada `WatchGuard` via `Lever`
+  - depois a trilha pública oficial da Câmara Municipal
+- `lever_watchguard` já foi adicionado ao catálogo curado e reutiliza o mesmo pipeline `Lever`
+  aberto anteriormente para `CI&T`
 
 ## Validacao Manual Oficial
 

@@ -17,6 +17,7 @@ public class TargetSiteOnboardingProfileCatalog {
     public TargetSiteOnboardingProfileCatalog() {
         TargetSiteOnboardingProfileTemplate greenhouseBitso = fromGreenhouseProfile(GreenhouseBoardOnboardingProfiles.bitso());
         TargetSiteOnboardingProfileTemplate leverCiandt = fromLeverProfile(LeverBoardOnboardingProfiles.ciandt());
+        TargetSiteOnboardingProfileTemplate leverWatchguard = fromLeverProfile(LeverBoardOnboardingProfiles.watchguard());
         TargetSiteOnboardingProfileTemplate indeedBr = CoreSourceOnboardingProfiles.indeedBr();
         TargetSiteOnboardingProfileTemplate douApi = CoreSourceOnboardingProfiles.douApi();
         TargetSiteOnboardingProfileTemplate pciConcursos = CoreSourceOnboardingProfiles.pciConcursos();
@@ -27,6 +28,7 @@ public class TargetSiteOnboardingProfileCatalog {
         this.templatesByKey = Map.of(
                 greenhouseBitso.profileKey(), greenhouseBitso,
                 leverCiandt.profileKey(), leverCiandt,
+                leverWatchguard.profileKey(), leverWatchguard,
                 indeedBr.profileKey(), indeedBr,
                 douApi.profileKey(), douApi,
                 pciConcursos.profileKey(), pciConcursos,

@@ -126,7 +126,7 @@ class ImportingCrawlJobExecutionRunnerTest {
     @Test
     @DisplayName("should execute lever import and return execution counters")
     void shouldExecuteLeverImportAndReturnExecutionCounters() {
-        CrawlJobEntity crawlJob = buildPrivateJob("lever_ciandt");
+        CrawlJobEntity crawlJob = buildPrivateJob("lever_watchguard");
         CrawlExecutionEntity crawlExecution = buildExecution(crawlJob);
         when(leverJobImportUseCase.execute(any(), any(), any()))
                 .thenReturn(List.of(JobPostingEntity.builder().externalId("lever-1").build()));

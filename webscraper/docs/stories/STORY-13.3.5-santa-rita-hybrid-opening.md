@@ -72,17 +72,15 @@ Validação de descoberta feita com fontes públicas:
 - board público `Lever` da `WatchGuard` com resultados para `Santa Rita Do Sapucai, Brazil`
 - página oficial `Processos Seletivos 2025` da Câmara Municipal acessível publicamente
 
-## Open Question
+## Next Decision
 
-A próxima implementação ainda precisa escolher a ordem entre:
+A ordem da próxima implementação foi definida assim:
 
 1. abrir primeiro a trilha privada `Lever` da `WatchGuard`;
-2. abrir primeiro a trilha pública oficial da Câmara;
-3. ou fazer uma pequena descoberta adicional para verificar se a Prefeitura também expõe uma rota
-   pública oficial mais forte para `PUBLIC_CONTEST`.
+2. deixar a trilha pública oficial da Câmara para a story seguinte.
 
 ## Final State
 
 - `Santa Rita do Sapucaí` foi aberta documentalmente no backlog híbrido
 - as duas rotas iniciais já têm referência concreta
-- a próxima story deve decidir qual trilha sai primeiro na implementação
+- a próxima story já pode partir direto para a implementação privada via `WatchGuard` no `Lever`
