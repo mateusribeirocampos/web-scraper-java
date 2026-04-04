@@ -363,6 +363,25 @@ Status atual:
 - a trilha privada `lever_ciandt` já opera em runtime real
 - `municipal_campinas` continua `PENDING_REVIEW/enabled=false` porque a revisão final de termos/base legal ainda não foi concluída
 
+#### Story 13.3.5 — Santa Rita do Sapucaí híbrido: abertura privada + pública oficial
+- Abrir `Santa Rita do Sapucaí` como a próxima cidade do backlog híbrido depois de `Campinas`.
+- Definir duas trilhas iniciais com sinal técnico real:
+  - privada: `WatchGuard Technologies` via `Lever` público (`jobs.lever.co/watchguard`)
+  - pública: página oficial de processos seletivos da Câmara Municipal
+- Referências verificadas:
+  - privada: `https://jobs.lever.co/watchguard`
+  - pública: `https://www.santaritadosapucai.mg.leg.br/transparencia/processos-seletivos-2025`
+- Critério de entrada:
+  - board privado público, sem autenticação e com vagas associadas a `Santa Rita Do Sapucai, Brazil`
+  - fonte pública oficial estruturada, navegável e com edital/processo seletivo acessível
+
+Status atual:
+- trilha privada `WatchGuard` mapeada com vagas on-site e híbridas ligadas a `Santa Rita Do Sapucai, Brazil`
+- trilha pública oficial da Câmara Municipal mapeada com `Processos Seletivos 2025`
+- próxima decisão técnica ainda aberta:
+  - implementar primeiro a trilha privada `Lever`;
+  - ou abrir primeiro a trilha pública oficial
+
 ---
 
 ### Iteration 7 — Baseline de resiliência

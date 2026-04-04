@@ -172,6 +172,9 @@ web-scraper-java/
   - `robots.txt` e JSONAPI oficial validados;
   - `operational-check` executado com sucesso;
   - decisão atual: continuar `PENDING_REVIEW` até a revisão final de termos/base legal.
+- a próxima cidade híbrida aberta no backlog é `Santa Rita do Sapucaí`, com:
+  - trilha privada candidata via `WatchGuard` no `Lever`;
+  - trilha pública oficial candidata via Câmara Municipal.
 
 ## Endpoints Disponiveis
 

@@ -64,6 +64,8 @@ Regra atual de testes:
   `municipal_campinas` implementada via JSONAPI oficial
 - a revisão da `13.3.4` concluiu que `municipal_campinas` continua `PENDING_REVIEW`, porque a
   validação técnica já fechou, mas a revisão final de termos/base legal ainda não foi concluída
+- a próxima frente híbrida aberta no backlog é `Santa Rita do Sapucaí`, com hipótese privada via
+  `WatchGuard` no `Lever` e hipótese pública oficial via página de processos seletivos da Câmara
 
 ## Validacao Manual Oficial
 
