@@ -234,6 +234,10 @@ Variáveis úteis:
 - `JOB_POSTINGS_PROFILE=JAVA_JUNIOR_BACKEND`
 - `JOB_POSTINGS_SENIORITY=` para deixar o recorte em `junior + pleno`
 - `KEEP_APP_RUNNING=true`
+- para concursos públicos, usar:
+  - `JOB_POSTINGS_CATEGORY=PUBLIC_CONTEST`
+  - `PUBLIC_CONTEST_STATUS=OPEN`
+  - `PUBLIC_CONTEST_ORDER_BY=registrationEndDate`
 
 O script agora fecha o fluxo ponta a ponta em duas visões:
 

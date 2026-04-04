@@ -11,6 +11,8 @@ DAYS_BACK="${DAYS_BACK:-60}"
 JOB_POSTINGS_CATEGORY="${JOB_POSTINGS_CATEGORY:-PRIVATE_SECTOR}"
 JOB_POSTINGS_PROFILE="${JOB_POSTINGS_PROFILE:-JAVA_JUNIOR_BACKEND}"
 JOB_POSTINGS_SENIORITY="${JOB_POSTINGS_SENIORITY:-}"
+PUBLIC_CONTEST_STATUS="${PUBLIC_CONTEST_STATUS:-OPEN}"
+PUBLIC_CONTEST_ORDER_BY="${PUBLIC_CONTEST_ORDER_BY:-registrationEndDate}"
 HEALTH_PATH="${HEALTH_PATH:-/actuator/health}"
 APP_LOG="${APP_LOG:-/tmp/webscraper-operational-check.log}"
 KEEP_APP_RUNNING="${KEEP_APP_RUNNING:-false}"
@@ -36,13 +38,21 @@ trap cleanup EXIT
 
 health_url="${APP_URL}${HEALTH_PATH}"
 operational_check_url="${APP_URL}/api/v1/onboarding-profiles/${PROFILE_KEY}/operational-check?smokeRun=${SMOKE_RUN}&daysBack=${DAYS_BACK}"
-job_postings_url="${APP_URL}/api/v1/job-postings?category=${JOB_POSTINGS_CATEGORY}&daysBack=${DAYS_BACK}&profile=${JOB_POSTINGS_PROFILE}"
-if [[ -n "${JOB_POSTINGS_SENIORITY}" ]]; then
-  job_postings_url="${job_postings_url}&seniority=${JOB_POSTINGS_SENIORITY}"
+read_model_label="job-postings"
+read_model_url="${APP_URL}/api/v1/job-postings?category=${JOB_POSTINGS_CATEGORY}&daysBack=${DAYS_BACK}&profile=${JOB_POSTINGS_PROFILE}"
+if [[ "${JOB_POSTINGS_CATEGORY}" == "PUBLIC_CONTEST" ]]; then
+  read_model_label="public-contests"
+  read_model_url="${APP_URL}/api/v1/public-contests?status=${PUBLIC_CONTEST_STATUS}&orderBy=${PUBLIC_CONTEST_ORDER_BY}"
+elif [[ -n "${JOB_POSTINGS_SENIORITY}" ]]; then
+  read_model_url="${read_model_url}&seniority=${JOB_POSTINGS_SENIORITY}"
 fi
 
 echo "[operational-check] profile=${PROFILE_KEY} smokeRun=${SMOKE_RUN} daysBack=${DAYS_BACK}"
-echo "[operational-check] user-query category=${JOB_POSTINGS_CATEGORY} profile=${JOB_POSTINGS_PROFILE} seniority=${JOB_POSTINGS_SENIORITY:-JUNIOR_AND_MID}"
+if [[ "${JOB_POSTINGS_CATEGORY}" == "PUBLIC_CONTEST" ]]; then
+  echo "[operational-check] user-query category=${JOB_POSTINGS_CATEGORY} status=${PUBLIC_CONTEST_STATUS} orderBy=${PUBLIC_CONTEST_ORDER_BY}"
+else
+  echo "[operational-check] user-query category=${JOB_POSTINGS_CATEGORY} profile=${JOB_POSTINGS_PROFILE} seniority=${JOB_POSTINGS_SENIORITY:-JUNIOR_AND_MID}"
+fi
 
 if ! curl -sS --max-time 2 "${health_url}" >/dev/null 2>&1; then
   if curl -sS --max-time 2 "${APP_URL}" >/dev/null 2>&1; then
@@ -78,8 +88,8 @@ echo "[operational-check] health=UP"
 echo "[operational-check] calling ${operational_check_url}"
 curl -fsS -X POST "${operational_check_url}"
 echo
-echo "[operational-check] calling ${job_postings_url}"
-curl -fsS "${job_postings_url}"
+echo "[operational-check] calling ${read_model_url}"
+curl -fsS "${read_model_url}"
 echo
 
 if [[ "${started_app}" == "true" && "${KEEP_APP_RUNNING}" == "true" ]]; then

@@ -250,7 +250,9 @@ Esse script:
 - sobe a aplicacao local se ela ainda nao estiver respondendo;
 - espera `GET /actuator/health`;
 - executa `POST /api/v1/onboarding-profiles/{profileKey}/operational-check`;
-- consulta depois `GET /api/v1/job-postings`;
+- consulta depois o endpoint de leitura compativel com a categoria:
+  - `GET /api/v1/job-postings` para `PRIVATE_SECTOR`;
+  - `GET /api/v1/public-contests` para `PUBLIC_CONTEST`;
 - devolve um resumo unico com bootstrap, smoke run/execucao observada e leitura funcional da base.
 
 Para o teste real do usuario, o script agora usa por padrao:
@@ -263,6 +265,16 @@ mas nao obriga `seniority=JUNIOR`. Se quiser voltar ao recorte estrito:
 
 ```bash
 JOB_POSTINGS_SENIORITY=JUNIOR ./scripts/run-local-operational-check.sh
+```
+
+Para concursos publicos:
+
+```bash
+PROFILE_KEY=municipal_campinas \
+JOB_POSTINGS_CATEGORY=PUBLIC_CONTEST \
+PUBLIC_CONTEST_STATUS=OPEN \
+PUBLIC_CONTEST_ORDER_BY=registrationEndDate \
+./scripts/run-local-operational-check.sh
 ```
 
 ## Validacao Manual Oficial
