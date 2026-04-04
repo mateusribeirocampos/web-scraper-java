@@ -102,3 +102,4 @@ Exemplos:
 | 13.3.1 — Priorização do backlog híbrido de polos tecnológicos | [STORY-13.3.1-hybrid-tech-hubs-prioritization.md](STORY-13.3.1-hybrid-tech-hubs-prioritization.md) | ✅ Concluída |
 | 13.3.2 — Campinas híbrido: abertura privada + pública | [STORY-13.3.2-campinas-hybrid-opening.md](STORY-13.3.2-campinas-hybrid-opening.md) | ✅ Concluída |
 | 13.3.3 — Campinas público oficial via JSONAPI | [STORY-13.3.3-campinas-public-official-jsonapi.md](STORY-13.3.3-campinas-public-official-jsonapi.md) | ✅ Concluída |
+| 13.3.4 — Campinas ativação operacional/legal | [STORY-13.3.4-campinas-operational-activation-review.md](STORY-13.3.4-campinas-operational-activation-review.md) | ✅ Concluída |

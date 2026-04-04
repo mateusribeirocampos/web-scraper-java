@@ -31,8 +31,12 @@ Regra atual de testes:
   - DOU
   - PCI Concursos
   - Prefeitura de Inconfidentes (HTML + PDF oficial)
+  - Prefeitura de Pouso Alegre (HTML + PDF oficial)
+  - Prefeitura de Munhoz (HTML + PDF oficial)
+  - Prefeitura de Campinas (JSONAPI oficial, ativacao ainda pendente)
   - Greenhouse
   - Gupy
+  - Lever (CI&T Campinas)
   - Playwright dinamico para sites Type C
 - Boards Greenhouse onboardados usam `?content=true` e reruns reenriquecem registros antigos
   pela camada idempotente de persistencia
@@ -53,11 +57,13 @@ Regra atual de testes:
   prefeituras
 - `Pouso Alegre` entrou na `13.2.4` como próxima prefeitura com portal mais estruturado
   (`concursos-publicos` + `concursos_view/<id>`) e reaproveita o pipeline municipal de PDF
-- `Munhoz` segue no backlog técnico até confirmação de endpoint municipal reaproveitável ou queda
-  formal para HTML + PDF
 - `Munhoz` agora também entra na `13.2.5` com portal estruturado e detalhe por `concursos_view/<id>`,
   reaproveitando o mesmo pipeline municipal de HTML + PDF já maturado em `Inconfidentes` e
   `Pouso Alegre`
+- `Campinas` agora também tem a trilha privada `lever_ciandt` operacional e a trilha pública
+  `municipal_campinas` implementada via JSONAPI oficial
+- a revisão da `13.3.4` concluiu que `municipal_campinas` continua `PENDING_REVIEW`, porque a
+  validação técnica já fechou, mas a revisão final de termos/base legal ainda não foi concluída
 
 ## Validacao Manual Oficial
 
@@ -203,7 +209,9 @@ Para a expansão municipal de concursos:
 - `municipal_inconfidentes` já entra como fonte runtime de `PUBLIC_CONTEST`;
 - o filtro principal continua sendo cargo, escolaridade e formação exigida em edital, e não
   `seniority`;
-- `Pouso Alegre` e `Munhoz` permanecem em avaliação técnica.
+- `Pouso Alegre` e `Munhoz` já operam no runtime municipal;
+- `municipal_campinas` já foi validado tecnicamente via `operational-check`, mas permanece
+  bloqueado em onboarding até a revisão final de compliance.
 
 Check operacional ponta a ponta por `profileKey`:
 

@@ -168,6 +168,10 @@ web-scraper-java/
   - pública via JSONAPI oficial do portal municipal de concursos.
 - a trilha pública de `Campinas` já está implementada tecnicamente, mas continua bloqueada em
   onboarding até o fechamento operacional/legal final.
+- a `13.3.4` já fechou a revisão operacional da trilha pública:
+  - `robots.txt` e JSONAPI oficial validados;
+  - `operational-check` executado com sucesso;
+  - decisão atual: continuar `PENDING_REVIEW` até a revisão final de termos/base legal.
 
 ## Endpoints Disponiveis
 

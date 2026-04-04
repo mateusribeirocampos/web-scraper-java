@@ -346,6 +346,23 @@ Status atual:
 - trilha pública oficial de `Campinas` implementada via JSONAPI oficial do portal (`municipal_campinas`)
 - ativação operacional/legal da trilha pública ainda pendente
 
+#### Story 13.3.4 — Ativação operacional/legal de `municipal_campinas`
+- Revisar a evidência oficial da trilha pública de `Campinas` antes de qualquer enable em produção.
+- Confirmar, no mínimo:
+  - `robots.txt` oficial acessível e permissivo para leitura pública;
+  - JSONAPI oficial acessível sem autenticação;
+  - validação real do `operational-check` com a aplicação rodando;
+  - decisão explícita sobre revisão de termos/base legal.
+- Critério de saída:
+  - se a revisão legal fechar, promover o perfil para `APPROVED/enabled=true`;
+  - se a revisão legal não fechar, manter `PENDING_REVIEW` com blocker documentado.
+
+Status atual:
+- `robots.txt` oficial respondeu `Allow: /`
+- a JSONAPI oficial e o `operational-check` já foram validados tecnicamente
+- a trilha privada `lever_ciandt` já opera em runtime real
+- `municipal_campinas` continua `PENDING_REVIEW/enabled=false` porque a revisão final de termos/base legal ainda não foi concluída
+
 ---
 
 ### Iteration 7 — Baseline de resiliência
