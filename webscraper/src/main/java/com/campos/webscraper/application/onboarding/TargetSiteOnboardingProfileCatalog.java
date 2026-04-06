@@ -25,17 +25,19 @@ public class TargetSiteOnboardingProfileCatalog {
         TargetSiteOnboardingProfileTemplate municipalPousoAlegre = CoreSourceOnboardingProfiles.municipalPousoAlegre();
         TargetSiteOnboardingProfileTemplate municipalMunhoz = CoreSourceOnboardingProfiles.municipalMunhoz();
         TargetSiteOnboardingProfileTemplate municipalCampinas = CoreSourceOnboardingProfiles.municipalCampinas();
-        this.templatesByKey = Map.of(
-                greenhouseBitso.profileKey(), greenhouseBitso,
-                leverCiandt.profileKey(), leverCiandt,
-                leverWatchguard.profileKey(), leverWatchguard,
-                indeedBr.profileKey(), indeedBr,
-                douApi.profileKey(), douApi,
-                pciConcursos.profileKey(), pciConcursos,
-                municipalInconfidentes.profileKey(), municipalInconfidentes,
-                municipalPousoAlegre.profileKey(), municipalPousoAlegre,
-                municipalMunhoz.profileKey(), municipalMunhoz,
-                municipalCampinas.profileKey(), municipalCampinas
+        TargetSiteOnboardingProfileTemplate camaraSantaRitaSapucai = CoreSourceOnboardingProfiles.camaraSantaRitaSapucai();
+        this.templatesByKey = Map.ofEntries(
+                Map.entry(greenhouseBitso.profileKey(), greenhouseBitso),
+                Map.entry(leverCiandt.profileKey(), leverCiandt),
+                Map.entry(leverWatchguard.profileKey(), leverWatchguard),
+                Map.entry(indeedBr.profileKey(), indeedBr),
+                Map.entry(douApi.profileKey(), douApi),
+                Map.entry(pciConcursos.profileKey(), pciConcursos),
+                Map.entry(municipalInconfidentes.profileKey(), municipalInconfidentes),
+                Map.entry(municipalPousoAlegre.profileKey(), municipalPousoAlegre),
+                Map.entry(municipalMunhoz.profileKey(), municipalMunhoz),
+                Map.entry(municipalCampinas.profileKey(), municipalCampinas),
+                Map.entry(camaraSantaRitaSapucai.profileKey(), camaraSantaRitaSapucai)
         );
     }
 

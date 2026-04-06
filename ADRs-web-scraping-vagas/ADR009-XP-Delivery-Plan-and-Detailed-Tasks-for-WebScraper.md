@@ -145,6 +145,15 @@ Atualização de priorização híbrida em 2026-03-31:
   - `Santa Rita do Sapucaí` e `Itajubá` são polos tecnológicos claros no Sul de Minas;
   - `Poços de Caldas` e `Extrema` permanecem fortes, mas ficam logo depois na fila.
 
+Atualização de Santa Rita do Sapucaí em 2026-04-05:
+
+- a trilha privada `lever_watchguard` já foi validada tecnicamente em runtime real, mas permanece
+  `PENDING_REVIEW` por base legal ainda insuficiente para promoção automática;
+- a frente ativa seguinte passa a ser a trilha pública oficial da Câmara Municipal;
+- a página `Processos Seletivos 2025` entra como fonte `STATIC_HTML` com anexos PDF oficiais;
+- a decisão da fatia foi modelar o HTML como fonte primária de metadados, usando os PDFs oficiais
+  como `editalUrl` canônico, sem depender de enrichment PDF nesta primeira entrega.
+
 ---
 
 ## Detailed Tasks by Iteration

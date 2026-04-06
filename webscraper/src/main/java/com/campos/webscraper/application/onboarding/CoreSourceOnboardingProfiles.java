@@ -288,4 +288,43 @@ public final class CoreSourceOnboardingProfiles {
         );
     }
 
+    public static TargetSiteOnboardingProfileTemplate camaraSantaRitaSapucai() {
+        String listingUrl = "https://www.santaritadosapucai.mg.leg.br/transparencia/processos-seletivos-2025";
+        return new TargetSiteOnboardingProfileTemplate(
+                "camara_santa_rita_sapucai",
+                "LEGISLATIVE_HTML",
+                "camara_santa_rita_sapucai",
+                listingUrl,
+                TargetSiteEntity.builder()
+                        .siteCode("camara_santa_rita_sapucai")
+                        .displayName("Câmara Municipal de Santa Rita do Sapucaí - Processos Seletivos")
+                        .baseUrl(listingUrl)
+                        .siteType(SiteType.TYPE_A)
+                        .extractionMode(ExtractionMode.STATIC_HTML)
+                        .jobCategory(JobCategory.PUBLIC_CONTEST)
+                        .legalStatus(LegalStatus.PENDING_REVIEW)
+                        .selectorBundleVersion("camara_santa_rita_html_v1")
+                        .enabled(false)
+                        .createdAt(Instant.parse("2026-04-05T00:00:00Z"))
+                        .build(),
+                new SiteOnboardingChecklist(
+                        "https://www.santaritadosapucai.mg.leg.br/robots.txt",
+                        false,
+                        false,
+                        "https://www.santaritadosapucai.mg.leg.br/transparencia/processos-seletivos-2025",
+                        false,
+                        false,
+                        true,
+                        "",
+                        true,
+                        "Fonte oficial da Câmara Municipal para processos seletivos e editais legislativos locais, com cronograma e anexos PDF no mesmo HTML.",
+                        "1 request every 10 seconds",
+                        OnboardingLegalCategory.DADOS_PUBLICOS,
+                        "platform-team@local",
+                        "PUBLIC_ANONYMOUS",
+                        "Pagina oficial da Câmara com Processos Seletivos 2025 revisada em 2026-04-05; ativacao operacional/legal ainda pendente."
+                )
+        );
+    }
+
 }

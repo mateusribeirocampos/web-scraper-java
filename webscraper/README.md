@@ -71,6 +71,9 @@ Regra atual de testes:
   - depois a trilha pública oficial da Câmara Municipal
 - `lever_watchguard` já foi adicionado ao catálogo curado e reutiliza o mesmo pipeline `Lever`
   aberto anteriormente para `CI&T`
+- `camara_santa_rita_sapucai` agora também entra como fonte `PUBLIC_CONTEST`, usando parser HTML
+  estático sobre a página oficial `Processos Seletivos 2025` e PDFs oficiais como `editalUrl`
+  canônico
 
 ## Validacao Manual Oficial
 

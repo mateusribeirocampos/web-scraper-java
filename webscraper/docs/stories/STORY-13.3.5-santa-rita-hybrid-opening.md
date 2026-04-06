@@ -83,4 +83,6 @@ A ordem da próxima implementação foi definida assim:
 
 - `Santa Rita do Sapucaí` foi aberta documentalmente no backlog híbrido
 - as duas rotas iniciais já têm referência concreta
-- a próxima story já pode partir direto para a implementação privada via `WatchGuard` no `Lever`
+- a story seguinte saiu primeiro pela trilha privada via `WatchGuard` no `Lever`
+- a trilha pública oficial da Câmara passou a seguir logo depois, modelada como HTML estático com
+  anexos PDF oficiais

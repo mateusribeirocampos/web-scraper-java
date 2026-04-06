@@ -180,6 +180,9 @@ web-scraper-java/
   - depois a trilha pública oficial da Câmara de Santa Rita do Sapucaí
 - a trilha privada `WatchGuard` de Santa Rita já entrou como implementação no catálogo curado
   via `lever_watchguard`, reaproveitando o pipeline genérico de `Lever`
+- a trilha pública oficial de `Santa Rita do Sapucaí` também foi implementada como
+  `camara_santa_rita_sapucai`, modelando a página `Processos Seletivos 2025` como `STATIC_HTML`
+  com anexos PDF oficiais
 
 ## Endpoints Disponiveis
 

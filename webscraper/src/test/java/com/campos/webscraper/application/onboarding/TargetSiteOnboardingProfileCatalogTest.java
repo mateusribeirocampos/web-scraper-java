@@ -20,7 +20,7 @@ class TargetSiteOnboardingProfileCatalogTest {
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
                 .contains("greenhouse_bitso", "lever_ciandt", "lever_watchguard", "indeed-br", "dou-api", "pci_concursos",
                         "municipal_inconfidentes", "municipal_pouso_alegre", "municipal_munhoz",
-                        "municipal_campinas");
+                        "municipal_campinas", "camara_santa_rita_sapucai");
     }
 
     @Test
@@ -46,6 +46,7 @@ class TargetSiteOnboardingProfileCatalogTest {
         TargetSiteOnboardingProfileTemplate pousoAlegre = catalog.get("municipal_pouso_alegre");
         TargetSiteOnboardingProfileTemplate munhoz = catalog.get("municipal_munhoz");
         TargetSiteOnboardingProfileTemplate campinas = catalog.get("municipal_campinas");
+        TargetSiteOnboardingProfileTemplate camaraSantaRita = catalog.get("camara_santa_rita_sapucai");
 
         assertThat(indeed.sourceFamily()).isEqualTo("INDEED");
         assertThat(indeed.targetSite().getSiteCode()).isEqualTo("indeed-br");
@@ -104,6 +105,13 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(campinas.targetSite().isEnabled()).isFalse();
         assertThat(campinas.jobsApiUrl()).contains("portal-api.campinas.sp.gov.br/jsonapi/node/site");
         assertThat(campinas.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.API_OFICIAL);
+
+        assertThat(camaraSantaRita.sourceFamily()).isEqualTo("LEGISLATIVE_HTML");
+        assertThat(camaraSantaRita.targetSite().getSiteCode()).isEqualTo("camara_santa_rita_sapucai");
+        assertThat(camaraSantaRita.targetSite().getSelectorBundleVersion()).isEqualTo("camara_santa_rita_html_v1");
+        assertThat(camaraSantaRita.targetSite().getLegalStatus().name()).isEqualTo("PENDING_REVIEW");
+        assertThat(camaraSantaRita.targetSite().isEnabled()).isFalse();
+        assertThat(camaraSantaRita.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.DADOS_PUBLICOS);
     }
 
     @Test
@@ -150,6 +158,12 @@ class TargetSiteOnboardingProfileCatalogTest {
                 .get()
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
                 .isEqualTo("municipal_campinas");
+
+        assertThat(catalog.findBySiteCode("camara_santa_rita_sapucai"))
+                .isPresent()
+                .get()
+                .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
+                .isEqualTo("camara_santa_rita_sapucai");
 
         assertThat(catalog.findBySiteCode("unknown-site")).isEmpty();
     }
