@@ -73,7 +73,7 @@ Regra atual de testes:
 - a trilha privada `lever_ciandt` também foi revisada com evidência pública suficiente e passa a
   `APPROVED/enabled=true`, com reconciliação persistente para ambientes já existentes
 - com isso, `Campinas` passa a ser a primeira cidade híbrida integralmente fechada no projeto
-- a próxima cidade a fechar passa a ser `Santa Rita do Sapucaí`
+- `Santa Rita do Sapucaí` ficou encerrada como a segunda cidade híbrida fechada
 - a próxima frente híbrida aberta no backlog é `Santa Rita do Sapucaí`, com hipótese privada via
   `WatchGuard` no `Lever` e hipótese pública oficial via página de processos seletivos da Câmara
 - a próxima implementação desse backlog já ficou decidida:
@@ -85,11 +85,10 @@ Regra atual de testes:
   estático sobre a página oficial `Processos Seletivos 2025` e PDFs oficiais como `editalUrl`
   canônico
 - `camara_santa_rita_sapucai` já passou na validação real e está `APPROVED/enabled=true`
-- `lever_watchguard` permanece `PENDING_REVIEW`
+- `lever_watchguard` foi reclassificada para `SCRAPING_PROIBIDO/enabled=false`
+  após revisão dos Terms of Use da WatchGuard
 - a próxima cidade híbrida aberta no backlog passa a ser `Itajubá`
 - a prioridade alta agora é fechar as cidades do backlog híbrido nesta ordem:
-  - `Campinas`
-  - `Santa Rita do Sapucaí`
   - `Itajubá`
   - `Poços de Caldas`
   - `Extrema`

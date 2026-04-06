@@ -463,8 +463,6 @@ Status atual:
   4. `Poços de Caldas`
   5. `Extrema`
 - Gaps esperados por cidade:
-  - `Campinas`: fechar compliance da trilha privada `lever_ciandt`
-  - `Santa Rita do Sapucaí`: fechar compliance da trilha privada `lever_watchguard`
   - `Itajubá`: mapear, implementar e ativar trilhas privada + pública
   - `Poços de Caldas`: abrir cidade, mapear, implementar e ativar trilhas
   - `Extrema`: abrir cidade, mapear, implementar e ativar trilhas
@@ -487,6 +485,19 @@ Status atual:
 - `lever_ciandt` promovida para `APPROVED/enabled=true`
 - reconciliação persistente adicionada para ambientes já bootstrapados
 - `Campinas` passa a ser a primeira cidade híbrida completamente fechada
+
+#### Story 13.3.12 — Santa Rita do Sapucaí privada: revisão operacional/legal da trilha `WatchGuard` via `Lever`
+- Revisar a base legal final da trilha privada `lever_watchguard`.
+- Confirmar se a permissão técnica do board `Lever` é suficiente ou se os termos do publisher
+  bloqueiam a automação.
+- Aplicar a decisão definitiva no perfil curado e nos registros persistidos.
+
+Status atual:
+- `lever_watchguard` reclassificada para `SCRAPING_PROIBIDO/enabled=false`
+- `Terms of Use` da WatchGuard revisados com proibição explícita de scraping e aplicações sem
+  autorização prévia
+- reconciliação persistente adicionada para ambientes já bootstrapados
+- `Santa Rita do Sapucaí` encerrada como cidade híbrida com blocker definitivo na trilha privada
 
 ---
 

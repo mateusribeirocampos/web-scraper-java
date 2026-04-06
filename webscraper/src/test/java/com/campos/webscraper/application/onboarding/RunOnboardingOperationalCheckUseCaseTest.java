@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Tag("unit")
@@ -269,6 +270,70 @@ class RunOnboardingOperationalCheckUseCaseTest {
         assertThat(result.executionSummary()).isNull();
         assertThat(result.recentPostingsCount()).isZero();
         assertThat(result.recentPostingsSample()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("should preserve operational summary when smoke run is blocked by compliance")
+    void shouldPreserveOperationalSummaryWhenSmokeRunIsBlockedByCompliance() {
+        TargetSiteEntity site = targetSite();
+        CrawlJobEntity canonicalJob = canonicalJob(site);
+        BootstrappedOnboardingWorkflowResult workflow = new BootstrappedOnboardingWorkflowResult(
+                "lever_watchguard",
+                new BootstrappedTargetSite("lever_watchguard", BootstrapStatus.UPDATED, site),
+                new BootstrappedCrawlJob(BootstrapStatus.UPDATED, canonicalJob),
+                true,
+                new TargetSiteSmokeRunResult(
+                        7L,
+                        "lever_watchguard",
+                        11L,
+                        BootstrapStatus.UPDATED,
+                        "BLOCKED_BY_COMPLIANCE",
+                        null
+                )
+        );
+        CrawlExecutionEntity previousExecution = CrawlExecutionEntity.builder()
+                .id(701L)
+                .crawlJob(canonicalJob)
+                .status(CrawlExecutionStatus.SUCCEEDED)
+                .itemsFound(3)
+                .startedAt(Instant.parse("2026-03-25T11:00:00Z"))
+                .finishedAt(Instant.parse("2026-03-25T11:00:20Z"))
+                .createdAt(Instant.parse("2026-03-25T11:00:00Z"))
+                .build();
+
+        when(bootstrapOnboardingProfileWorkflowUseCase.execute("lever_watchguard", true))
+                .thenReturn(workflow);
+        when(crawlJobRepository.findById(11L)).thenReturn(Optional.of(canonicalJob));
+        when(crawlExecutionRepository.findByCrawlJob(canonicalJob)).thenReturn(List.of(previousExecution));
+        when(jobPostingRepository.findTop5ByCrawlExecutionAndPublishedAtGreaterThanEqualOrderByPublishedAtDesc(
+                org.mockito.ArgumentMatchers.eq(previousExecution),
+                org.mockito.ArgumentMatchers.any(LocalDate.class)
+        )).thenReturn(List.of(
+                posting(site, previousExecution, 1L, "Security Engineer")
+        ));
+        when(jobPostingRepository.countByCrawlExecutionAndPublishedAtGreaterThanEqual(
+                org.mockito.ArgumentMatchers.eq(previousExecution),
+                org.mockito.ArgumentMatchers.any(LocalDate.class)
+        )).thenReturn(1L);
+
+        RunOnboardingOperationalCheckUseCase useCase = new RunOnboardingOperationalCheckUseCase(
+                bootstrapOnboardingProfileWorkflowUseCase,
+                crawlJobRepository,
+                crawlExecutionRepository,
+                jobPostingRepository,
+                publicContestPostingRepository,
+                clock
+        );
+
+        OnboardingOperationalCheckResult result = useCase.execute("lever_watchguard", true, 60);
+
+        assertThat(result.smokeRunRequested()).isTrue();
+        assertThat(result.smokeRun()).isNotNull();
+        assertThat(result.smokeRun().smokeRunStatus()).isEqualTo("BLOCKED_BY_COMPLIANCE");
+        assertThat(result.executionSummary()).isNotNull();
+        assertThat(result.executionSummary().crawlExecutionId()).isEqualTo(701L);
+        assertThat(result.recentPostingsCount()).isEqualTo(1);
+        verify(bootstrapOnboardingProfileWorkflowUseCase).execute("lever_watchguard", true);
     }
 
     @Test

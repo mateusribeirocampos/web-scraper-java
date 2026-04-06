@@ -5,9 +5,12 @@ import com.campos.webscraper.application.orchestrator.CrawlJobDispatcher;
 import com.campos.webscraper.application.queue.InFlightCrawlJobRegistry;
 import com.campos.webscraper.domain.enums.CrawlExecutionStatus;
 import com.campos.webscraper.domain.enums.JobCategory;
+import com.campos.webscraper.domain.enums.LegalStatus;
 import com.campos.webscraper.domain.model.CrawlJobEntity;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
 import com.campos.webscraper.domain.repository.CrawlJobRepository;
+import com.campos.webscraper.domain.repository.TargetSiteRepository;
+import com.campos.webscraper.shared.TargetSiteActivationBlockedException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -19,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -43,6 +47,9 @@ class RunTargetSiteSmokeRunUseCaseTest {
     private CrawlJobRepository crawlJobRepository;
 
     @Mock
+    private TargetSiteRepository targetSiteRepository;
+
+    @Mock
     private InFlightCrawlJobRegistry inFlightCrawlJobRegistry;
 
     @Test
@@ -54,12 +61,15 @@ class RunTargetSiteSmokeRunUseCaseTest {
                         .id(7L)
                         .siteCode("greenhouse_bitso")
                         .jobCategory(JobCategory.PRIVATE_SECTOR)
+                        .legalStatus(LegalStatus.APPROVED)
+                        .enabled(true)
                         .build())
                 .scheduledAt(Instant.parse("2026-03-24T20:01:00Z"))
                 .schedulerManaged(true)
                 .createdAt(Instant.parse("2026-03-24T20:00:00Z"))
                 .build();
 
+        when(targetSiteRepository.findById(7L)).thenReturn(Optional.of(approvedDisabledOrEnabledSite(7L, LegalStatus.APPROVED, true)));
         when(bootstrapCrawlJobFromTargetSiteUseCase.executeForSmokeRun(anyLong(), any(Instant.class)))
                 .thenReturn(new BootstrappedCrawlJob(BootstrapStatus.CREATED, crawlJob));
         when(inFlightCrawlJobRegistry.tryClaim(101L)).thenReturn(true);
@@ -80,6 +90,7 @@ class RunTargetSiteSmokeRunUseCaseTest {
                 bootstrapCrawlJobFromTargetSiteUseCase,
                 crawlJobDispatcher,
                 crawlJobRepository,
+                targetSiteRepository,
                 inFlightCrawlJobRegistry,
                 Clock.fixed(Instant.parse("2026-03-24T20:00:00Z"), ZoneOffset.UTC)
         );
@@ -112,12 +123,15 @@ class RunTargetSiteSmokeRunUseCaseTest {
                         .id(7L)
                         .siteCode("greenhouse_bitso")
                         .jobCategory(JobCategory.PRIVATE_SECTOR)
+                        .legalStatus(LegalStatus.APPROVED)
+                        .enabled(true)
                         .build())
                 .scheduledAt(Instant.parse("2026-03-24T20:00:00Z"))
                 .schedulerManaged(false)
                 .createdAt(Instant.parse("2026-03-24T20:00:00Z"))
                 .build();
 
+        when(targetSiteRepository.findById(7L)).thenReturn(Optional.of(approvedDisabledOrEnabledSite(7L, LegalStatus.APPROVED, true)));
         when(bootstrapCrawlJobFromTargetSiteUseCase.executeForSmokeRun(anyLong(), any(Instant.class)))
                 .thenReturn(new BootstrappedCrawlJob(BootstrapStatus.UPDATED, crawlJob));
         when(crawlJobDispatcher.dispatch(crawlJob)).thenReturn(CrawlExecutionStatus.SUCCEEDED);
@@ -126,6 +140,7 @@ class RunTargetSiteSmokeRunUseCaseTest {
                 bootstrapCrawlJobFromTargetSiteUseCase,
                 crawlJobDispatcher,
                 crawlJobRepository,
+                targetSiteRepository,
                 inFlightCrawlJobRegistry,
                 Clock.fixed(Instant.parse("2026-03-24T20:00:00Z"), ZoneOffset.UTC)
         );
@@ -149,12 +164,15 @@ class RunTargetSiteSmokeRunUseCaseTest {
                         .id(7L)
                         .siteCode("greenhouse_bitso")
                         .jobCategory(JobCategory.PRIVATE_SECTOR)
+                        .legalStatus(LegalStatus.APPROVED)
+                        .enabled(true)
                         .build())
                 .scheduledAt(Instant.parse("2026-03-24T20:00:00Z"))
                 .schedulerManaged(true)
                 .createdAt(Instant.parse("2026-03-24T20:00:00Z"))
                 .build();
 
+        when(targetSiteRepository.findById(7L)).thenReturn(Optional.of(approvedDisabledOrEnabledSite(7L, LegalStatus.APPROVED, true)));
         when(bootstrapCrawlJobFromTargetSiteUseCase.executeForSmokeRun(anyLong(), any(Instant.class)))
                 .thenReturn(new BootstrappedCrawlJob(BootstrapStatus.UPDATED, crawlJob));
         when(inFlightCrawlJobRegistry.tryClaim(101L)).thenReturn(false);
@@ -163,6 +181,7 @@ class RunTargetSiteSmokeRunUseCaseTest {
                 bootstrapCrawlJobFromTargetSiteUseCase,
                 crawlJobDispatcher,
                 crawlJobRepository,
+                targetSiteRepository,
                 inFlightCrawlJobRegistry,
                 Clock.fixed(Instant.parse("2026-03-24T20:00:00Z"), ZoneOffset.UTC)
         );
@@ -185,12 +204,15 @@ class RunTargetSiteSmokeRunUseCaseTest {
                         .id(7L)
                         .siteCode("greenhouse_bitso")
                         .jobCategory(JobCategory.PRIVATE_SECTOR)
+                        .legalStatus(LegalStatus.APPROVED)
+                        .enabled(true)
                         .build())
                 .scheduledAt(Instant.parse("2026-03-24T19:59:00Z"))
                 .schedulerManaged(true)
                 .createdAt(Instant.parse("2026-03-24T19:00:00Z"))
                 .build();
 
+        when(targetSiteRepository.findById(7L)).thenReturn(Optional.of(approvedDisabledOrEnabledSite(7L, LegalStatus.APPROVED, true)));
         when(bootstrapCrawlJobFromTargetSiteUseCase.executeForSmokeRun(anyLong(), any(Instant.class)))
                 .thenReturn(new BootstrappedCrawlJob(BootstrapStatus.UPDATED, crawlJob));
         when(inFlightCrawlJobRegistry.tryClaim(101L)).thenReturn(true);
@@ -215,6 +237,7 @@ class RunTargetSiteSmokeRunUseCaseTest {
                 bootstrapCrawlJobFromTargetSiteUseCase,
                 crawlJobDispatcher,
                 crawlJobRepository,
+                targetSiteRepository,
                 inFlightCrawlJobRegistry,
                 Clock.fixed(Instant.parse("2026-03-24T20:00:00Z"), ZoneOffset.UTC)
         );
@@ -245,12 +268,15 @@ class RunTargetSiteSmokeRunUseCaseTest {
                         .id(7L)
                         .siteCode("greenhouse_bitso")
                         .jobCategory(JobCategory.PRIVATE_SECTOR)
+                        .legalStatus(LegalStatus.APPROVED)
+                        .enabled(true)
                         .build())
                 .scheduledAt(Instant.parse("2026-03-24T20:00:20Z"))
                 .schedulerManaged(true)
                 .createdAt(Instant.parse("2026-03-24T19:00:00Z"))
                 .build();
 
+        when(targetSiteRepository.findById(7L)).thenReturn(Optional.of(approvedDisabledOrEnabledSite(7L, LegalStatus.APPROVED, true)));
         when(bootstrapCrawlJobFromTargetSiteUseCase.executeForSmokeRun(anyLong(), any(Instant.class)))
                 .thenReturn(new BootstrappedCrawlJob(BootstrapStatus.UPDATED, crawlJob));
         when(inFlightCrawlJobRegistry.tryClaim(101L)).thenReturn(true);
@@ -275,6 +301,7 @@ class RunTargetSiteSmokeRunUseCaseTest {
                 bootstrapCrawlJobFromTargetSiteUseCase,
                 crawlJobDispatcher,
                 crawlJobRepository,
+                targetSiteRepository,
                 inFlightCrawlJobRegistry,
                 Clock.fixed(Instant.parse("2026-03-24T20:00:00Z"), ZoneOffset.UTC)
         );
@@ -305,12 +332,15 @@ class RunTargetSiteSmokeRunUseCaseTest {
                         .id(7L)
                         .siteCode("greenhouse_bitso")
                         .jobCategory(JobCategory.PRIVATE_SECTOR)
+                        .legalStatus(LegalStatus.APPROVED)
+                        .enabled(true)
                         .build())
                 .scheduledAt(Instant.parse("2026-03-24T20:00:00Z"))
                 .schedulerManaged(true)
                 .createdAt(Instant.parse("2026-03-24T20:00:00Z"))
                 .build();
 
+        when(targetSiteRepository.findById(7L)).thenReturn(Optional.of(approvedDisabledOrEnabledSite(7L, LegalStatus.APPROVED, true)));
         when(bootstrapCrawlJobFromTargetSiteUseCase.executeForSmokeRun(anyLong(), any(Instant.class)))
                 .thenReturn(new BootstrappedCrawlJob(BootstrapStatus.UPDATED, crawlJob));
         when(inFlightCrawlJobRegistry.tryClaim(101L)).thenReturn(true);
@@ -320,6 +350,7 @@ class RunTargetSiteSmokeRunUseCaseTest {
                 bootstrapCrawlJobFromTargetSiteUseCase,
                 crawlJobDispatcher,
                 crawlJobRepository,
+                targetSiteRepository,
                 inFlightCrawlJobRegistry,
                 Clock.fixed(Instant.parse("2026-03-24T20:00:00Z"), ZoneOffset.UTC)
         );
@@ -331,5 +362,91 @@ class RunTargetSiteSmokeRunUseCaseTest {
         verify(inFlightCrawlJobRegistry).tryClaim(101L);
         verify(inFlightCrawlJobRegistry).release(101L);
         verify(crawlJobDispatcher, never()).dispatch(any());
+    }
+
+    @Test
+    @DisplayName("should block smoke run when target site is prohibited")
+    void shouldBlockSmokeRunWhenTargetSiteIsProhibited() {
+        CrawlJobEntity crawlJob = CrawlJobEntity.builder()
+                .id(101L)
+                .targetSite(TargetSiteEntity.builder()
+                        .id(7L)
+                        .siteCode("lever_watchguard")
+                        .jobCategory(JobCategory.PRIVATE_SECTOR)
+                        .legalStatus(LegalStatus.SCRAPING_PROIBIDO)
+                        .enabled(false)
+                        .build())
+                .scheduledAt(Instant.parse("2026-03-24T20:00:00Z"))
+                .schedulerManaged(true)
+                .createdAt(Instant.parse("2026-03-24T20:00:00Z"))
+                .build();
+
+        when(targetSiteRepository.findById(7L)).thenReturn(Optional.of(approvedDisabledOrEnabledSite(7L, LegalStatus.SCRAPING_PROIBIDO, false)));
+        RunTargetSiteSmokeRunUseCase useCase = new RunTargetSiteSmokeRunUseCase(
+                bootstrapCrawlJobFromTargetSiteUseCase,
+                crawlJobDispatcher,
+                crawlJobRepository,
+                targetSiteRepository,
+                inFlightCrawlJobRegistry,
+                Clock.fixed(Instant.parse("2026-03-24T20:00:00Z"), ZoneOffset.UTC)
+        );
+
+        assertThatThrownBy(() -> useCase.execute(7L))
+                .isInstanceOf(TargetSiteActivationBlockedException.class)
+                .hasMessage("Target site activation blocked: 7");
+
+        verify(targetSiteRepository).findById(7L);
+        verify(bootstrapCrawlJobFromTargetSiteUseCase, never()).executeForSmokeRun(anyLong(), any(Instant.class));
+        verify(inFlightCrawlJobRegistry, never()).tryClaim(anyLong());
+        verify(crawlJobRepository, never()).save(any());
+        verify(crawlJobDispatcher, never()).dispatch(any());
+    }
+
+    @Test
+    @DisplayName("should allow smoke run for disabled target site when it is not prohibited")
+    void shouldAllowSmokeRunForDisabledTargetSiteWhenItIsNotProhibited() {
+        CrawlJobEntity crawlJob = CrawlJobEntity.builder()
+                .id(101L)
+                .targetSite(TargetSiteEntity.builder()
+                        .id(7L)
+                        .siteCode("greenhouse_bitso")
+                        .jobCategory(JobCategory.PRIVATE_SECTOR)
+                        .legalStatus(LegalStatus.PENDING_REVIEW)
+                        .enabled(false)
+                        .build())
+                .scheduledAt(Instant.parse("2026-03-24T20:00:00Z"))
+                .schedulerManaged(false)
+                .createdAt(Instant.parse("2026-03-24T20:00:00Z"))
+                .build();
+
+        when(targetSiteRepository.findById(7L)).thenReturn(Optional.of(approvedDisabledOrEnabledSite(7L, LegalStatus.PENDING_REVIEW, false)));
+        when(bootstrapCrawlJobFromTargetSiteUseCase.executeForSmokeRun(anyLong(), any(Instant.class)))
+                .thenReturn(new BootstrappedCrawlJob(BootstrapStatus.UPDATED, crawlJob));
+        when(crawlJobDispatcher.dispatch(crawlJob)).thenReturn(CrawlExecutionStatus.SUCCEEDED);
+
+        RunTargetSiteSmokeRunUseCase useCase = new RunTargetSiteSmokeRunUseCase(
+                bootstrapCrawlJobFromTargetSiteUseCase,
+                crawlJobDispatcher,
+                crawlJobRepository,
+                targetSiteRepository,
+                inFlightCrawlJobRegistry,
+                Clock.fixed(Instant.parse("2026-03-24T20:00:00Z"), ZoneOffset.UTC)
+        );
+
+        TargetSiteSmokeRunResult result = useCase.execute(7L);
+
+        assertThat(result.smokeRunStatus()).isEqualTo("DISPATCHED");
+        assertThat(result.dispatchStatus()).isEqualTo(CrawlExecutionStatus.SUCCEEDED);
+        verify(crawlJobDispatcher).dispatch(crawlJob);
+    }
+
+    private static TargetSiteEntity approvedDisabledOrEnabledSite(Long id, LegalStatus legalStatus, boolean enabled) {
+        return TargetSiteEntity.builder()
+                .id(id)
+                .siteCode("site-" + id)
+                .jobCategory(JobCategory.PRIVATE_SECTOR)
+                .legalStatus(legalStatus)
+                .enabled(enabled)
+                .build();
     }
 }

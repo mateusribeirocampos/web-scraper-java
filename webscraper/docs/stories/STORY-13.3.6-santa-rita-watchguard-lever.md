@@ -2,7 +2,7 @@
 
 ## Status
 
-Implemented and ready for review
+Implemented with later compliance blocker
 
 ## Objective
 
@@ -69,4 +69,5 @@ Validação real da aplicação deve acontecer na etapa seguinte da story:
 
 - `Santa Rita do Sapucaí` passa a ter a trilha privada `WatchGuard` formalmente implementada no
   catálogo curado
-- a validação operacional real fica como próximo passo antes de qualquer ativação
+- a validação operacional real foi concluída depois, mas a ativação acabou bloqueada na revisão de
+  compliance da story `13.3.12`

@@ -87,6 +87,24 @@ class OnboardingOperationalCheckControllerTest {
     }
 
     @Test
+    @DisplayName("should preserve operational summary when smoke run is blocked by compliance")
+    void shouldPreserveOperationalSummaryWhenSmokeRunIsBlockedByCompliance() throws Exception {
+        when(runOnboardingOperationalCheckUseCase.execute("lever_watchguard", true, 60))
+                .thenReturn(blockedSmokeRunResult());
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new RestExceptionHandler())
+                .build();
+
+        mockMvc.perform(post("/api/v1/onboarding-profiles/lever_watchguard/operational-check"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.profileKey").value("lever_watchguard"))
+                .andExpect(jsonPath("$.smokeRunRequested").value(true))
+                .andExpect(jsonPath("$.smokeRunStatus").value("BLOCKED_BY_COMPLIANCE"))
+                .andExpect(jsonPath("$.smokeRunDispatchStatus").doesNotExist());
+    }
+
+    @Test
     @DisplayName("should return bad request when days back is not positive")
     void shouldReturnBadRequestWhenDaysBackIsNotPositive() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller)
@@ -152,6 +170,50 @@ class OnboardingOperationalCheckControllerTest {
                         "https://example.org/jobs/1",
                         LocalDate.now().minusDays(1)
                 ))
+        );
+    }
+
+    private static OnboardingOperationalCheckResult blockedSmokeRunResult() {
+        TargetSiteEntity site = TargetSiteEntity.builder()
+                .id(25L)
+                .siteCode("lever_watchguard")
+                .displayName("WatchGuard Careers via Lever")
+                .baseUrl("https://api.lever.co/v0/postings/watchguard?mode=json")
+                .siteType(SiteType.TYPE_E)
+                .extractionMode(ExtractionMode.API)
+                .jobCategory(JobCategory.PRIVATE_SECTOR)
+                .legalStatus(LegalStatus.SCRAPING_PROIBIDO)
+                .selectorBundleVersion("n/a")
+                .enabled(false)
+                .createdAt(Instant.parse("2026-04-04T00:00:00Z"))
+                .updatedAt(Instant.parse("2026-04-06T00:00:00Z"))
+                .build();
+        CrawlJobEntity crawlJob = CrawlJobEntity.builder()
+                .id(51L)
+                .targetSite(site)
+                .scheduledAt(Instant.parse("2026-04-06T15:01:00Z"))
+                .schedulerManaged(true)
+                .createdAt(Instant.parse("2026-04-04T00:00:00Z"))
+                .build();
+        return new OnboardingOperationalCheckResult(
+                "lever_watchguard",
+                new BootstrappedOnboardingWorkflowResult(
+                        "lever_watchguard",
+                        new BootstrappedTargetSite("lever_watchguard", BootstrapStatus.UPDATED, site),
+                        new BootstrappedCrawlJob(BootstrapStatus.UPDATED, crawlJob),
+                        true,
+                        new TargetSiteSmokeRunResult(
+                                25L,
+                                "lever_watchguard",
+                                51L,
+                                BootstrapStatus.UPDATED,
+                                "BLOCKED_BY_COMPLIANCE",
+                                null
+                        )
+                ),
+                null,
+                0,
+                List.of()
         );
     }
 }

@@ -40,20 +40,16 @@ Definition of done da cidade:
 
 ### 2. Santa Rita do Sapucaí
 
-Cidade parcialmente fechada, com trilha pública resolvida e trilha privada pendente.
+Cidade encerrada com trilha pública aprovada e trilha privada bloqueada definitivamente.
 
 Gaps remanescentes:
 
-- revisar compliance da trilha privada `lever_watchguard`;
-- decidir se `lever_watchguard` pode sair de `PENDING_REVIEW`;
-- alinhar documentação final da cidade após a decisão da trilha privada.
+- nenhum após a `13.3.12`.
 
 Definition of done da cidade:
 
 - `camara_santa_rita_sapucai` já segue `APPROVED/enabled=true`;
-- `lever_watchguard` com decisão final explícita:
-  - promovida para `APPROVED/enabled=true`; ou
-  - bloqueada com motivo definitivo documentado;
+- `lever_watchguard` segue `SCRAPING_PROIBIDO/enabled=false` com blocker definitivo documentado;
 - cidade marcada como encerrada no backlog híbrido.
 
 ### 3. Itajubá
@@ -107,8 +103,8 @@ Gaps remanescentes:
 
 - nenhuma cidade nova deve começar antes da cidade anterior ter sua decisão final registrada;
 - `Campinas` fica encerrada como a primeira cidade híbrida completa;
-- o foco imediato passa a ser `Santa Rita do Sapucaí`;
-- `Itajubá`, `Poços de Caldas` e `Extrema` só avançam quando as cidades anteriores estiverem
+- o foco imediato passa a ser `Itajubá`;
+- `Poços de Caldas` e `Extrema` só avançam quando as cidades anteriores estiverem
   documental e operacionalmente resolvidas.
 
 ## Exit Criteria

@@ -3,8 +3,12 @@ package com.campos.webscraper.application.usecase;
 import com.campos.webscraper.application.orchestrator.CrawlJobDispatcher;
 import com.campos.webscraper.application.queue.InFlightCrawlJobRegistry;
 import com.campos.webscraper.domain.enums.CrawlExecutionStatus;
+import com.campos.webscraper.domain.enums.LegalStatus;
 import com.campos.webscraper.domain.model.CrawlJobEntity;
 import com.campos.webscraper.domain.repository.CrawlJobRepository;
+import com.campos.webscraper.domain.repository.TargetSiteRepository;
+import com.campos.webscraper.shared.TargetSiteActivationBlockedException;
+import com.campos.webscraper.shared.TargetSiteNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
@@ -17,6 +21,7 @@ public class RunTargetSiteSmokeRunUseCase {
     private final BootstrapCrawlJobFromTargetSiteUseCase bootstrapCrawlJobFromTargetSiteUseCase;
     private final CrawlJobDispatcher crawlJobDispatcher;
     private final CrawlJobRepository crawlJobRepository;
+    private final TargetSiteRepository targetSiteRepository;
     private final InFlightCrawlJobRegistry inFlightCrawlJobRegistry;
     private final Clock clock;
 
@@ -24,6 +29,7 @@ public class RunTargetSiteSmokeRunUseCase {
             BootstrapCrawlJobFromTargetSiteUseCase bootstrapCrawlJobFromTargetSiteUseCase,
             CrawlJobDispatcher crawlJobDispatcher,
             CrawlJobRepository crawlJobRepository,
+            TargetSiteRepository targetSiteRepository,
             InFlightCrawlJobRegistry inFlightCrawlJobRegistry,
             Clock clock
     ) {
@@ -33,6 +39,7 @@ public class RunTargetSiteSmokeRunUseCase {
         );
         this.crawlJobDispatcher = Objects.requireNonNull(crawlJobDispatcher, "crawlJobDispatcher must not be null");
         this.crawlJobRepository = Objects.requireNonNull(crawlJobRepository, "crawlJobRepository must not be null");
+        this.targetSiteRepository = Objects.requireNonNull(targetSiteRepository, "targetSiteRepository must not be null");
         this.inFlightCrawlJobRegistry = Objects.requireNonNull(
                 inFlightCrawlJobRegistry,
                 "inFlightCrawlJobRegistry must not be null"
@@ -42,6 +49,7 @@ public class RunTargetSiteSmokeRunUseCase {
 
     public TargetSiteSmokeRunResult execute(Long siteId) {
         Instant now = Instant.now(clock);
+        assertTargetSiteReviewable(siteId);
         BootstrappedCrawlJob bootstrappedCrawlJob =
                 bootstrapCrawlJobFromTargetSiteUseCase.executeForSmokeRun(siteId, now.plusSeconds(60));
         boolean claimed = false;
@@ -111,5 +119,13 @@ public class RunTargetSiteSmokeRunUseCase {
                 .createdAt(now)
                 .build();
         return crawlJobRepository.save(smokeRunJob);
+    }
+
+    private void assertTargetSiteReviewable(Long siteId) {
+        if (targetSiteRepository.findById(siteId)
+                .orElseThrow(() -> new TargetSiteNotFoundException(siteId))
+                .getLegalStatus() == LegalStatus.SCRAPING_PROIBIDO) {
+            throw new TargetSiteActivationBlockedException(siteId, java.util.List.of("target site is blocked by compliance"));
+        }
     }
 }

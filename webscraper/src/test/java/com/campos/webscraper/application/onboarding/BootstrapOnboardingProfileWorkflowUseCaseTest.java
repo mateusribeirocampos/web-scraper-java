@@ -12,6 +12,7 @@ import com.campos.webscraper.domain.enums.SiteType;
 import com.campos.webscraper.domain.model.CrawlJobEntity;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
 import com.campos.webscraper.domain.repository.CrawlJobRepository;
+import com.campos.webscraper.shared.TargetSiteActivationBlockedException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -155,6 +156,39 @@ class BootstrapOnboardingProfileWorkflowUseCaseTest {
         assertThat(result.crawlJob().bootstrapStatus()).isEqualTo(BootstrapStatus.UPDATED);
         assertThat(result.crawlJob().crawlJob().getScheduledAt()).isEqualTo(Instant.parse("2026-03-25T10:01:00Z"));
         verify(crawlJobRepository).findFirstByTargetSiteIdAndSchedulerManagedTrueOrderByCreatedAtAsc(7L);
+    }
+
+    @Test
+    @DisplayName("should preserve created bootstrap statuses when smoke run is blocked by compliance")
+    void shouldPreserveCreatedBootstrapStatusesWhenSmokeRunIsBlockedByCompliance() {
+        when(bootstrapTargetSiteFromProfileUseCase.execute("lever_watchguard"))
+                .thenReturn(new BootstrappedTargetSite(
+                        "lever_watchguard",
+                        BootstrapStatus.CREATED,
+                        persistedSite()
+                ));
+        when(bootstrapCrawlJobFromTargetSiteUseCase.execute(7L))
+                .thenReturn(new BootstrappedCrawlJob(BootstrapStatus.CREATED, persistedCrawlJob()));
+        when(runTargetSiteSmokeRunUseCase.execute(7L))
+                .thenThrow(new TargetSiteActivationBlockedException(7L, java.util.List.of("target site is blocked by compliance")));
+
+        BootstrapOnboardingProfileWorkflowUseCase useCase = new BootstrapOnboardingProfileWorkflowUseCase(
+                bootstrapTargetSiteFromProfileUseCase,
+                bootstrapCrawlJobFromTargetSiteUseCase,
+                runTargetSiteSmokeRunUseCase,
+                crawlJobRepository
+        );
+
+        BootstrappedOnboardingWorkflowResult result = useCase.execute("lever_watchguard", true);
+
+        assertThat(result.targetSite().bootstrapStatus()).isEqualTo(BootstrapStatus.CREATED);
+        assertThat(result.crawlJob().bootstrapStatus()).isEqualTo(BootstrapStatus.CREATED);
+        assertThat(result.smokeRunRequested()).isTrue();
+        assertThat(result.smokeRun()).isNotNull();
+        assertThat(result.smokeRun().bootstrapStatus()).isEqualTo(BootstrapStatus.CREATED);
+        assertThat(result.smokeRun().smokeRunStatus()).isEqualTo("BLOCKED_BY_COMPLIANCE");
+        assertThat(result.smokeRun().jobId()).isEqualTo(11L);
+        verify(crawlJobRepository, never()).findFirstByTargetSiteIdAndSchedulerManagedTrueOrderByCreatedAtAsc(7L);
     }
 
     private static TargetSiteEntity persistedSite() {

@@ -64,9 +64,9 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(watchguard.sourceFamily()).isEqualTo("LEVER");
         assertThat(watchguard.targetSite().getSiteCode()).isEqualTo("lever_watchguard");
         assertThat(watchguard.targetSite().getDisplayName()).isEqualTo("WatchGuard Careers via Lever");
-        assertThat(watchguard.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.API_OFICIAL);
+        assertThat(watchguard.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.SCRAPING_PROIBIDO);
         assertThat(watchguard.jobsApiUrl()).isEqualTo("https://api.lever.co/v0/postings/watchguard?mode=json");
-        assertThat(watchguard.targetSite().getLegalStatus().name()).isEqualTo("PENDING_REVIEW");
+        assertThat(watchguard.targetSite().getLegalStatus().name()).isEqualTo("SCRAPING_PROIBIDO");
         assertThat(watchguard.targetSite().isEnabled()).isFalse();
 
         assertThat(dou.sourceFamily()).isEqualTo("DOU");

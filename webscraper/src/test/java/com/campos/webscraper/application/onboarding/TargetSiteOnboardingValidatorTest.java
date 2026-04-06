@@ -318,6 +318,48 @@ class TargetSiteOnboardingValidatorTest {
     }
 
     @Test
+    @DisplayName("should prohibit WatchGuard Lever source when reviewed terms deny automated access")
+    void shouldProhibitWatchGuardLeverSourceWhenReviewedTermsDenyAutomatedAccess() {
+        TargetSiteEntity watchguard = TargetSiteEntity.builder()
+                .siteCode("lever_watchguard")
+                .displayName("WatchGuard Careers via Lever")
+                .baseUrl("https://api.lever.co/v0/postings/watchguard?mode=json")
+                .siteType(SiteType.TYPE_E)
+                .extractionMode(ExtractionMode.API)
+                .jobCategory(JobCategory.PRIVATE_SECTOR)
+                .legalStatus(LegalStatus.PENDING_REVIEW)
+                .selectorBundleVersion("n/a")
+                .enabled(false)
+                .createdAt(Instant.parse("2026-04-04T00:00:00Z"))
+                .build();
+
+        SiteOnboardingChecklist checklist = new SiteOnboardingChecklist(
+                "https://jobs.lever.co/robots.txt",
+                true,
+                true,
+                "https://www.watchguard.com/wgrd-trust-center/terms-of-use",
+                true,
+                false,
+                true,
+                "https://api.lever.co/v0/postings/watchguard?mode=json",
+                true,
+                "Primeira trilha privada de Santa Rita do Sapucai; board publico Lever da WatchGuard com vagas ligadas ao polo local.",
+                "Lever public postings API: 60 rpm conservative profile",
+                OnboardingLegalCategory.SCRAPING_PROIBIDO,
+                "platform-team@local",
+                "PUBLIC_ANONYMOUS",
+                "Jobs.lever.co revisado com Content-Signal search=yes, mas os Terms of Use da WatchGuard proíbem scraping e aplicações sem autorização prévia."
+        );
+
+        TargetSiteOnboardingDecision decision = validator.assess(watchguard, checklist);
+
+        assertThat(decision.productionReady()).isFalse();
+        assertThat(decision.targetSite().getLegalStatus()).isEqualTo(LegalStatus.SCRAPING_PROIBIDO);
+        assertThat(decision.targetSite().isEnabled()).isFalse();
+        assertThat(decision.blockingReasons()).contains("scraping explicitly blocked by onboarding evidence");
+    }
+
+    @Test
     @DisplayName("should approve Santa Rita Camara public contests source when official public evidence is reviewed")
     void shouldApproveSantaRitaCamaraPublicContestsSourceWhenOfficialPublicEvidenceIsReviewed() {
         TargetSiteEntity camaraSantaRita = TargetSiteEntity.builder()

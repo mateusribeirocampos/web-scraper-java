@@ -68,7 +68,7 @@ public final class LeverBoardOnboardingProfiles {
                 .siteType(SiteType.TYPE_E)
                 .extractionMode(ExtractionMode.API)
                 .jobCategory(JobCategory.PRIVATE_SECTOR)
-                .legalStatus(LegalStatus.PENDING_REVIEW)
+                .legalStatus(LegalStatus.SCRAPING_PROIBIDO)
                 .selectorBundleVersion("n/a")
                 .enabled(false)
                 .createdAt(Instant.parse("2026-04-04T00:00:00Z"))
@@ -78,18 +78,18 @@ public final class LeverBoardOnboardingProfiles {
                 "https://jobs.lever.co/robots.txt",
                 true,
                 true,
-                "",
+                "https://www.watchguard.com/wgrd-trust-center/terms-of-use",
                 true,
-                true,
+                false,
                 true,
                 apiUrl,
                 true,
                 "Primeira trilha privada de Santa Rita do Sapucai; board publico Lever da WatchGuard com vagas ligadas ao polo local.",
                 "Lever public postings API: 60 rpm conservative profile",
-                OnboardingLegalCategory.API_OFICIAL,
+                OnboardingLegalCategory.SCRAPING_PROIBIDO,
                 "platform-team@local",
                 "PUBLIC_ANONYMOUS",
-                "Lever public postings endpoint da WatchGuard revisado em 2026-04-04."
+                "Lever public postings endpoint da WatchGuard revisado em 2026-04-06; jobs.lever.co expõe Content-Signal search=yes, mas os Terms of Use da WatchGuard proíbem explicitamente data mining, robots, scraping e aplicações sem autorização prévia nos Services."
         );
 
         return new LeverBoardOnboardingProfile(

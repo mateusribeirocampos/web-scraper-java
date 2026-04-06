@@ -177,7 +177,7 @@ web-scraper-java/
   - API pública oficial do board
   - política de privacidade pública da CI&T
 - com isso, `Campinas` passa a ser a primeira cidade totalmente encerrada no backlog híbrido
-- a próxima cidade a ser fechada passa a ser `Santa Rita do Sapucaí`
+- `Santa Rita do Sapucaí` ficou encerrada como a segunda cidade híbrida fechada
 - a próxima cidade híbrida aberta no backlog é `Santa Rita do Sapucaí`, com:
   - trilha privada candidata via `WatchGuard` no `Lever`;
   - trilha pública oficial candidata via Câmara Municipal.
@@ -191,11 +191,10 @@ web-scraper-java/
   com anexos PDF oficiais
 - essa trilha pública da Câmara já foi validada em runtime real e promovida para
   `APPROVED/enabled=true`
-- `lever_watchguard` continua `PENDING_REVIEW`, sem nova ação de compliance nesta etapa
+- `lever_watchguard` foi revisada em compliance e ficou `SCRAPING_PROIBIDO/enabled=false`
+  por proibição explícita de scraping nos Terms of Use da WatchGuard
 - a próxima cidade híbrida aberta no backlog passa a ser `Itajubá`
 - a prioridade alta do backlog híbrido agora é fechar as cidades por ordem de menor gap:
-  - `Campinas`
-  - `Santa Rita do Sapucaí`
   - `Itajubá`
   - `Poços de Caldas`
   - `Extrema`

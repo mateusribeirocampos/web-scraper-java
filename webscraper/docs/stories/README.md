@@ -110,3 +110,4 @@ Exemplos:
 | 13.3.9 — Itajubá híbrido: abertura privada + pública | [STORY-13.3.9-itajuba-hybrid-opening.md](STORY-13.3.9-itajuba-hybrid-opening.md) | 🚧 Aberta |
 | 13.3.10 — Plano de fechamento das cidades híbridas | [STORY-13.3.10-hybrid-cities-closure-plan.md](STORY-13.3.10-hybrid-cities-closure-plan.md) | 🚧 Aberta |
 | 13.3.11 — Campinas privada: ativação da trilha CI&T Lever | [STORY-13.3.11-campinas-ciandt-activation-review.md](STORY-13.3.11-campinas-ciandt-activation-review.md) | ✅ Concluída |
+| 13.3.12 — Santa Rita privada: revisão operacional/legal da trilha WatchGuard via Lever | [STORY-13.3.12-santa-rita-watchguard-activation-review.md](STORY-13.3.12-santa-rita-watchguard-activation-review.md) | ✅ Concluída |

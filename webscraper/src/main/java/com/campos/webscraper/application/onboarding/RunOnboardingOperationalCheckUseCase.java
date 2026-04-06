@@ -120,7 +120,7 @@ public class RunOnboardingOperationalCheckUseCase {
         }
 
         List<CrawlExecutionEntity> executions = crawlExecutionRepository.findByCrawlJob(observedJob);
-        if (workflow.smokeRun() != null && "SKIPPED_IN_FLIGHT".equals(workflow.smokeRun().smokeRunStatus())) {
+        if (workflow.smokeRun() != null && reusesPreviousExecution(workflow.smokeRun().smokeRunStatus())) {
             return executions.stream()
                     .max(Comparator.comparing(CrawlExecutionEntity::getCreatedAt))
                     .orElse(null);
@@ -130,6 +130,11 @@ public class RunOnboardingOperationalCheckUseCase {
                 .filter(execution -> execution.getCreatedAt() != null && !execution.getCreatedAt().isBefore(requestStartedAt))
                 .max(Comparator.comparing(CrawlExecutionEntity::getCreatedAt))
                 .orElse(null);
+    }
+
+    private boolean reusesPreviousExecution(String smokeRunStatus) {
+        return "SKIPPED_IN_FLIGHT".equals(smokeRunStatus)
+                || "BLOCKED_BY_COMPLIANCE".equals(smokeRunStatus);
     }
 
     private static OnboardingOperationalCheckExecutionSummary toExecutionSummary(CrawlExecutionEntity execution) {

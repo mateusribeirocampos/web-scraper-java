@@ -6,6 +6,7 @@ import com.campos.webscraper.application.usecase.RunTargetSiteSmokeRunUseCase;
 import com.campos.webscraper.application.usecase.TargetSiteSmokeRunResult;
 import com.campos.webscraper.domain.model.CrawlJobEntity;
 import com.campos.webscraper.domain.repository.CrawlJobRepository;
+import com.campos.webscraper.shared.TargetSiteActivationBlockedException;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -42,12 +43,25 @@ public class BootstrapOnboardingProfileWorkflowUseCase {
     public BootstrappedOnboardingWorkflowResult execute(String profileKey, boolean smokeRunRequested) {
         BootstrappedTargetSite targetSite = bootstrapTargetSiteFromProfileUseCase.execute(profileKey);
         BootstrappedCrawlJob crawlJob = bootstrapCrawlJobFromTargetSiteUseCase.execute(targetSite.targetSite().getId());
-        TargetSiteSmokeRunResult smokeRun = smokeRunRequested
-                ? runTargetSiteSmokeRunUseCase.execute(targetSite.targetSite().getId())
-                : null;
-        BootstrappedCrawlJob refreshedCrawlJob = smokeRunRequested
-                ? refreshCanonicalCrawlJob(targetSite.targetSite().getId(), crawlJob)
-                : crawlJob;
+        TargetSiteSmokeRunResult smokeRun = null;
+        if (smokeRunRequested) {
+            try {
+                smokeRun = runTargetSiteSmokeRunUseCase.execute(targetSite.targetSite().getId());
+            } catch (TargetSiteActivationBlockedException exception) {
+                smokeRun = new TargetSiteSmokeRunResult(
+                        targetSite.targetSite().getId(),
+                        targetSite.targetSite().getSiteCode(),
+                        crawlJob.crawlJob().getId(),
+                        crawlJob.bootstrapStatus(),
+                        "BLOCKED_BY_COMPLIANCE",
+                        null
+                );
+            }
+        }
+        BootstrappedCrawlJob refreshedCrawlJob =
+                shouldRefreshCanonicalCrawlJob(smokeRunRequested, smokeRun)
+                        ? refreshCanonicalCrawlJob(targetSite.targetSite().getId(), crawlJob)
+                        : crawlJob;
         return new BootstrappedOnboardingWorkflowResult(
                 profileKey,
                 targetSite,
@@ -55,6 +69,12 @@ public class BootstrapOnboardingProfileWorkflowUseCase {
                 smokeRunRequested,
                 smokeRun
         );
+    }
+
+    private boolean shouldRefreshCanonicalCrawlJob(boolean smokeRunRequested, TargetSiteSmokeRunResult smokeRun) {
+        return smokeRunRequested
+                && smokeRun != null
+                && !"BLOCKED_BY_COMPLIANCE".equals(smokeRun.smokeRunStatus());
     }
 
     private BootstrappedCrawlJob refreshCanonicalCrawlJob(Long siteId, BootstrappedCrawlJob bootstrappedCrawlJob) {
