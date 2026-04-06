@@ -92,4 +92,5 @@ Validação real:
 
 - `Santa Rita do Sapucaí` passa a ter também a trilha pública oficial implementada;
 - a modelagem escolhida é HTML estático com anexos PDF oficiais;
-- a ativação continua dependente de review legal/operacional posterior.
+- a ativação foi fechada em seguida na `13.3.8`, promovendo `camara_santa_rita_sapucai` para
+  `APPROVED/enabled=true`.

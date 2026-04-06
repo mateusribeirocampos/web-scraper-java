@@ -106,3 +106,4 @@ Exemplos:
 | 13.3.5 — Santa Rita do Sapucaí híbrido: abertura privada + pública | [STORY-13.3.5-santa-rita-hybrid-opening.md](STORY-13.3.5-santa-rita-hybrid-opening.md) | ✅ Concluída |
 | 13.3.6 — Santa Rita do Sapucaí privada via WatchGuard Lever | [STORY-13.3.6-santa-rita-watchguard-lever.md](STORY-13.3.6-santa-rita-watchguard-lever.md) | ✅ Concluída |
 | 13.3.7 — Santa Rita do Sapucaí pública via Câmara HTML | [STORY-13.3.7-santa-rita-camara-public-html.md](STORY-13.3.7-santa-rita-camara-public-html.md) | ✅ Concluída |
+| 13.3.8 — Santa Rita do Sapucaí pública: ativação operacional/legal da Câmara | [STORY-13.3.8-santa-rita-camara-activation-review.md](STORY-13.3.8-santa-rita-camara-activation-review.md) | ✅ Concluída |

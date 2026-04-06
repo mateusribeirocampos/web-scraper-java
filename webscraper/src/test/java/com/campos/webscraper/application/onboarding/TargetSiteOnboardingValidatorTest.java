@@ -276,6 +276,48 @@ class TargetSiteOnboardingValidatorTest {
     }
 
     @Test
+    @DisplayName("should approve Santa Rita Camara public contests source when official public evidence is reviewed")
+    void shouldApproveSantaRitaCamaraPublicContestsSourceWhenOfficialPublicEvidenceIsReviewed() {
+        TargetSiteEntity camaraSantaRita = TargetSiteEntity.builder()
+                .siteCode("camara_santa_rita_sapucai")
+                .displayName("Câmara Municipal de Santa Rita do Sapucaí - Processos Seletivos")
+                .baseUrl("https://www.santaritadosapucai.mg.leg.br/transparencia/processos-seletivos-2025")
+                .siteType(SiteType.TYPE_A)
+                .extractionMode(ExtractionMode.STATIC_HTML)
+                .jobCategory(JobCategory.PUBLIC_CONTEST)
+                .legalStatus(LegalStatus.PENDING_REVIEW)
+                .selectorBundleVersion("camara_santa_rita_html_v1")
+                .enabled(false)
+                .createdAt(Instant.parse("2026-04-05T00:00:00Z"))
+                .build();
+
+        SiteOnboardingChecklist checklist = new SiteOnboardingChecklist(
+                "https://www.santaritadosapucai.mg.leg.br/robots.txt",
+                true,
+                true,
+                "https://www.santaritadosapucai.mg.leg.br/transparencia",
+                true,
+                true,
+                true,
+                "",
+                true,
+                "Fonte oficial da Câmara Municipal para processos seletivos e editais legislativos locais.",
+                "1 request every 10 seconds",
+                OnboardingLegalCategory.DADOS_PUBLICOS,
+                "platform-team@local",
+                "PUBLIC_ANONYMOUS",
+                "Portal institucional/transparencia revisado com robots permissivo e sem restricao explicita adicional encontrada."
+        );
+
+        TargetSiteOnboardingDecision decision = validator.assess(camaraSantaRita, checklist);
+
+        assertThat(decision.productionReady()).isTrue();
+        assertThat(decision.targetSite().getLegalStatus()).isEqualTo(LegalStatus.APPROVED);
+        assertThat(decision.targetSite().isEnabled()).isTrue();
+        assertThat(decision.blockingReasons()).isEmpty();
+    }
+
+    @Test
     @DisplayName("should keep api official onboarding pending when official endpoint is not documented")
     void shouldKeepApiOfficialOnboardingPendingWhenOfficialEndpointIsNotDocumented() {
         TargetSiteEntity apiSite = buildApiTargetSite(false, LegalStatus.PENDING_REVIEW);

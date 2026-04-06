@@ -74,6 +74,7 @@ Regra atual de testes:
 - `camara_santa_rita_sapucai` agora também entra como fonte `PUBLIC_CONTEST`, usando parser HTML
   estático sobre a página oficial `Processos Seletivos 2025` e PDFs oficiais como `editalUrl`
   canônico
+- `camara_santa_rita_sapucai` já passou na validação real e está `APPROVED/enabled=true`
 
 ## Validacao Manual Oficial
 

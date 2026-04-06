@@ -183,6 +183,8 @@ web-scraper-java/
 - a trilha pública oficial de `Santa Rita do Sapucaí` também foi implementada como
   `camara_santa_rita_sapucai`, modelando a página `Processos Seletivos 2025` como `STATIC_HTML`
   com anexos PDF oficiais
+- essa trilha pública da Câmara já foi validada em runtime real e promovida para
+  `APPROVED/enabled=true`
 
 ## Endpoints Disponiveis
 

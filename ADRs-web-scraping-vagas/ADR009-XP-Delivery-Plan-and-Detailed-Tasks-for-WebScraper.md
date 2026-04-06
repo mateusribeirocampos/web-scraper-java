@@ -154,6 +154,13 @@ Atualização de Santa Rita do Sapucaí em 2026-04-05:
 - a decisão da fatia foi modelar o HTML como fonte primária de metadados, usando os PDFs oficiais
   como `editalUrl` canônico, sem depender de enrichment PDF nesta primeira entrega.
 
+Atualização de Santa Rita do Sapucaí em 2026-04-06:
+
+- `camara_santa_rita_sapucai` foi validada em runtime real com `crawlExecutionId=116`,
+  `SUCCEEDED` e `itemsFound=1`;
+- `robots.txt` da Câmara respondeu com `User-agent: *` e `Disallow:` vazio;
+- a trilha pública oficial da Câmara foi promovida para `APPROVED/enabled=true`.
+
 ---
 
 ## Detailed Tasks by Iteration
@@ -407,6 +414,18 @@ Status atual:
 - `lever_watchguard` implementado no catálogo curado
 - runner continua roteando `lever_*` pelo `LeverJobImportUseCase`
 - a validação real da aplicação para `WatchGuard` ainda é a próxima etapa
+
+#### Story 13.3.8 — Santa Rita do Sapucaí pública: ativação operacional/legal da Câmara
+- Revisar a evidência oficial da Câmara após a implementação da `13.3.7`.
+- Confirmar se a trilha pública já pode sair de `PENDING_REVIEW`.
+- Promover `camara_santa_rita_sapucai` para `APPROVED/enabled=true` quando a base pública e o
+  runtime estiverem fechados.
+
+Status atual:
+- `camara_santa_rita_sapucai` validada em runtime real com `crawlExecutionId=116`,
+  `SUCCEEDED` e `itemsFound=1`
+- `robots.txt` público respondeu com `User-agent: *` e `Disallow:` vazio
+- trilha pública da Câmara promovida para `APPROVED/enabled=true`
 
 ---
 

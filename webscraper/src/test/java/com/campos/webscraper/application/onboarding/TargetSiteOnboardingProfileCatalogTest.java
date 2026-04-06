@@ -109,8 +109,8 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(camaraSantaRita.sourceFamily()).isEqualTo("LEGISLATIVE_HTML");
         assertThat(camaraSantaRita.targetSite().getSiteCode()).isEqualTo("camara_santa_rita_sapucai");
         assertThat(camaraSantaRita.targetSite().getSelectorBundleVersion()).isEqualTo("camara_santa_rita_html_v1");
-        assertThat(camaraSantaRita.targetSite().getLegalStatus().name()).isEqualTo("PENDING_REVIEW");
-        assertThat(camaraSantaRita.targetSite().isEnabled()).isFalse();
+        assertThat(camaraSantaRita.targetSite().getLegalStatus().name()).isEqualTo("APPROVED");
+        assertThat(camaraSantaRita.targetSite().isEnabled()).isTrue();
         assertThat(camaraSantaRita.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.DADOS_PUBLICOS);
     }
 

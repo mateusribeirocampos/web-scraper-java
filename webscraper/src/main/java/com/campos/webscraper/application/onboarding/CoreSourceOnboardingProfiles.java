@@ -302,18 +302,18 @@ public final class CoreSourceOnboardingProfiles {
                         .siteType(SiteType.TYPE_A)
                         .extractionMode(ExtractionMode.STATIC_HTML)
                         .jobCategory(JobCategory.PUBLIC_CONTEST)
-                        .legalStatus(LegalStatus.PENDING_REVIEW)
+                        .legalStatus(LegalStatus.APPROVED)
                         .selectorBundleVersion("camara_santa_rita_html_v1")
-                        .enabled(false)
+                        .enabled(true)
                         .createdAt(Instant.parse("2026-04-05T00:00:00Z"))
                         .build(),
                 new SiteOnboardingChecklist(
                         "https://www.santaritadosapucai.mg.leg.br/robots.txt",
-                        false,
-                        false,
-                        "https://www.santaritadosapucai.mg.leg.br/transparencia/processos-seletivos-2025",
-                        false,
-                        false,
+                        true,
+                        true,
+                        "https://www.santaritadosapucai.mg.leg.br/transparencia",
+                        true,
+                        true,
                         true,
                         "",
                         true,
@@ -322,7 +322,7 @@ public final class CoreSourceOnboardingProfiles {
                         OnboardingLegalCategory.DADOS_PUBLICOS,
                         "platform-team@local",
                         "PUBLIC_ANONYMOUS",
-                        "Pagina oficial da Câmara com Processos Seletivos 2025 revisada em 2026-04-05; ativacao operacional/legal ainda pendente."
+                        "Fonte oficial da Câmara revisada em 2026-04-06; robots.txt permite acesso anonimo e nao foi encontrada restricao explicita adicional no portal institucional/transparencia para esta coleta publica."
                 )
         );
     }

@@ -81,9 +81,9 @@ public class BootstrapTargetSiteFromProfileUseCase {
                 .siteType(templateSite.getSiteType())
                 .extractionMode(templateSite.getExtractionMode())
                 .jobCategory(templateSite.getJobCategory())
-                .legalStatus(runnableConfigurationChanged ? mergedLegalStatus(templateSite, existing) : existing.getLegalStatus())
+                .legalStatus(mergedLegalStatus(templateSite, existing, runnableConfigurationChanged))
                 .selectorBundleVersion(templateSite.getSelectorBundleVersion())
-                .enabled(runnableConfigurationChanged ? templateSite.isEnabled() : existing.isEnabled())
+                .enabled(mergedEnabled(templateSite, existing, runnableConfigurationChanged))
                 .createdAt(existing.getCreatedAt())
                 .updatedAt(now)
                 .build();
@@ -91,12 +91,33 @@ public class BootstrapTargetSiteFromProfileUseCase {
 
     private static LegalStatus mergedLegalStatus(
             TargetSiteEntity templateSite,
-            TargetSiteEntity existing
+            TargetSiteEntity existing,
+            boolean runnableConfigurationChanged
     ) {
         if (existing.getLegalStatus() == LegalStatus.SCRAPING_PROIBIDO) {
             return existing.getLegalStatus();
         }
+        if (!runnableConfigurationChanged
+                && existing.getLegalStatus() == LegalStatus.APPROVED
+                && templateSite.getLegalStatus() == LegalStatus.PENDING_REVIEW) {
+            return existing.getLegalStatus();
+        }
         return templateSite.getLegalStatus();
+    }
+
+    private static boolean mergedEnabled(
+            TargetSiteEntity templateSite,
+            TargetSiteEntity existing,
+            boolean runnableConfigurationChanged
+    ) {
+        LegalStatus mergedLegalStatus = mergedLegalStatus(templateSite, existing, runnableConfigurationChanged);
+        if (mergedLegalStatus == LegalStatus.SCRAPING_PROIBIDO) {
+            return false;
+        }
+        if (!runnableConfigurationChanged && existing.getLegalStatus() == LegalStatus.APPROVED) {
+            return existing.isEnabled();
+        }
+        return templateSite.isEnabled();
     }
 
     private static boolean runnableConfigurationChanged(TargetSiteEntity templateSite, TargetSiteEntity existing) {

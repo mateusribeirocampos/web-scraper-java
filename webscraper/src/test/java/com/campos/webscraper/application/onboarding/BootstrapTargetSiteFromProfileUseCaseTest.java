@@ -81,8 +81,8 @@ class BootstrapTargetSiteFromProfileUseCaseTest {
     }
 
     @Test
-    @DisplayName("should update existing target site from curated profile while preserving operational state")
-    void shouldUpdateExistingTargetSiteFromCuratedProfileWhilePreservingOperationalState() {
+    @DisplayName("should update existing target site from curated profile while preserving existing approval when config is unchanged")
+    void shouldUpdateExistingTargetSiteFromCuratedProfileWhilePreservingExistingApprovalWhenConfigIsUnchanged() {
         TargetSiteEntity existing = TargetSiteEntity.builder()
                 .id(7L)
                 .siteCode("greenhouse_bitso")
@@ -125,6 +125,109 @@ class BootstrapTargetSiteFromProfileUseCaseTest {
         verify(targetSiteRepository).save(captor.capture());
         assertThat(captor.getValue().getLegalStatus()).isEqualTo(LegalStatus.APPROVED);
         assertThat(captor.getValue().isEnabled()).isTrue();
+    }
+
+    @Test
+    @DisplayName("should promote an existing site when curated activation changes without runnable config changes")
+    void shouldPromoteAnExistingSiteWhenCuratedActivationChangesWithoutRunnableConfigChanges() {
+        TargetSiteEntity existing = TargetSiteEntity.builder()
+                .id(26L)
+                .siteCode("camara_santa_rita_sapucai")
+                .displayName("Câmara Municipal de Santa Rita do Sapucaí - Processos Seletivos")
+                .baseUrl("https://www.santaritadosapucai.mg.leg.br/transparencia/processos-seletivos-2025")
+                .siteType(SiteType.TYPE_A)
+                .extractionMode(ExtractionMode.STATIC_HTML)
+                .jobCategory(JobCategory.PUBLIC_CONTEST)
+                .legalStatus(LegalStatus.PENDING_REVIEW)
+                .selectorBundleVersion("camara_santa_rita_html_v1")
+                .enabled(false)
+                .createdAt(Instant.parse("2026-04-05T12:00:00Z"))
+                .updatedAt(Instant.parse("2026-04-05T12:30:00Z"))
+                .build();
+
+        when(targetSiteRepository.findBySiteCode("camara_santa_rita_sapucai")).thenReturn(Optional.of(existing));
+        when(targetSiteRepository.save(any(TargetSiteEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        BootstrapTargetSiteFromProfileUseCase useCase = new BootstrapTargetSiteFromProfileUseCase(
+                catalog,
+                targetSiteRepository,
+                Clock.fixed(Instant.parse("2026-04-06T12:00:00Z"), ZoneOffset.UTC)
+        );
+
+        BootstrappedTargetSite result = useCase.execute("camara_santa_rita_sapucai");
+
+        assertThat(result.bootstrapStatus()).isEqualTo(BootstrapStatus.UPDATED);
+        assertThat(result.targetSite().getLegalStatus()).isEqualTo(LegalStatus.APPROVED);
+        assertThat(result.targetSite().isEnabled()).isTrue();
+        assertThat(result.targetSite().getUpdatedAt()).isEqualTo(Instant.parse("2026-04-06T12:00:00Z"));
+    }
+
+    @Test
+    @DisplayName("should preserve existing approval when curated template is still pending review")
+    void shouldPreserveExistingApprovalWhenCuratedTemplateIsStillPendingReview() {
+        TargetSiteEntity existing = TargetSiteEntity.builder()
+                .id(7L)
+                .siteCode("greenhouse_bitso")
+                .displayName("Legacy Bitso Name")
+                .baseUrl("https://boards-api.greenhouse.io/v1/boards/bitso/jobs?content=true")
+                .siteType(SiteType.TYPE_E)
+                .extractionMode(ExtractionMode.API)
+                .jobCategory(JobCategory.PRIVATE_SECTOR)
+                .legalStatus(LegalStatus.APPROVED)
+                .selectorBundleVersion("n/a")
+                .enabled(true)
+                .createdAt(Instant.parse("2026-03-20T12:00:00Z"))
+                .updatedAt(Instant.parse("2026-03-20T12:30:00Z"))
+                .build();
+
+        when(targetSiteRepository.findBySiteCode("greenhouse_bitso")).thenReturn(Optional.of(existing));
+        when(targetSiteRepository.save(any(TargetSiteEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        BootstrapTargetSiteFromProfileUseCase useCase = new BootstrapTargetSiteFromProfileUseCase(
+                catalog,
+                targetSiteRepository,
+                Clock.fixed(Instant.parse("2026-03-24T19:00:00Z"), ZoneOffset.UTC)
+        );
+
+        BootstrappedTargetSite result = useCase.execute("greenhouse_bitso");
+
+        assertThat(result.bootstrapStatus()).isEqualTo(BootstrapStatus.UPDATED);
+        assertThat(result.targetSite().getLegalStatus()).isEqualTo(LegalStatus.APPROVED);
+        assertThat(result.targetSite().isEnabled()).isTrue();
+    }
+
+    @Test
+    @DisplayName("should preserve manual disable for an already approved site")
+    void shouldPreserveManualDisableForAnAlreadyApprovedSite() {
+        TargetSiteEntity existing = TargetSiteEntity.builder()
+                .id(26L)
+                .siteCode("camara_santa_rita_sapucai")
+                .displayName("Câmara Municipal de Santa Rita do Sapucaí - Processos Seletivos")
+                .baseUrl("https://www.santaritadosapucai.mg.leg.br/transparencia/processos-seletivos-2025")
+                .siteType(SiteType.TYPE_A)
+                .extractionMode(ExtractionMode.STATIC_HTML)
+                .jobCategory(JobCategory.PUBLIC_CONTEST)
+                .legalStatus(LegalStatus.APPROVED)
+                .selectorBundleVersion("camara_santa_rita_html_v1")
+                .enabled(false)
+                .createdAt(Instant.parse("2026-04-05T12:00:00Z"))
+                .updatedAt(Instant.parse("2026-04-05T12:30:00Z"))
+                .build();
+
+        when(targetSiteRepository.findBySiteCode("camara_santa_rita_sapucai")).thenReturn(Optional.of(existing));
+        when(targetSiteRepository.save(any(TargetSiteEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        BootstrapTargetSiteFromProfileUseCase useCase = new BootstrapTargetSiteFromProfileUseCase(
+                catalog,
+                targetSiteRepository,
+                Clock.fixed(Instant.parse("2026-04-06T12:00:00Z"), ZoneOffset.UTC)
+        );
+
+        BootstrappedTargetSite result = useCase.execute("camara_santa_rita_sapucai");
+
+        assertThat(result.bootstrapStatus()).isEqualTo(BootstrapStatus.UPDATED);
+        assertThat(result.targetSite().getLegalStatus()).isEqualTo(LegalStatus.APPROVED);
+        assertThat(result.targetSite().isEnabled()).isFalse();
     }
 
     @Test
