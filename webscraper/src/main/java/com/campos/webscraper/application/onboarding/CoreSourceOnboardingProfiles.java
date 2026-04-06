@@ -263,18 +263,18 @@ public final class CoreSourceOnboardingProfiles {
                         .siteType(SiteType.TYPE_E)
                         .extractionMode(ExtractionMode.API)
                         .jobCategory(JobCategory.PUBLIC_CONTEST)
-                        .legalStatus(LegalStatus.PENDING_REVIEW)
+                        .legalStatus(LegalStatus.APPROVED)
                         .selectorBundleVersion("campinas_jsonapi_v1")
-                        .enabled(false)
+                        .enabled(true)
                         .createdAt(Instant.parse("2026-03-31T00:00:00Z"))
                         .build(),
                 new SiteOnboardingChecklist(
                         "https://campinas.sp.gov.br/robots.txt",
                         true,
                         true,
-                        "https://campinas.sp.gov.br/sites/concursos/",
-                        false,
-                        false,
+                        "https://portal-api.campinas.sp.gov.br/node/1599",
+                        true,
+                        true,
                         true,
                         apiUrl,
                         true,
@@ -283,7 +283,7 @@ public final class CoreSourceOnboardingProfiles {
                         OnboardingLegalCategory.API_OFICIAL,
                         "platform-team@local",
                         "PUBLIC_ANONYMOUS",
-                        "JSONAPI oficial do portal Campinas validado em 2026-03-31; ativacao operacional/legal ainda pendente de revisao final antes de permitir enable em producao."
+                        "JSONAPI oficial do portal Campinas revisado em 2026-04-06; robots.txt permite leitura publica, o servico institucional 'Concursos e Empregos' permanece acessivel sem autenticacao e nao foi encontrada restricao explicita adicional ao consumo da fonte oficial."
                 )
         );
     }

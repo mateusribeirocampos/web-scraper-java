@@ -26,9 +26,9 @@ public final class LeverBoardOnboardingProfiles {
                 .siteType(SiteType.TYPE_E)
                 .extractionMode(ExtractionMode.API)
                 .jobCategory(JobCategory.PRIVATE_SECTOR)
-                .legalStatus(LegalStatus.PENDING_REVIEW)
+                .legalStatus(LegalStatus.APPROVED)
                 .selectorBundleVersion("n/a")
-                .enabled(false)
+                .enabled(true)
                 .createdAt(Instant.parse("2026-03-31T00:00:00Z"))
                 .build();
 
@@ -36,7 +36,7 @@ public final class LeverBoardOnboardingProfiles {
                 "https://jobs.lever.co/robots.txt",
                 true,
                 true,
-                "",
+                "https://ciandt.com/br/pt-br/politica-de-privacidade",
                 true,
                 true,
                 true,
@@ -47,7 +47,7 @@ public final class LeverBoardOnboardingProfiles {
                 OnboardingLegalCategory.API_OFICIAL,
                 "platform-team@local",
                 "PUBLIC_ANONYMOUS",
-                "Lever public postings endpoint da CI&T revisado em 2026-03-31."
+                "Lever public postings endpoint da CI&T revisado em 2026-04-06; jobs.lever.co expõe Content-Signal search=yes e a politica de privacidade publica da CI&T cobre dados fornecidos quando a pessoa se candidata a uma vaga."
         );
 
         return new LeverBoardOnboardingProfile(

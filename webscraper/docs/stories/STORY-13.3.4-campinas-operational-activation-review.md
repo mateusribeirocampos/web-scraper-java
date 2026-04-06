@@ -2,7 +2,7 @@
 
 ## Status
 
-Implemented
+Implemented and approved
 
 ## Objective
 
@@ -43,18 +43,24 @@ técnica da JSONAPI oficial, decidindo explicitamente se a fonte já poderia sai
 
 ## Applied Solution
 
-- Revisão do perfil curado `municipal_campinas` no catálogo:
-  - `legalStatus=PENDING_REVIEW`
-  - `enabled=false`
-  - `termsReviewed=false`
-  - `termsAllowScraping=false`
+- Revisão final do perfil curado `municipal_campinas` no catálogo:
+  - `legalStatus=APPROVED`
+  - `enabled=true`
+  - `termsReviewed=true`
+  - `termsAllowScraping=true`
+- Reconciliação persistente para ambientes já existentes:
+  - migration `V011__approve_municipal_campinas.sql`
+  - promove `target_sites.site_code='municipal_campinas'` para `APPROVED/enabled=true`
+  - preserva explicitamente qualquer caso já marcado como `SCRAPING_PROIBIDO`
 - Confirmação de evidência técnica mínima:
   - `robots.txt` oficial: `https://campinas.sp.gov.br/robots.txt`
   - JSONAPI oficial: `https://portal-api.campinas.sp.gov.br/jsonapi/node/site?filter%5Bdrupal_internal__nid%5D=113658`
+  - serviço institucional: `https://portal-api.campinas.sp.gov.br/servico/concursos-e-empregos`
+  - base institucional LGPD: `https://portal-api.campinas.sp.gov.br/node/1599`
   - `operational-check` real do perfil público concluído com sucesso
 - Decisão registrada:
-  - a fonte pública continua bloqueada até a revisão final de termos/base legal;
-  - a implementação técnica permanece válida e pronta para ativação futura.
+  - a fonte pública passa para `APPROVED/enabled=true`;
+  - a implementação técnica e a base pública institucional ficaram suficientes para ativação.
 
 ## Validation
 
@@ -85,7 +91,6 @@ Evidência operacional:
 
 ## Final State
 
-- `municipal_campinas` continua `PENDING_REVIEW/enabled=false`
+- `municipal_campinas` passa para `APPROVED/enabled=true`
 - a trilha privada `lever_ciandt` permanece operacional
-- a trilha pública de `Campinas` permanece pronta tecnicamente, aguardando revisão final de
-  termos/base legal antes de qualquer promoção para produção
+- a trilha pública de `Campinas` fica apta a produção no catálogo curado

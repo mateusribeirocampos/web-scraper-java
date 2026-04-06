@@ -166,12 +166,18 @@ web-scraper-java/
 - `Campinas` agora tem duas trilhas abertas no backlog híbrido:
   - privada via `Lever` público da `CI&T`;
   - pública via JSONAPI oficial do portal municipal de concursos.
-- a trilha pública de `Campinas` já está implementada tecnicamente, mas continua bloqueada em
-  onboarding até o fechamento operacional/legal final.
-- a `13.3.4` já fechou a revisão operacional da trilha pública:
+- a `13.3.4` fechou a revisão operacional/legal da trilha pública:
   - `robots.txt` e JSONAPI oficial validados;
   - `operational-check` executado com sucesso;
-  - decisão atual: continuar `PENDING_REVIEW` até a revisão final de termos/base legal.
+  - serviço institucional `Concursos e Empregos` e base LGPD revisados;
+  - decisão atual: `municipal_campinas` promovida para `APPROVED/enabled=true`, com reconciliação
+    persistente para ambientes já bootstrapados.
+- a `13.3.11` fecha a revisão da trilha privada `lever_ciandt` com base em:
+  - `jobs.lever.co/robots.txt`
+  - API pública oficial do board
+  - política de privacidade pública da CI&T
+- com isso, `Campinas` passa a ser a primeira cidade totalmente encerrada no backlog híbrido
+- a próxima cidade a ser fechada passa a ser `Santa Rita do Sapucaí`
 - a próxima cidade híbrida aberta no backlog é `Santa Rita do Sapucaí`, com:
   - trilha privada candidata via `WatchGuard` no `Lever`;
   - trilha pública oficial candidata via Câmara Municipal.
@@ -187,8 +193,12 @@ web-scraper-java/
   `APPROVED/enabled=true`
 - `lever_watchguard` continua `PENDING_REVIEW`, sem nova ação de compliance nesta etapa
 - a próxima cidade híbrida aberta no backlog passa a ser `Itajubá`
-- antes da próxima implementação grande, o próximo checkpoint recomendado é um teste ponta a ponta
-  com a aplicação cobrindo as trilhas já entregues
+- a prioridade alta do backlog híbrido agora é fechar as cidades por ordem de menor gap:
+  - `Campinas`
+  - `Santa Rita do Sapucaí`
+  - `Itajubá`
+  - `Poços de Caldas`
+  - `Extrema`
 
 ## Endpoints Disponiveis
 

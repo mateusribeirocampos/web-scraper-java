@@ -234,8 +234,8 @@ class TargetSiteOnboardingValidatorTest {
     }
 
     @Test
-    @DisplayName("should keep Campinas public contests source pending until final activation review")
-    void shouldKeepCampinasPublicContestsSourcePendingUntilFinalActivationReview() {
+    @DisplayName("should approve Campinas public contests source when official public evidence is reviewed")
+    void shouldApproveCampinasPublicContestsSourceWhenOfficialPublicEvidenceIsReviewed() {
         TargetSiteEntity campinas = TargetSiteEntity.builder()
                 .siteCode("municipal_campinas")
                 .displayName("Prefeitura de Campinas - Concursos")
@@ -253,9 +253,9 @@ class TargetSiteOnboardingValidatorTest {
                 "https://campinas.sp.gov.br/robots.txt",
                 true,
                 true,
-                "https://campinas.sp.gov.br/sites/concursos/",
-                false,
-                false,
+                "https://portal-api.campinas.sp.gov.br/node/1599",
+                true,
+                true,
                 true,
                 "https://portal-api.campinas.sp.gov.br/jsonapi/node/site?filter%5Bdrupal_internal__nid%5D=113658",
                 true,
@@ -264,15 +264,57 @@ class TargetSiteOnboardingValidatorTest {
                 OnboardingLegalCategory.API_OFICIAL,
                 "platform-team@local",
                 "PUBLIC_ANONYMOUS",
-                "JSONAPI oficial do portal Campinas revisado, com ativacao final ainda pendente."
+                "JSONAPI oficial do portal Campinas revisado com servico institucional publico e sem restricao explicita adicional encontrada."
         );
 
         TargetSiteOnboardingDecision decision = validator.assess(campinas, checklist);
 
-        assertThat(decision.productionReady()).isFalse();
-        assertThat(decision.targetSite().getLegalStatus()).isEqualTo(LegalStatus.PENDING_REVIEW);
-        assertThat(decision.targetSite().isEnabled()).isFalse();
-        assertThat(decision.blockingReasons()).contains("terms of service not reviewed");
+        assertThat(decision.productionReady()).isTrue();
+        assertThat(decision.targetSite().getLegalStatus()).isEqualTo(LegalStatus.APPROVED);
+        assertThat(decision.targetSite().isEnabled()).isTrue();
+        assertThat(decision.blockingReasons()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("should approve CI&T Lever source when official API and privacy evidence are reviewed")
+    void shouldApproveCiandtLeverSourceWhenOfficialApiAndPrivacyEvidenceAreReviewed() {
+        TargetSiteEntity ciandt = TargetSiteEntity.builder()
+                .siteCode("lever_ciandt")
+                .displayName("CI&T Careers via Lever")
+                .baseUrl("https://api.lever.co/v0/postings/ciandt?mode=json")
+                .siteType(SiteType.TYPE_E)
+                .extractionMode(ExtractionMode.API)
+                .jobCategory(JobCategory.PRIVATE_SECTOR)
+                .legalStatus(LegalStatus.PENDING_REVIEW)
+                .selectorBundleVersion("n/a")
+                .enabled(false)
+                .createdAt(Instant.parse("2026-03-31T00:00:00Z"))
+                .build();
+
+        SiteOnboardingChecklist checklist = new SiteOnboardingChecklist(
+                "https://jobs.lever.co/robots.txt",
+                true,
+                true,
+                "https://ciandt.com/br/pt-br/politica-de-privacidade",
+                true,
+                true,
+                true,
+                "https://api.lever.co/v0/postings/ciandt?mode=json",
+                true,
+                "Primeira trilha privada de Campinas; board publico Lever da CI&T validado para expansao hybrid tech hubs.",
+                "Lever public postings API: 60 rpm conservative profile",
+                OnboardingLegalCategory.API_OFICIAL,
+                "platform-team@local",
+                "PUBLIC_ANONYMOUS",
+                "Jobs.lever.co revisado com Content-Signal search=yes e politica de privacidade publica da CI&T revisada para o fluxo de candidatura."
+        );
+
+        TargetSiteOnboardingDecision decision = validator.assess(ciandt, checklist);
+
+        assertThat(decision.productionReady()).isTrue();
+        assertThat(decision.targetSite().getLegalStatus()).isEqualTo(LegalStatus.APPROVED);
+        assertThat(decision.targetSite().isEnabled()).isTrue();
+        assertThat(decision.blockingReasons()).isEmpty();
     }
 
     @Test

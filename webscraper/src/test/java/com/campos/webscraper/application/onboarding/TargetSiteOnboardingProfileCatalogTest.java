@@ -58,8 +58,8 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(lever.targetSite().getSiteCode()).isEqualTo("lever_ciandt");
         assertThat(lever.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.API_OFICIAL);
         assertThat(lever.jobsApiUrl()).isEqualTo("https://api.lever.co/v0/postings/ciandt?mode=json");
-        assertThat(lever.targetSite().getLegalStatus().name()).isEqualTo("PENDING_REVIEW");
-        assertThat(lever.targetSite().isEnabled()).isFalse();
+        assertThat(lever.targetSite().getLegalStatus().name()).isEqualTo("APPROVED");
+        assertThat(lever.targetSite().isEnabled()).isTrue();
 
         assertThat(watchguard.sourceFamily()).isEqualTo("LEVER");
         assertThat(watchguard.targetSite().getSiteCode()).isEqualTo("lever_watchguard");
@@ -101,8 +101,8 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(campinas.sourceFamily()).isEqualTo("MUNICIPAL_API");
         assertThat(campinas.targetSite().getSiteCode()).isEqualTo("municipal_campinas");
         assertThat(campinas.targetSite().getSelectorBundleVersion()).isEqualTo("campinas_jsonapi_v1");
-        assertThat(campinas.targetSite().getLegalStatus().name()).isEqualTo("PENDING_REVIEW");
-        assertThat(campinas.targetSite().isEnabled()).isFalse();
+        assertThat(campinas.targetSite().getLegalStatus().name()).isEqualTo("APPROVED");
+        assertThat(campinas.targetSite().isEnabled()).isTrue();
         assertThat(campinas.jobsApiUrl()).contains("portal-api.campinas.sp.gov.br/jsonapi/node/site");
         assertThat(campinas.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.API_OFICIAL);
 

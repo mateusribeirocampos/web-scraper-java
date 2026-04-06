@@ -368,7 +368,7 @@ Exemplo de fixture de resposta JSON do Indeed MCP:
 Status atual:
 - trilha privada `Lever` da `CI&T` implementada
 - trilha pública oficial de `Campinas` implementada via JSONAPI oficial do portal (`municipal_campinas`)
-- ativação operacional/legal da trilha pública ainda pendente
+- trilha pública oficial de `Campinas` promovida para `APPROVED/enabled=true`
 
 #### Story 13.3.4 — Ativação operacional/legal de `municipal_campinas`
 - Revisar a evidência oficial da trilha pública de `Campinas` antes de qualquer enable em produção.
@@ -385,7 +385,13 @@ Status atual:
 - `robots.txt` oficial respondeu `Allow: /`
 - a JSONAPI oficial e o `operational-check` já foram validados tecnicamente
 - a trilha privada `lever_ciandt` já opera em runtime real
-- `municipal_campinas` continua `PENDING_REVIEW/enabled=false` porque a revisão final de termos/base legal ainda não foi concluída
+- `municipal_campinas` foi promovida para `APPROVED/enabled=true` após revisão final da fonte oficial
+- a base usada para aprovação foi:
+  - `robots.txt` público permissivo
+  - serviço institucional `Concursos e Empregos` acessível sem autenticação
+  - página institucional de LGPD acessível no portal administrativo
+- a promoção também foi reconciliada via migration para `target_sites` já persistidos em ambientes
+  existentes
 
 #### Story 13.3.5 — Santa Rita do Sapucaí híbrido: abertura privada + pública oficial
 - Abrir `Santa Rita do Sapucaí` como a próxima cidade do backlog híbrido depois de `Campinas`.
@@ -446,6 +452,41 @@ Status atual:
 - `lever_watchguard` segue sem promoção adicional de compliance nesta etapa
 - antes da próxima implementação grande, fica recomendado um teste operacional ponta a ponta do
   fluxo já construído no projeto
+
+#### Story 13.3.10 — Plano de fechamento das cidades híbridas
+- Registrar a ordem oficial de fechamento das cidades abertas/priorizadas no backlog híbrido,
+  começando pela cidade com menos gaps e terminando na cidade com mais lacunas.
+- Ordem de execução:
+  1. `Campinas`
+  2. `Santa Rita do Sapucaí`
+  3. `Itajubá`
+  4. `Poços de Caldas`
+  5. `Extrema`
+- Gaps esperados por cidade:
+  - `Campinas`: fechar compliance da trilha privada `lever_ciandt`
+  - `Santa Rita do Sapucaí`: fechar compliance da trilha privada `lever_watchguard`
+  - `Itajubá`: mapear, implementar e ativar trilhas privada + pública
+  - `Poços de Caldas`: abrir cidade, mapear, implementar e ativar trilhas
+  - `Extrema`: abrir cidade, mapear, implementar e ativar trilhas
+- Regra operacional:
+  - não abrir a execução da próxima cidade antes de registrar a decisão final da anterior.
+
+#### Story 13.3.11 — Campinas privada: ativação operacional/legal da trilha `CI&T` via `Lever`
+- Fechar a revisão de compliance da trilha privada `lever_ciandt`, último gap remanescente para
+  encerrar `Campinas` como cidade híbrida.
+- Evidência revisada:
+  - `https://jobs.lever.co/robots.txt`
+  - `https://api.lever.co/v0/postings/ciandt?mode=json`
+  - `https://ciandt.com/br/pt-br/politica-de-privacidade`
+- Critério de saída:
+  - promover `lever_ciandt` para `APPROVED/enabled=true` se a base pública revisada continuar
+    suficiente;
+  - reconciliar a promoção também nos `target_sites` já persistidos.
+
+Status atual:
+- `lever_ciandt` promovida para `APPROVED/enabled=true`
+- reconciliação persistente adicionada para ambientes já bootstrapados
+- `Campinas` passa a ser a primeira cidade híbrida completamente fechada
 
 ---
 

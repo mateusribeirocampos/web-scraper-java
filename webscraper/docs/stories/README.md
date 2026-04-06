@@ -108,3 +108,5 @@ Exemplos:
 | 13.3.7 — Santa Rita do Sapucaí pública via Câmara HTML | [STORY-13.3.7-santa-rita-camara-public-html.md](STORY-13.3.7-santa-rita-camara-public-html.md) | ✅ Concluída |
 | 13.3.8 — Santa Rita do Sapucaí pública: ativação operacional/legal da Câmara | [STORY-13.3.8-santa-rita-camara-activation-review.md](STORY-13.3.8-santa-rita-camara-activation-review.md) | ✅ Concluída |
 | 13.3.9 — Itajubá híbrido: abertura privada + pública | [STORY-13.3.9-itajuba-hybrid-opening.md](STORY-13.3.9-itajuba-hybrid-opening.md) | 🚧 Aberta |
+| 13.3.10 — Plano de fechamento das cidades híbridas | [STORY-13.3.10-hybrid-cities-closure-plan.md](STORY-13.3.10-hybrid-cities-closure-plan.md) | 🚧 Aberta |
+| 13.3.11 — Campinas privada: ativação da trilha CI&T Lever | [STORY-13.3.11-campinas-ciandt-activation-review.md](STORY-13.3.11-campinas-ciandt-activation-review.md) | ✅ Concluída |

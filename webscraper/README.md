@@ -62,8 +62,18 @@ Regra atual de testes:
   `Pouso Alegre`
 - `Campinas` agora também tem a trilha privada `lever_ciandt` operacional e a trilha pública
   `municipal_campinas` implementada via JSONAPI oficial
-- a revisão da `13.3.4` concluiu que `municipal_campinas` continua `PENDING_REVIEW`, porque a
-  validação técnica já fechou, mas a revisão final de termos/base legal ainda não foi concluída
+- a revisão da `13.3.4` promoveu `municipal_campinas` para `APPROVED/enabled=true`
+- a base da promoção foi:
+  - `robots.txt` permissivo
+  - JSONAPI oficial validada
+  - serviço institucional `Concursos e Empregos` acessível sem autenticação
+  - página institucional de LGPD acessível no portal administrativo
+- a promoção também ganhou reconciliação persistente via migration para ambientes onde
+  `municipal_campinas` já existia em banco
+- a trilha privada `lever_ciandt` também foi revisada com evidência pública suficiente e passa a
+  `APPROVED/enabled=true`, com reconciliação persistente para ambientes já existentes
+- com isso, `Campinas` passa a ser a primeira cidade híbrida integralmente fechada no projeto
+- a próxima cidade a fechar passa a ser `Santa Rita do Sapucaí`
 - a próxima frente híbrida aberta no backlog é `Santa Rita do Sapucaí`, com hipótese privada via
   `WatchGuard` no `Lever` e hipótese pública oficial via página de processos seletivos da Câmara
 - a próxima implementação desse backlog já ficou decidida:
@@ -77,8 +87,12 @@ Regra atual de testes:
 - `camara_santa_rita_sapucai` já passou na validação real e está `APPROVED/enabled=true`
 - `lever_watchguard` permanece `PENDING_REVIEW`
 - a próxima cidade híbrida aberta no backlog passa a ser `Itajubá`
-- antes da próxima implementação grande, o próximo checkpoint recomendado é um teste operacional
-  ponta a ponta da aplicação
+- a prioridade alta agora é fechar as cidades do backlog híbrido nesta ordem:
+  - `Campinas`
+  - `Santa Rita do Sapucaí`
+  - `Itajubá`
+  - `Poços de Caldas`
+  - `Extrema`
 
 ## Validacao Manual Oficial
 
