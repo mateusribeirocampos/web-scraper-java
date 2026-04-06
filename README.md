@@ -185,6 +185,10 @@ web-scraper-java/
   com anexos PDF oficiais
 - essa trilha pública da Câmara já foi validada em runtime real e promovida para
   `APPROVED/enabled=true`
+- `lever_watchguard` continua `PENDING_REVIEW`, sem nova ação de compliance nesta etapa
+- a próxima cidade híbrida aberta no backlog passa a ser `Itajubá`
+- antes da próxima implementação grande, o próximo checkpoint recomendado é um teste ponta a ponta
+  com a aplicação cobrindo as trilhas já entregues
 
 ## Endpoints Disponiveis
 

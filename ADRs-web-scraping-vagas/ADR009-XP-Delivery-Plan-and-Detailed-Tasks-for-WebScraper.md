@@ -161,6 +161,14 @@ Atualização de Santa Rita do Sapucaí em 2026-04-06:
 - `robots.txt` da Câmara respondeu com `User-agent: *` e `Disallow:` vazio;
 - a trilha pública oficial da Câmara foi promovida para `APPROVED/enabled=true`.
 
+Atualização de priorização híbrida em 2026-04-06:
+
+- `Santa Rita do Sapucaí` teve a trilha pública oficial fechada até ativação;
+- `lever_watchguard` permanece `PENDING_REVIEW`, sem nova ação de compliance nesta etapa;
+- a próxima cidade híbrida aberta passa a ser `Itajubá`;
+- antes de avançar demais no backlog, o próximo checkpoint operacional deve incluir uma rodada
+  ponta a ponta com a aplicação cobrindo as trilhas privadas e públicas já entregues.
+
 ---
 
 ## Detailed Tasks by Iteration
@@ -426,6 +434,18 @@ Status atual:
   `SUCCEEDED` e `itemsFound=1`
 - `robots.txt` público respondeu com `User-agent: *` e `Disallow:` vazio
 - trilha pública da Câmara promovida para `APPROVED/enabled=true`
+
+#### Story 13.3.9 — Itajubá híbrido: abertura privada + pública
+- Abrir `Itajubá` como a próxima cidade do backlog híbrido depois de `Santa Rita do Sapucaí`.
+- Mapear uma trilha privada aderente ao ecossistema tech local e uma trilha pública oficial de
+  concursos/processos seletivos.
+- Registrar a decisão da primeira implementação executável da cidade.
+
+Status atual:
+- `Itajubá` passa a ser a próxima cidade do backlog híbrido
+- `lever_watchguard` segue sem promoção adicional de compliance nesta etapa
+- antes da próxima implementação grande, fica recomendado um teste operacional ponta a ponta do
+  fluxo já construído no projeto
 
 ---
 

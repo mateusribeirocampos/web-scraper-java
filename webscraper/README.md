@@ -75,6 +75,10 @@ Regra atual de testes:
   estático sobre a página oficial `Processos Seletivos 2025` e PDFs oficiais como `editalUrl`
   canônico
 - `camara_santa_rita_sapucai` já passou na validação real e está `APPROVED/enabled=true`
+- `lever_watchguard` permanece `PENDING_REVIEW`
+- a próxima cidade híbrida aberta no backlog passa a ser `Itajubá`
+- antes da próxima implementação grande, o próximo checkpoint recomendado é um teste operacional
+  ponta a ponta da aplicação
 
 ## Validacao Manual Oficial
 
