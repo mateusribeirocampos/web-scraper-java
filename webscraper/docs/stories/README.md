@@ -113,4 +113,6 @@ Exemplos:
 | 13.3.12 — Santa Rita privada: revisão operacional/legal da trilha WatchGuard via Lever | [STORY-13.3.12-santa-rita-watchguard-activation-review.md](STORY-13.3.12-santa-rita-watchguard-activation-review.md) | ✅ Concluída |
 | 13.3.13 — Itajubá híbrido: mapeamento das trilhas e ordem de execução | [STORY-13.3.13-itajuba-source-mapping.md](STORY-13.3.13-itajuba-source-mapping.md) | ✅ Concluída |
 | 13.3.14 — Itajubá pública via Câmara HTML | [STORY-13.3.14-itajuba-camara-public-html.md](STORY-13.3.14-itajuba-camara-public-html.md) | ✅ Concluída |
-| 13.3.15 — Itajubá pública: ativação operacional/legal da Câmara | [STORY-13.3.15-itajuba-camara-activation-review.md](STORY-13.3.15-itajuba-camara-activation-review.md) | 🚧 Em andamento |
+| 13.3.15 — Itajubá pública: ativação operacional/legal da Câmara | [STORY-13.3.15-itajuba-camara-activation-review.md](STORY-13.3.15-itajuba-camara-activation-review.md) | ✅ Concluída |
+| 13.3.16 — Itajubá privada via Airbus/Helibras Workday | [STORY-13.3.16-itajuba-airbus-workday.md](STORY-13.3.16-itajuba-airbus-workday.md) | ✅ Concluída |
+| 13.3.17 — Itajubá privada: ativação operacional/legal da trilha Airbus Workday | [STORY-13.3.17-itajuba-airbus-activation-review.md](STORY-13.3.17-itajuba-airbus-activation-review.md) | 🚧 Em andamento |

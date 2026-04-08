@@ -6,6 +6,7 @@ import com.campos.webscraper.application.usecase.GupyJobImportUseCase;
 import com.campos.webscraper.application.usecase.InconfidentesContestImportUseCase;
 import com.campos.webscraper.application.usecase.IndeedJobImportUseCase;
 import com.campos.webscraper.application.usecase.LeverJobImportUseCase;
+import com.campos.webscraper.application.usecase.WorkdayJobImportUseCase;
 import com.campos.webscraper.application.usecase.PciConcursosImportUseCase;
 import com.campos.webscraper.application.usecase.PousoAlegreContestImportUseCase;
 import com.campos.webscraper.application.usecase.MunhozContestImportUseCase;
@@ -31,6 +32,7 @@ public class ImportingCrawlJobExecutionRunner implements CrawlJobExecutionRunner
     private final IndeedJobImportUseCase indeedJobImportUseCase;
     private final GreenhouseJobImportUseCase greenhouseJobImportUseCase;
     private final LeverJobImportUseCase leverJobImportUseCase;
+    private final WorkdayJobImportUseCase workdayJobImportUseCase;
     private final GupyJobImportUseCase gupyJobImportUseCase;
     private final DouContestImportUseCase douContestImportUseCase;
     private final PciConcursosImportUseCase pciConcursosImportUseCase;
@@ -45,6 +47,7 @@ public class ImportingCrawlJobExecutionRunner implements CrawlJobExecutionRunner
             IndeedJobImportUseCase indeedJobImportUseCase,
             GreenhouseJobImportUseCase greenhouseJobImportUseCase,
             LeverJobImportUseCase leverJobImportUseCase,
+            WorkdayJobImportUseCase workdayJobImportUseCase,
             GupyJobImportUseCase gupyJobImportUseCase,
             DouContestImportUseCase douContestImportUseCase,
             PciConcursosImportUseCase pciConcursosImportUseCase,
@@ -61,6 +64,8 @@ public class ImportingCrawlJobExecutionRunner implements CrawlJobExecutionRunner
                 greenhouseJobImportUseCase, "greenhouseJobImportUseCase must not be null");
         this.leverJobImportUseCase = Objects.requireNonNull(
                 leverJobImportUseCase, "leverJobImportUseCase must not be null");
+        this.workdayJobImportUseCase = Objects.requireNonNull(
+                workdayJobImportUseCase, "workdayJobImportUseCase must not be null");
         this.gupyJobImportUseCase = Objects.requireNonNull(
                 gupyJobImportUseCase, "gupyJobImportUseCase must not be null");
         this.douContestImportUseCase = Objects.requireNonNull(
@@ -100,6 +105,8 @@ public class ImportingCrawlJobExecutionRunner implements CrawlJobExecutionRunner
             itemsFound = greenhouseJobImportUseCase.execute(targetSite, crawlExecution, command).size();
         } else if (siteCode.startsWith("lever_")) {
             itemsFound = leverJobImportUseCase.execute(targetSite, crawlExecution, command).size();
+        } else if (siteCode.endsWith("_workday")) {
+            itemsFound = workdayJobImportUseCase.execute(targetSite, crawlExecution, command).size();
         } else if (siteCode.startsWith("gupy_")) {
             itemsFound = gupyJobImportUseCase.execute(targetSite, crawlExecution, command).size();
         } else {

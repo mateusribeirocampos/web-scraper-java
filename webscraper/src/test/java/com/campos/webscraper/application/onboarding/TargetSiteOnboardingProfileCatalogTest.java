@@ -18,7 +18,7 @@ class TargetSiteOnboardingProfileCatalogTest {
     void shouldExposeCuratedOnboardingProfilesForSupportedSources() {
         assertThat(catalog.list())
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
-                .contains("greenhouse_bitso", "lever_ciandt", "lever_watchguard", "indeed-br", "dou-api", "pci_concursos",
+                .contains("greenhouse_bitso", "lever_ciandt", "lever_watchguard", "airbus_helibras_workday", "indeed-br", "dou-api", "pci_concursos",
                         "municipal_inconfidentes", "municipal_pouso_alegre", "municipal_munhoz",
                         "municipal_campinas", "camara_santa_rita_sapucai", "camara_itajuba");
     }
@@ -40,6 +40,7 @@ class TargetSiteOnboardingProfileCatalogTest {
         TargetSiteOnboardingProfileTemplate indeed = catalog.get("indeed-br");
         TargetSiteOnboardingProfileTemplate lever = catalog.get("lever_ciandt");
         TargetSiteOnboardingProfileTemplate watchguard = catalog.get("lever_watchguard");
+        TargetSiteOnboardingProfileTemplate workday = catalog.get("airbus_helibras_workday");
         TargetSiteOnboardingProfileTemplate dou = catalog.get("dou-api");
         TargetSiteOnboardingProfileTemplate pci = catalog.get("pci_concursos");
         TargetSiteOnboardingProfileTemplate inconfidentes = catalog.get("municipal_inconfidentes");
@@ -69,6 +70,14 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(watchguard.jobsApiUrl()).isEqualTo("https://api.lever.co/v0/postings/watchguard?mode=json");
         assertThat(watchguard.targetSite().getLegalStatus().name()).isEqualTo("SCRAPING_PROIBIDO");
         assertThat(watchguard.targetSite().isEnabled()).isFalse();
+
+        assertThat(workday.sourceFamily()).isEqualTo("WORKDAY");
+        assertThat(workday.targetSite().getSiteCode()).isEqualTo("airbus_helibras_workday");
+        assertThat(workday.targetSite().getDisplayName()).isEqualTo("Airbus / Helibras Careers via Workday");
+        assertThat(workday.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.API_OFICIAL);
+        assertThat(workday.jobsApiUrl()).isEqualTo("https://ag.wd3.myworkdayjobs.com/wday/cxs/ag/Airbus/jobs");
+        assertThat(workday.targetSite().getLegalStatus().name()).isEqualTo("APPROVED");
+        assertThat(workday.targetSite().isEnabled()).isTrue();
 
         assertThat(dou.sourceFamily()).isEqualTo("DOU");
         assertThat(dou.targetSite().getSiteCode()).isEqualTo("dou-api");
@@ -142,6 +151,12 @@ class TargetSiteOnboardingProfileCatalogTest {
                 .get()
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
                 .isEqualTo("lever_watchguard");
+
+        assertThat(catalog.findBySiteCode("airbus_helibras_workday"))
+                .isPresent()
+                .get()
+                .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
+                .isEqualTo("airbus_helibras_workday");
 
         assertThat(catalog.findBySiteCode("municipal_inconfidentes"))
                 .isPresent()

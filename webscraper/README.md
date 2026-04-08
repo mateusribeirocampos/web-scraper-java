@@ -102,8 +102,16 @@ Regra atual de testes:
 - a validação real da trilha pública já fechou com `operational-check` `SUCCEEDED` e `itemsFound=1`
 - `camara_itajuba` foi promovida para `APPROVED/enabled=true` após revisão do portal oficial,
   `robots.txt` público e página institucional de LGPD/privacidade
+- `airbus_helibras_workday` agora também entrou como trilha privada oficial de `Itajubá`,
+  usando o board público `Workday` da Airbus com filtro para vagas da `Helibras`
+- a validação técnica da trilha privada fechou com `operational-check` `SUCCEEDED` e `itemsFound=22`
+- a revisão operacional/legal dessa trilha também foi fechada com promoção para
+  `APPROVED/enabled=true`, baseada em:
+  - `robots.txt` do domínio `wd3`
+  - página oficial `Careers` da Airbus apontando para o board
+  - política pública de privacidade da Airbus
+- com isso, `Itajubá` passa a ser a terceira cidade híbrida integralmente fechada
 - a prioridade alta agora é fechar as cidades do backlog híbrido nesta ordem:
-  - `Itajubá`
   - `Poços de Caldas`
   - `Extrema`
 
@@ -252,8 +260,7 @@ Para a expansão municipal de concursos:
 - o filtro principal continua sendo cargo, escolaridade e formação exigida em edital, e não
   `seniority`;
 - `Pouso Alegre` e `Munhoz` já operam no runtime municipal;
-- `municipal_campinas` já foi validado tecnicamente via `operational-check`, mas permanece
-  bloqueado em onboarding até a revisão final de compliance.
+- `municipal_campinas` e `camara_itajuba` já estão aprovados e operacionais no onboarding.
 
 Check operacional ponta a ponta por `profileKey`:
 

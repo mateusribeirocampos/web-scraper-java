@@ -56,6 +56,8 @@ public class GetTargetSiteOnboardingProfileUseCase {
     }
 
     private static boolean supportsBoardToken(String sourceFamily) {
-        return "GREENHOUSE".equals(sourceFamily) || "LEVER".equals(sourceFamily);
+        return "GREENHOUSE".equals(sourceFamily)
+                || "LEVER".equals(sourceFamily)
+                || "WORKDAY".equals(sourceFamily);
     }
 }

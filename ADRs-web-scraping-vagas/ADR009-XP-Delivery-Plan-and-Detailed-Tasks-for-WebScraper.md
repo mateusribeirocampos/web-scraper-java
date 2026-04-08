@@ -548,6 +548,29 @@ Status atual:
 - reconciliação persistida para ambientes existentes via `V014__approve_camara_itajuba.sql`
 - `Itajubá` segue pendente apenas da trilha privada `Airbus/Helibras` via `Workday`
 
+#### Story 13.3.16 — Itajubá privada via Airbus/Helibras Workday
+- Implementar a trilha privada de `Itajubá` usando o board oficial `Workday` da Airbus.
+- Escopo:
+  - nova família operacional `WORKDAY`
+  - client paginado com filtro de localização para `Itajubá`
+  - normalização e persistência idempotente das vagas privadas
+  - wiring no runner e no catálogo operacional
+- Resultado consolidado:
+  - `airbus_helibras_workday` implementada
+  - validação técnica em runtime real fechada com `operational-check` `SUCCEEDED`
+  - `itemsFound=22`
+
+#### Story 13.3.17 — Itajubá privada: ativação operacional/legal da trilha Airbus Workday
+- Revisar a base legal/operacional da trilha privada `airbus_helibras_workday`.
+- Evidência revisada:
+  - `https://ag.wd3.myworkdayjobs.com/robots.txt`
+  - `https://www.airbus.com/en/careers`
+  - `https://www.airbus.com/en/privacy-notice`
+- Resultado consolidado:
+  - `airbus_helibras_workday` promovida para `APPROVED/enabled=true`
+  - reconciliação persistida para ambientes existentes via `V015__approve_airbus_helibras_workday.sql`
+  - `Itajubá` passa a ser a terceira cidade híbrida integralmente fechada
+
 ---
 
 ### Iteration 7 — Baseline de resiliência

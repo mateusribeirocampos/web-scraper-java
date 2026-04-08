@@ -210,8 +210,17 @@ web-scraper-java/
 - a validação real da trilha pública já fechou com `operational-check` `SUCCEEDED` e `itemsFound=1`
 - `camara_itajuba` foi promovida para `APPROVED/enabled=true` após revisão do portal oficial,
   `robots.txt` público e página institucional de LGPD/privacidade
+- a trilha privada `airbus_helibras_workday` agora também foi implementada para `Itajubá`,
+  usando o board oficial `Workday` da Airbus filtrado pelas vagas da `Helibras`
+- a validação técnica dessa trilha privada fechou com `operational-check` `SUCCEEDED` e
+  `itemsFound=22`
+- a revisão operacional/legal da trilha privada também foi fechada com promoção de
+  `airbus_helibras_workday` para `APPROVED/enabled=true`, apoiada em:
+  - `robots.txt` do domínio `wd3`
+  - página oficial `Careers` da Airbus apontando para o board
+  - política pública de privacidade da Airbus
+- com isso, `Itajubá` passa a ser a terceira cidade híbrida integralmente fechada
 - a prioridade alta do backlog híbrido agora é fechar as cidades por ordem de menor gap:
-  - `Itajubá`
   - `Poços de Caldas`
   - `Extrema`
 

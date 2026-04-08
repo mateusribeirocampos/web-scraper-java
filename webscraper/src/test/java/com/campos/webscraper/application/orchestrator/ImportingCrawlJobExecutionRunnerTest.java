@@ -6,6 +6,7 @@ import com.campos.webscraper.application.usecase.GupyJobImportUseCase;
 import com.campos.webscraper.application.usecase.InconfidentesContestImportUseCase;
 import com.campos.webscraper.application.usecase.IndeedJobImportUseCase;
 import com.campos.webscraper.application.usecase.LeverJobImportUseCase;
+import com.campos.webscraper.application.usecase.WorkdayJobImportUseCase;
 import com.campos.webscraper.application.usecase.PciConcursosImportUseCase;
 import com.campos.webscraper.application.usecase.PousoAlegreContestImportUseCase;
 import com.campos.webscraper.application.usecase.MunhozContestImportUseCase;
@@ -52,6 +53,9 @@ class ImportingCrawlJobExecutionRunnerTest {
 
     @Mock
     private LeverJobImportUseCase leverJobImportUseCase;
+
+    @Mock
+    private WorkdayJobImportUseCase workdayJobImportUseCase;
 
     @Mock
     private GupyJobImportUseCase gupyJobImportUseCase;
@@ -146,6 +150,23 @@ class ImportingCrawlJobExecutionRunnerTest {
         assertThat(outcome.pagesVisited()).isEqualTo(1);
         assertThat(outcome.itemsFound()).isEqualTo(1);
         verify(leverJobImportUseCase).execute(any(), any(), any());
+    }
+
+    @Test
+    @DisplayName("should execute Workday import and return execution counters")
+    void shouldExecuteWorkdayImportAndReturnExecutionCounters() {
+        CrawlJobEntity crawlJob = buildPrivateJob("airbus_helibras_workday");
+        CrawlExecutionEntity crawlExecution = buildExecution(crawlJob);
+        when(workdayJobImportUseCase.execute(any(), any(), any()))
+                .thenReturn(List.of(JobPostingEntity.builder().externalId("JR10397592").build()));
+
+        ImportingCrawlJobExecutionRunner runner = newRunner();
+
+        CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
+
+        assertThat(outcome.pagesVisited()).isEqualTo(1);
+        assertThat(outcome.itemsFound()).isEqualTo(1);
+        verify(workdayJobImportUseCase).execute(any(), any(), any());
     }
 
     @Test
@@ -285,6 +306,7 @@ class ImportingCrawlJobExecutionRunnerTest {
                 indeedJobImportUseCase,
                 greenhouseJobImportUseCase,
                 leverJobImportUseCase,
+                workdayJobImportUseCase,
                 gupyJobImportUseCase,
                 douContestImportUseCase,
                 pciConcursosImportUseCase,

@@ -18,6 +18,7 @@ public class TargetSiteOnboardingProfileCatalog {
         TargetSiteOnboardingProfileTemplate greenhouseBitso = fromGreenhouseProfile(GreenhouseBoardOnboardingProfiles.bitso());
         TargetSiteOnboardingProfileTemplate leverCiandt = fromLeverProfile(LeverBoardOnboardingProfiles.ciandt());
         TargetSiteOnboardingProfileTemplate leverWatchguard = fromLeverProfile(LeverBoardOnboardingProfiles.watchguard());
+        TargetSiteOnboardingProfileTemplate workdayAirbusHelibras = fromWorkdayProfile(WorkdayBoardOnboardingProfiles.airbusHelibras());
         TargetSiteOnboardingProfileTemplate indeedBr = CoreSourceOnboardingProfiles.indeedBr();
         TargetSiteOnboardingProfileTemplate douApi = CoreSourceOnboardingProfiles.douApi();
         TargetSiteOnboardingProfileTemplate pciConcursos = CoreSourceOnboardingProfiles.pciConcursos();
@@ -31,6 +32,7 @@ public class TargetSiteOnboardingProfileCatalog {
                 Map.entry(greenhouseBitso.profileKey(), greenhouseBitso),
                 Map.entry(leverCiandt.profileKey(), leverCiandt),
                 Map.entry(leverWatchguard.profileKey(), leverWatchguard),
+                Map.entry(workdayAirbusHelibras.profileKey(), workdayAirbusHelibras),
                 Map.entry(indeedBr.profileKey(), indeedBr),
                 Map.entry(douApi.profileKey(), douApi),
                 Map.entry(pciConcursos.profileKey(), pciConcursos),
@@ -78,6 +80,17 @@ public class TargetSiteOnboardingProfileCatalog {
         return new TargetSiteOnboardingProfileTemplate(
                 "lever_" + profile.boardToken(),
                 "LEVER",
+                profile.boardToken(),
+                profile.jobsApiUrl(),
+                profile.targetSite(),
+                profile.checklist()
+        );
+    }
+
+    private static TargetSiteOnboardingProfileTemplate fromWorkdayProfile(WorkdayBoardOnboardingProfile profile) {
+        return new TargetSiteOnboardingProfileTemplate(
+                profile.targetSite().getSiteCode(),
+                "WORKDAY",
                 profile.boardToken(),
                 profile.jobsApiUrl(),
                 profile.targetSite(),

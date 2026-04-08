@@ -198,6 +198,41 @@ class BootstrapTargetSiteFromProfileUseCaseTest {
     }
 
     @Test
+    @DisplayName("should promote Airbus Helibras Workday site when curated activation changes without runnable config changes")
+    void shouldPromoteAirbusHelibrasWorkdaySiteWhenCuratedActivationChangesWithoutRunnableConfigChanges() {
+        TargetSiteEntity existing = TargetSiteEntity.builder()
+                .id(28L)
+                .siteCode("airbus_helibras_workday")
+                .displayName("Airbus / Helibras Careers via Workday")
+                .baseUrl("https://ag.wd3.myworkdayjobs.com/wday/cxs/ag/Airbus/jobs")
+                .siteType(SiteType.TYPE_E)
+                .extractionMode(ExtractionMode.API)
+                .jobCategory(JobCategory.PRIVATE_SECTOR)
+                .legalStatus(LegalStatus.PENDING_REVIEW)
+                .selectorBundleVersion("n/a")
+                .enabled(false)
+                .createdAt(Instant.parse("2026-04-08T12:00:00Z"))
+                .updatedAt(Instant.parse("2026-04-08T12:30:00Z"))
+                .build();
+
+        when(targetSiteRepository.findBySiteCode("airbus_helibras_workday")).thenReturn(Optional.of(existing));
+        when(targetSiteRepository.save(any(TargetSiteEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        BootstrapTargetSiteFromProfileUseCase useCase = new BootstrapTargetSiteFromProfileUseCase(
+                catalog,
+                targetSiteRepository,
+                Clock.fixed(Instant.parse("2026-04-08T19:00:00Z"), ZoneOffset.UTC)
+        );
+
+        BootstrappedTargetSite result = useCase.execute("airbus_helibras_workday");
+
+        assertThat(result.bootstrapStatus()).isEqualTo(BootstrapStatus.UPDATED);
+        assertThat(result.targetSite().getLegalStatus()).isEqualTo(LegalStatus.APPROVED);
+        assertThat(result.targetSite().isEnabled()).isTrue();
+        assertThat(result.targetSite().getUpdatedAt()).isEqualTo(Instant.parse("2026-04-08T19:00:00Z"));
+    }
+
+    @Test
     @DisplayName("should preserve existing approval when curated template is still pending review")
     void shouldPreserveExistingApprovalWhenCuratedTemplateIsStillPendingReview() {
         TargetSiteEntity existing = TargetSiteEntity.builder()

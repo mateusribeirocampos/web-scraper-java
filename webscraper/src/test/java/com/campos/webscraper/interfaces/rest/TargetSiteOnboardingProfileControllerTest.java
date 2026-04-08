@@ -169,6 +169,57 @@ class TargetSiteOnboardingProfileControllerTest {
     }
 
     @Test
+    @DisplayName("should return board token for Workday onboarding profile too")
+    void shouldReturnBoardTokenForWorkdayOnboardingProfileToo() throws Exception {
+        when(getTargetSiteOnboardingProfileUseCase.execute("airbus_helibras_workday")).thenReturn(
+                new TargetSiteOnboardingProfileResponse(
+                        "airbus_helibras_workday",
+                        "WORKDAY",
+                        "Airbus",
+                        "Airbus",
+                        "https://ag.wd3.myworkdayjobs.com/wday/cxs/ag/Airbus/jobs",
+                        "airbus_helibras_workday",
+                        "Airbus / Helibras Careers via Workday",
+                        "https://ag.wd3.myworkdayjobs.com/wday/cxs/ag/Airbus/jobs",
+                        "TYPE_E",
+                        "API",
+                        "PRIVATE_SECTOR",
+                        "APPROVED",
+                        true,
+                        "n/a",
+                        "https://ag.wd3.myworkdayjobs.com/robots.txt",
+                        true,
+                        true,
+                        "",
+                        true,
+                        true,
+                        true,
+                        "https://ag.wd3.myworkdayjobs.com/wday/cxs/ag/Airbus/jobs",
+                        true,
+                        "Trilha privada de Itajubá mapeada no board oficial da Airbus com vagas da Helibras na cidade.",
+                        "Workday public jobs API: filtered POST with conservative pagination",
+                        "API_OFICIAL",
+                        "platform-team@local",
+                        "PUBLIC_ANONYMOUS",
+                        "Board Workday Airbus revisado em 2026-04-08; robots do domínio wd3 permitem a trilha /Airbus/, a página oficial de careers da Airbus aponta para o board e a revisão legal foi fechada sem restrição explícita específica para a API pública de vagas."
+                )
+        );
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new RestExceptionHandler())
+                .build();
+
+        mockMvc.perform(get("/api/v1/onboarding-profiles/airbus_helibras_workday"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.profileKey").value("airbus_helibras_workday"))
+                .andExpect(jsonPath("$.sourceFamily").value("WORKDAY"))
+                .andExpect(jsonPath("$.boardToken").value("Airbus"))
+                .andExpect(jsonPath("$.sourceIdentifier").value("Airbus"));
+
+        verify(getTargetSiteOnboardingProfileUseCase).execute("airbus_helibras_workday");
+    }
+
+    @Test
     @DisplayName("should return not found for unknown onboarding profile")
     void shouldReturnNotFoundForUnknownOnboardingProfile() throws Exception {
         when(getTargetSiteOnboardingProfileUseCase.execute("unknown"))
