@@ -2,7 +2,7 @@
 
 ## Status
 
-Open
+Concluida
 
 ## Objective
 
@@ -24,9 +24,8 @@ implementações.
 
 - `Itajubá` passa a ser a próxima cidade híbrida aberta;
 - `lever_watchguard` não recebe nova ação de compliance nesta fatia;
-- a próxima implementação da cidade ainda depende do mapeamento das duas trilhas:
-  - privada;
-  - pública oficial.
+- o mapeamento detalhado das duas trilhas fica explicitamente desdobrado para a story seguinte;
+- a abertura da cidade fica concluída sem escolher ainda a primeira implementação.
 
 ## Next Steps
 
@@ -40,6 +39,6 @@ implementações.
 ## Final State
 
 - `Itajubá` fica aberta como a próxima cidade do backlog híbrido;
-- `lever_watchguard` permanece `PENDING_REVIEW`;
-- o projeto passa a carregar explicitamente a recomendação de um teste operacional ponta a ponta
-  antes do próximo bloco grande de expansão.
+- `lever_watchguard` permanece sem nova ação adicional nesta fatia;
+- a decisão de mapeamento e ordem da implementação segue para a próxima story operacional da
+  cidade.

@@ -26,6 +26,7 @@ public class TargetSiteOnboardingProfileCatalog {
         TargetSiteOnboardingProfileTemplate municipalMunhoz = CoreSourceOnboardingProfiles.municipalMunhoz();
         TargetSiteOnboardingProfileTemplate municipalCampinas = CoreSourceOnboardingProfiles.municipalCampinas();
         TargetSiteOnboardingProfileTemplate camaraSantaRitaSapucai = CoreSourceOnboardingProfiles.camaraSantaRitaSapucai();
+        TargetSiteOnboardingProfileTemplate camaraItajuba = CoreSourceOnboardingProfiles.camaraItajuba();
         this.templatesByKey = Map.ofEntries(
                 Map.entry(greenhouseBitso.profileKey(), greenhouseBitso),
                 Map.entry(leverCiandt.profileKey(), leverCiandt),
@@ -37,7 +38,8 @@ public class TargetSiteOnboardingProfileCatalog {
                 Map.entry(municipalPousoAlegre.profileKey(), municipalPousoAlegre),
                 Map.entry(municipalMunhoz.profileKey(), municipalMunhoz),
                 Map.entry(municipalCampinas.profileKey(), municipalCampinas),
-                Map.entry(camaraSantaRitaSapucai.profileKey(), camaraSantaRitaSapucai)
+                Map.entry(camaraSantaRitaSapucai.profileKey(), camaraSantaRitaSapucai),
+                Map.entry(camaraItajuba.profileKey(), camaraItajuba)
         );
     }
 

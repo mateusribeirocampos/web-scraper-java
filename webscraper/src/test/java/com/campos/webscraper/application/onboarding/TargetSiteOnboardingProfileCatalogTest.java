@@ -20,7 +20,7 @@ class TargetSiteOnboardingProfileCatalogTest {
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
                 .contains("greenhouse_bitso", "lever_ciandt", "lever_watchguard", "indeed-br", "dou-api", "pci_concursos",
                         "municipal_inconfidentes", "municipal_pouso_alegre", "municipal_munhoz",
-                        "municipal_campinas", "camara_santa_rita_sapucai");
+                        "municipal_campinas", "camara_santa_rita_sapucai", "camara_itajuba");
     }
 
     @Test
@@ -47,6 +47,7 @@ class TargetSiteOnboardingProfileCatalogTest {
         TargetSiteOnboardingProfileTemplate munhoz = catalog.get("municipal_munhoz");
         TargetSiteOnboardingProfileTemplate campinas = catalog.get("municipal_campinas");
         TargetSiteOnboardingProfileTemplate camaraSantaRita = catalog.get("camara_santa_rita_sapucai");
+        TargetSiteOnboardingProfileTemplate camaraItajuba = catalog.get("camara_itajuba");
 
         assertThat(indeed.sourceFamily()).isEqualTo("INDEED");
         assertThat(indeed.targetSite().getSiteCode()).isEqualTo("indeed-br");
@@ -112,6 +113,13 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(camaraSantaRita.targetSite().getLegalStatus().name()).isEqualTo("APPROVED");
         assertThat(camaraSantaRita.targetSite().isEnabled()).isTrue();
         assertThat(camaraSantaRita.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.DADOS_PUBLICOS);
+
+        assertThat(camaraItajuba.sourceFamily()).isEqualTo("LEGISLATIVE_HTML");
+        assertThat(camaraItajuba.targetSite().getSiteCode()).isEqualTo("camara_itajuba");
+        assertThat(camaraItajuba.targetSite().getSelectorBundleVersion()).isEqualTo("camara_itajuba_html_v1");
+        assertThat(camaraItajuba.targetSite().getLegalStatus().name()).isEqualTo("PENDING_REVIEW");
+        assertThat(camaraItajuba.targetSite().isEnabled()).isFalse();
+        assertThat(camaraItajuba.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.DADOS_PUBLICOS);
     }
 
     @Test
@@ -164,6 +172,12 @@ class TargetSiteOnboardingProfileCatalogTest {
                 .get()
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
                 .isEqualTo("camara_santa_rita_sapucai");
+
+        assertThat(catalog.findBySiteCode("camara_itajuba"))
+                .isPresent()
+                .get()
+                .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
+                .isEqualTo("camara_itajuba");
 
         assertThat(catalog.findBySiteCode("unknown-site")).isEmpty();
     }

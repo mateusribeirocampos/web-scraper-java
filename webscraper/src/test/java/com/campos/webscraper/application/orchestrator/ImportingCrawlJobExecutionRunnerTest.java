@@ -11,6 +11,7 @@ import com.campos.webscraper.application.usecase.PousoAlegreContestImportUseCase
 import com.campos.webscraper.application.usecase.MunhozContestImportUseCase;
 import com.campos.webscraper.application.usecase.CampinasContestImportUseCase;
 import com.campos.webscraper.application.usecase.CamaraSantaRitaContestImportUseCase;
+import com.campos.webscraper.application.usecase.CamaraItajubaContestImportUseCase;
 import com.campos.webscraper.domain.enums.CrawlExecutionStatus;
 import com.campos.webscraper.domain.enums.ExtractionMode;
 import com.campos.webscraper.domain.enums.JobCategory;
@@ -75,6 +76,9 @@ class ImportingCrawlJobExecutionRunnerTest {
 
     @Mock
     private CamaraSantaRitaContestImportUseCase camaraSantaRitaContestImportUseCase;
+
+    @Mock
+    private CamaraItajubaContestImportUseCase camaraItajubaContestImportUseCase;
 
     @Test
     @DisplayName("should execute greenhouse import and return execution counters")
@@ -259,6 +263,23 @@ class ImportingCrawlJobExecutionRunnerTest {
         verify(camaraSantaRitaContestImportUseCase).execute(any(), any(), any());
     }
 
+    @Test
+    @DisplayName("should execute Itajubá Câmara import for legislative static public contest jobs")
+    void shouldExecuteItajubaCamaraImportForLegislativeStaticPublicContestJobs() {
+        CrawlJobEntity crawlJob = buildStaticPublicJob("camara_itajuba");
+        CrawlExecutionEntity crawlExecution = buildExecution(crawlJob);
+        when(camaraItajubaContestImportUseCase.execute(any(), any(), any()))
+                .thenReturn(List.of(PublicContestPostingEntity.builder().externalId("camara-itajuba-1").build()));
+
+        ImportingCrawlJobExecutionRunner runner = newRunner();
+
+        CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
+
+        assertThat(outcome.pagesVisited()).isEqualTo(1);
+        assertThat(outcome.itemsFound()).isEqualTo(1);
+        verify(camaraItajubaContestImportUseCase).execute(any(), any(), any());
+    }
+
     private ImportingCrawlJobExecutionRunner newRunner() {
         return new ImportingCrawlJobExecutionRunner(
                 indeedJobImportUseCase,
@@ -271,7 +292,8 @@ class ImportingCrawlJobExecutionRunnerTest {
                 pousoAlegreContestImportUseCase,
                 munhozContestImportUseCase,
                 campinasContestImportUseCase,
-                camaraSantaRitaContestImportUseCase
+                camaraSantaRitaContestImportUseCase,
+                camaraItajubaContestImportUseCase
         );
     }
 

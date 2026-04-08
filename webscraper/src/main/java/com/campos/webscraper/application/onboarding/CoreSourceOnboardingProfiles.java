@@ -327,4 +327,43 @@ public final class CoreSourceOnboardingProfiles {
         );
     }
 
+    public static TargetSiteOnboardingProfileTemplate camaraItajuba() {
+        String listingUrl = "https://itajuba.cam.mg.gov.br/site/camara-municipal-de-itajuba-lanca-concurso-publico-para-preenchimento-de-cargos-efetivos/";
+        return new TargetSiteOnboardingProfileTemplate(
+                "camara_itajuba",
+                "LEGISLATIVE_HTML",
+                "camara_itajuba",
+                listingUrl,
+                TargetSiteEntity.builder()
+                        .siteCode("camara_itajuba")
+                        .displayName("Câmara Municipal de Itajubá - Concurso Público")
+                        .baseUrl(listingUrl)
+                        .siteType(SiteType.TYPE_A)
+                        .extractionMode(ExtractionMode.STATIC_HTML)
+                        .jobCategory(JobCategory.PUBLIC_CONTEST)
+                        .legalStatus(LegalStatus.PENDING_REVIEW)
+                        .selectorBundleVersion("camara_itajuba_html_v1")
+                        .enabled(false)
+                        .createdAt(Instant.parse("2026-04-06T00:00:00Z"))
+                        .build(),
+                new SiteOnboardingChecklist(
+                        "https://itajuba.cam.mg.gov.br/robots.txt",
+                        false,
+                        false,
+                        "https://itajuba.cam.mg.gov.br/site/lgpd/",
+                        false,
+                        false,
+                        true,
+                        "",
+                        true,
+                        "Fonte oficial legislativa para o concurso público da Câmara Municipal de Itajubá, com página institucional e anexo PDF do edital.",
+                        "1 request every 10 seconds",
+                        OnboardingLegalCategory.DADOS_PUBLICOS,
+                        "platform-team@local",
+                        "PUBLIC_ANONYMOUS",
+                        "Página institucional do concurso público 2023 da Câmara de Itajubá mapeada em 2026-04-06, com edital oficial em PDF e atualização posterior de status no próprio portal."
+                )
+        );
+    }
+
 }

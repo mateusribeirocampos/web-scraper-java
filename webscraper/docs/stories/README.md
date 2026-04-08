@@ -107,7 +107,9 @@ Exemplos:
 | 13.3.6 — Santa Rita do Sapucaí privada via WatchGuard Lever | [STORY-13.3.6-santa-rita-watchguard-lever.md](STORY-13.3.6-santa-rita-watchguard-lever.md) | ✅ Concluída |
 | 13.3.7 — Santa Rita do Sapucaí pública via Câmara HTML | [STORY-13.3.7-santa-rita-camara-public-html.md](STORY-13.3.7-santa-rita-camara-public-html.md) | ✅ Concluída |
 | 13.3.8 — Santa Rita do Sapucaí pública: ativação operacional/legal da Câmara | [STORY-13.3.8-santa-rita-camara-activation-review.md](STORY-13.3.8-santa-rita-camara-activation-review.md) | ✅ Concluída |
-| 13.3.9 — Itajubá híbrido: abertura privada + pública | [STORY-13.3.9-itajuba-hybrid-opening.md](STORY-13.3.9-itajuba-hybrid-opening.md) | 🚧 Aberta |
+| 13.3.9 — Itajubá híbrido: abertura privada + pública | [STORY-13.3.9-itajuba-hybrid-opening.md](STORY-13.3.9-itajuba-hybrid-opening.md) | ✅ Concluída |
 | 13.3.10 — Plano de fechamento das cidades híbridas | [STORY-13.3.10-hybrid-cities-closure-plan.md](STORY-13.3.10-hybrid-cities-closure-plan.md) | 🚧 Aberta |
 | 13.3.11 — Campinas privada: ativação da trilha CI&T Lever | [STORY-13.3.11-campinas-ciandt-activation-review.md](STORY-13.3.11-campinas-ciandt-activation-review.md) | ✅ Concluída |
 | 13.3.12 — Santa Rita privada: revisão operacional/legal da trilha WatchGuard via Lever | [STORY-13.3.12-santa-rita-watchguard-activation-review.md](STORY-13.3.12-santa-rita-watchguard-activation-review.md) | ✅ Concluída |
+| 13.3.13 — Itajubá híbrido: mapeamento das trilhas e ordem de execução | [STORY-13.3.13-itajuba-source-mapping.md](STORY-13.3.13-itajuba-source-mapping.md) | ✅ Concluída |
+| 13.3.14 — Itajubá pública via Câmara HTML | [STORY-13.3.14-itajuba-camara-public-html.md](STORY-13.3.14-itajuba-camara-public-html.md) | 🚧 Em andamento |

@@ -11,6 +11,7 @@ import com.campos.webscraper.application.usecase.PousoAlegreContestImportUseCase
 import com.campos.webscraper.application.usecase.MunhozContestImportUseCase;
 import com.campos.webscraper.application.usecase.CampinasContestImportUseCase;
 import com.campos.webscraper.application.usecase.CamaraSantaRitaContestImportUseCase;
+import com.campos.webscraper.application.usecase.CamaraItajubaContestImportUseCase;
 import com.campos.webscraper.domain.enums.JobCategory;
 import com.campos.webscraper.domain.model.CrawlExecutionEntity;
 import com.campos.webscraper.domain.model.CrawlJobEntity;
@@ -38,6 +39,7 @@ public class ImportingCrawlJobExecutionRunner implements CrawlJobExecutionRunner
     private final MunhozContestImportUseCase munhozContestImportUseCase;
     private final CampinasContestImportUseCase campinasContestImportUseCase;
     private final CamaraSantaRitaContestImportUseCase camaraSantaRitaContestImportUseCase;
+    private final CamaraItajubaContestImportUseCase camaraItajubaContestImportUseCase;
 
     public ImportingCrawlJobExecutionRunner(
             IndeedJobImportUseCase indeedJobImportUseCase,
@@ -50,7 +52,8 @@ public class ImportingCrawlJobExecutionRunner implements CrawlJobExecutionRunner
             PousoAlegreContestImportUseCase pousoAlegreContestImportUseCase,
             MunhozContestImportUseCase munhozContestImportUseCase,
             CampinasContestImportUseCase campinasContestImportUseCase,
-            CamaraSantaRitaContestImportUseCase camaraSantaRitaContestImportUseCase
+            CamaraSantaRitaContestImportUseCase camaraSantaRitaContestImportUseCase,
+            CamaraItajubaContestImportUseCase camaraItajubaContestImportUseCase
     ) {
         this.indeedJobImportUseCase = Objects.requireNonNull(
                 indeedJobImportUseCase, "indeedJobImportUseCase must not be null");
@@ -74,6 +77,8 @@ public class ImportingCrawlJobExecutionRunner implements CrawlJobExecutionRunner
                 campinasContestImportUseCase, "campinasContestImportUseCase must not be null");
         this.camaraSantaRitaContestImportUseCase = Objects.requireNonNull(
                 camaraSantaRitaContestImportUseCase, "camaraSantaRitaContestImportUseCase must not be null");
+        this.camaraItajubaContestImportUseCase = Objects.requireNonNull(
+                camaraItajubaContestImportUseCase, "camaraItajubaContestImportUseCase must not be null");
     }
 
     @Override
@@ -112,6 +117,8 @@ public class ImportingCrawlJobExecutionRunner implements CrawlJobExecutionRunner
                         campinasContestImportUseCase.execute(targetSite, crawlExecution, command).size();
                 case "camara_santa_rita_sapucai" ->
                         camaraSantaRitaContestImportUseCase.execute(targetSite, crawlExecution, command).size();
+                case "camara_itajuba" ->
+                        camaraItajubaContestImportUseCase.execute(targetSite, crawlExecution, command).size();
                 default -> throw new UnsupportedSiteException("No import runner registered for site: " + siteCode);
             };
         }

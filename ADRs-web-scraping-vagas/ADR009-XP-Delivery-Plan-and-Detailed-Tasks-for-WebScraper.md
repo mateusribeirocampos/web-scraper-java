@@ -499,6 +499,42 @@ Status atual:
 - reconciliação persistente adicionada para ambientes já bootstrapados
 - `Santa Rita do Sapucaí` encerrada como cidade híbrida com blocker definitivo na trilha privada
 
+#### Story 13.3.13 — Itajubá híbrido: mapeamento das trilhas e ordem de execução
+- Mapear a trilha privada real e a trilha pública oficial da cidade com evidência concreta.
+- Escolher a primeira implementação executável de `Itajubá`.
+
+Status atual:
+- trilha privada mapeada:
+  - `Helibras/Airbus` via `Workday`, com vagas oficiais em `Itajubá`
+- trilha pública mapeada:
+  - `Câmara Municipal de Itajubá`, com páginas institucionais e PDFs oficiais do concurso
+- hipótese de prefeitura rebaixada nesta etapa:
+  - domínio institucional apresentou desafio `Cloudflare` no acesso direto, aumentando o risco
+    operacional para a primeira implementação
+- ordem decidida para a cidade:
+  1. implementar primeiro a trilha pública oficial da Câmara Municipal de Itajubá
+  2. depois atacar a trilha privada `Helibras/Airbus` via `Workday`
+
+#### Story 13.3.14 — Itajubá pública via Câmara HTML
+- Implementar a trilha pública oficial da Câmara Municipal de Itajubá como primeira execução da
+  cidade.
+- Modelar a página institucional do concurso público e o PDF oficial do edital como fonte
+  `PUBLIC_CONTEST`.
+
+Status atual:
+- `camara_itajuba` entrou como fonte `LEGISLATIVE_HTML`
+- base URL escolhida:
+  - `https://itajuba.cam.mg.gov.br/site/camara-municipal-de-itajuba-lanca-concurso-publico-para-preenchimento-de-cargos-efetivos/`
+- primeira iteração implementada com:
+  - parser HTML estático
+  - normalizer canônico
+  - strategy
+  - import use case
+  - catálogo de onboarding
+  - runner
+- validação real concluída com `operational-check` `SUCCEEDED`, `crawlExecutionId=121` e `itemsFound=1`
+- a fonte permanece `PENDING_REVIEW/enabled=false` até fechar compliance
+
 ---
 
 ### Iteration 7 — Baseline de resiliência

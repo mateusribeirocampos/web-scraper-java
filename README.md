@@ -194,6 +194,21 @@ web-scraper-java/
 - `lever_watchguard` foi revisada em compliance e ficou `SCRAPING_PROIBIDO/enabled=false`
   por proibição explícita de scraping nos Terms of Use da WatchGuard
 - a próxima cidade híbrida aberta no backlog passa a ser `Itajubá`
+- o mapeamento atual da cidade ficou assim:
+  - pública oficial prioritária via `Câmara Municipal de Itajubá`
+  - privada candidata via `Helibras/Airbus` em `Workday`
+- a ordem de implementação decidida para `Itajubá` é:
+  - primeiro a trilha pública da Câmara
+  - depois a trilha privada `Airbus/Helibras`
+- a hipótese inicial de prefeitura foi rebaixada nesta etapa por risco operacional maior, após
+  resposta com desafio anti-bot no domínio institucional
+- a primeira trilha executável da cidade já entrou como `camara_itajuba`:
+  - `LEGISLATIVE_HTML`
+  - `STATIC_HTML`
+  - `PUBLIC_CONTEST`
+  - usando a página institucional do concurso e o PDF oficial do edital
+- a validação real da trilha pública já fechou com `operational-check` `SUCCEEDED` e `itemsFound=1`
+- a fonte ainda permanece `PENDING_REVIEW/enabled=false` até fechar compliance
 - a prioridade alta do backlog híbrido agora é fechar as cidades por ordem de menor gap:
   - `Itajubá`
   - `Poços de Caldas`
