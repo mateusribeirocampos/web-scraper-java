@@ -216,6 +216,7 @@ secrets/
 HELP.md
 create-schema.sql
 CONFIG-REFERENCE.md
+.codex
 
 # Permitir source em target (Spring Boot padrão)
 !**/src/main/**/target/
