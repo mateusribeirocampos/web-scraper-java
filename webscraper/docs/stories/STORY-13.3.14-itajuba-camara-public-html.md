@@ -88,4 +88,4 @@ Municipal, usando a página institucional de lançamento do concurso e o PDF ofi
 - `camara_itajuba` implementada em código;
 - suíte focada verde;
 - validação real concluída com `itemsFound=1`;
-- fonte pronta para review, ainda em `PENDING_REVIEW/enabled=false` até a revisão de compliance.
+- fonte pronta para a revisão de compliance da próxima fatia.

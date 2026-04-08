@@ -163,6 +163,41 @@ class BootstrapTargetSiteFromProfileUseCaseTest {
     }
 
     @Test
+    @DisplayName("should promote Itajuba chamber site when curated activation changes without runnable config changes")
+    void shouldPromoteItajubaChamberSiteWhenCuratedActivationChangesWithoutRunnableConfigChanges() {
+        TargetSiteEntity existing = TargetSiteEntity.builder()
+                .id(31L)
+                .siteCode("camara_itajuba")
+                .displayName("Câmara Municipal de Itajubá - Concurso Público")
+                .baseUrl("https://itajuba.cam.mg.gov.br/site/camara-municipal-de-itajuba-lanca-concurso-publico-para-preenchimento-de-cargos-efetivos/")
+                .siteType(SiteType.TYPE_A)
+                .extractionMode(ExtractionMode.STATIC_HTML)
+                .jobCategory(JobCategory.PUBLIC_CONTEST)
+                .legalStatus(LegalStatus.PENDING_REVIEW)
+                .selectorBundleVersion("camara_itajuba_html_v1")
+                .enabled(false)
+                .createdAt(Instant.parse("2026-04-06T12:00:00Z"))
+                .updatedAt(Instant.parse("2026-04-06T12:30:00Z"))
+                .build();
+
+        when(targetSiteRepository.findBySiteCode("camara_itajuba")).thenReturn(Optional.of(existing));
+        when(targetSiteRepository.save(any(TargetSiteEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        BootstrapTargetSiteFromProfileUseCase useCase = new BootstrapTargetSiteFromProfileUseCase(
+                catalog,
+                targetSiteRepository,
+                Clock.fixed(Instant.parse("2026-04-08T12:00:00Z"), ZoneOffset.UTC)
+        );
+
+        BootstrappedTargetSite result = useCase.execute("camara_itajuba");
+
+        assertThat(result.bootstrapStatus()).isEqualTo(BootstrapStatus.UPDATED);
+        assertThat(result.targetSite().getLegalStatus()).isEqualTo(LegalStatus.APPROVED);
+        assertThat(result.targetSite().isEnabled()).isTrue();
+        assertThat(result.targetSite().getUpdatedAt()).isEqualTo(Instant.parse("2026-04-08T12:00:00Z"));
+    }
+
+    @Test
     @DisplayName("should preserve existing approval when curated template is still pending review")
     void shouldPreserveExistingApprovalWhenCuratedTemplateIsStillPendingReview() {
         TargetSiteEntity existing = TargetSiteEntity.builder()

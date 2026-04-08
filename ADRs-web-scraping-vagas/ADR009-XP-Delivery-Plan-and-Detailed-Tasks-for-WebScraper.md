@@ -533,7 +533,20 @@ Status atual:
   - catálogo de onboarding
   - runner
 - validação real concluída com `operational-check` `SUCCEEDED`, `crawlExecutionId=121` e `itemsFound=1`
-- a fonte permanece `PENDING_REVIEW/enabled=false` até fechar compliance
+- a implementação ficou pronta para a revisão de compliance da próxima fatia
+
+#### Story 13.3.15 — Itajubá pública: ativação operacional/legal da Câmara
+- Revisar a base pública oficial da Câmara Municipal de Itajubá e decidir a promoção da fonte
+  `camara_itajuba`.
+
+Status atual:
+- `camara_itajuba` promovida para `APPROVED/enabled=true`
+- evidências revisadas:
+  - `https://itajuba.cam.mg.gov.br/robots.txt`
+  - `https://itajuba.cam.mg.gov.br/site/camara-municipal-de-itajuba-lanca-concurso-publico-para-preenchimento-de-cargos-efetivos/`
+  - `https://itajuba.cam.mg.gov.br/site/lgpd-lei-geral-de-protecao-de-dados-2/`
+- reconciliação persistida para ambientes existentes via `V014__approve_camara_itajuba.sql`
+- `Itajubá` segue pendente apenas da trilha privada `Airbus/Helibras` via `Workday`
 
 ---
 

@@ -341,18 +341,18 @@ public final class CoreSourceOnboardingProfiles {
                         .siteType(SiteType.TYPE_A)
                         .extractionMode(ExtractionMode.STATIC_HTML)
                         .jobCategory(JobCategory.PUBLIC_CONTEST)
-                        .legalStatus(LegalStatus.PENDING_REVIEW)
+                        .legalStatus(LegalStatus.APPROVED)
                         .selectorBundleVersion("camara_itajuba_html_v1")
-                        .enabled(false)
+                        .enabled(true)
                         .createdAt(Instant.parse("2026-04-06T00:00:00Z"))
                         .build(),
                 new SiteOnboardingChecklist(
                         "https://itajuba.cam.mg.gov.br/robots.txt",
-                        false,
-                        false,
-                        "https://itajuba.cam.mg.gov.br/site/lgpd/",
-                        false,
-                        false,
+                        true,
+                        true,
+                        "https://itajuba.cam.mg.gov.br/site/lgpd-lei-geral-de-protecao-de-dados-2/",
+                        true,
+                        true,
                         true,
                         "",
                         true,
@@ -361,7 +361,7 @@ public final class CoreSourceOnboardingProfiles {
                         OnboardingLegalCategory.DADOS_PUBLICOS,
                         "platform-team@local",
                         "PUBLIC_ANONYMOUS",
-                        "Página institucional do concurso público 2023 da Câmara de Itajubá mapeada em 2026-04-06, com edital oficial em PDF e atualização posterior de status no próprio portal."
+                        "Portal institucional da Câmara de Itajubá revisado em 2026-04-08 com robots.txt público, página oficial do concurso e política de privacidade/LGPD acessível no mesmo domínio."
                 )
         );
     }

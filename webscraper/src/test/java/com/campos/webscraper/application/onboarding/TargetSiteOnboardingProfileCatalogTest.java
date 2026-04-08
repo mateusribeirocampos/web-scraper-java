@@ -117,8 +117,8 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(camaraItajuba.sourceFamily()).isEqualTo("LEGISLATIVE_HTML");
         assertThat(camaraItajuba.targetSite().getSiteCode()).isEqualTo("camara_itajuba");
         assertThat(camaraItajuba.targetSite().getSelectorBundleVersion()).isEqualTo("camara_itajuba_html_v1");
-        assertThat(camaraItajuba.targetSite().getLegalStatus().name()).isEqualTo("PENDING_REVIEW");
-        assertThat(camaraItajuba.targetSite().isEnabled()).isFalse();
+        assertThat(camaraItajuba.targetSite().getLegalStatus().name()).isEqualTo("APPROVED");
+        assertThat(camaraItajuba.targetSite().isEnabled()).isTrue();
         assertThat(camaraItajuba.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.DADOS_PUBLICOS);
     }
 

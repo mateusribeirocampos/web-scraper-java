@@ -100,7 +100,8 @@ Regra atual de testes:
   - página institucional do concurso público da Câmara
   - PDF oficial do edital como URL canônica
 - a validação real da trilha pública já fechou com `operational-check` `SUCCEEDED` e `itemsFound=1`
-- a fonte ainda permanece `PENDING_REVIEW/enabled=false` até fechar compliance
+- `camara_itajuba` foi promovida para `APPROVED/enabled=true` após revisão do portal oficial,
+  `robots.txt` público e página institucional de LGPD/privacidade
 - a prioridade alta agora é fechar as cidades do backlog híbrido nesta ordem:
   - `Itajubá`
   - `Poços de Caldas`

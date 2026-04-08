@@ -208,7 +208,8 @@ web-scraper-java/
   - `PUBLIC_CONTEST`
   - usando a página institucional do concurso e o PDF oficial do edital
 - a validação real da trilha pública já fechou com `operational-check` `SUCCEEDED` e `itemsFound=1`
-- a fonte ainda permanece `PENDING_REVIEW/enabled=false` até fechar compliance
+- `camara_itajuba` foi promovida para `APPROVED/enabled=true` após revisão do portal oficial,
+  `robots.txt` público e página institucional de LGPD/privacidade
 - a prioridade alta do backlog híbrido agora é fechar as cidades por ordem de menor gap:
   - `Itajubá`
   - `Poços de Caldas`

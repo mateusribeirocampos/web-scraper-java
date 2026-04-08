@@ -276,6 +276,48 @@ class TargetSiteOnboardingValidatorTest {
     }
 
     @Test
+    @DisplayName("should approve Itajuba public chamber source when official public evidence is reviewed")
+    void shouldApproveItajubaPublicChamberSourceWhenOfficialPublicEvidenceIsReviewed() {
+        TargetSiteEntity itajuba = TargetSiteEntity.builder()
+                .siteCode("camara_itajuba")
+                .displayName("Câmara Municipal de Itajubá - Concurso Público")
+                .baseUrl("https://itajuba.cam.mg.gov.br/site/camara-municipal-de-itajuba-lanca-concurso-publico-para-preenchimento-de-cargos-efetivos/")
+                .siteType(SiteType.TYPE_A)
+                .extractionMode(ExtractionMode.STATIC_HTML)
+                .jobCategory(JobCategory.PUBLIC_CONTEST)
+                .legalStatus(LegalStatus.PENDING_REVIEW)
+                .selectorBundleVersion("camara_itajuba_html_v1")
+                .enabled(false)
+                .createdAt(Instant.parse("2026-04-06T00:00:00Z"))
+                .build();
+
+        SiteOnboardingChecklist checklist = new SiteOnboardingChecklist(
+                "https://itajuba.cam.mg.gov.br/robots.txt",
+                true,
+                true,
+                "https://itajuba.cam.mg.gov.br/site/lgpd-lei-geral-de-protecao-de-dados-2/",
+                true,
+                true,
+                true,
+                "",
+                true,
+                "Fonte oficial legislativa para concurso público municipal.",
+                "1 request every 10 seconds",
+                OnboardingLegalCategory.DADOS_PUBLICOS,
+                "platform-team@local",
+                "PUBLIC_ANONYMOUS",
+                "Portal institucional da Câmara de Itajubá revisado com robots.txt público, política LGPD acessível e página oficial do concurso."
+        );
+
+        TargetSiteOnboardingDecision decision = validator.assess(itajuba, checklist);
+
+        assertThat(decision.productionReady()).isTrue();
+        assertThat(decision.targetSite().getLegalStatus()).isEqualTo(LegalStatus.APPROVED);
+        assertThat(decision.targetSite().isEnabled()).isTrue();
+        assertThat(decision.blockingReasons()).isEmpty();
+    }
+
+    @Test
     @DisplayName("should approve CI&T Lever source when official API and privacy evidence are reviewed")
     void shouldApproveCiandtLeverSourceWhenOfficialApiAndPrivacyEvidenceAreReviewed() {
         TargetSiteEntity ciandt = TargetSiteEntity.builder()
