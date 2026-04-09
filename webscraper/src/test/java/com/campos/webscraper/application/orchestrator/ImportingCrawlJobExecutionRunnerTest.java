@@ -13,6 +13,7 @@ import com.campos.webscraper.application.usecase.MunhozContestImportUseCase;
 import com.campos.webscraper.application.usecase.CampinasContestImportUseCase;
 import com.campos.webscraper.application.usecase.CamaraSantaRitaContestImportUseCase;
 import com.campos.webscraper.application.usecase.CamaraItajubaContestImportUseCase;
+import com.campos.webscraper.application.usecase.PocosCaldasContestImportUseCase;
 import com.campos.webscraper.domain.enums.CrawlExecutionStatus;
 import com.campos.webscraper.domain.enums.ExtractionMode;
 import com.campos.webscraper.domain.enums.JobCategory;
@@ -83,6 +84,9 @@ class ImportingCrawlJobExecutionRunnerTest {
 
     @Mock
     private CamaraItajubaContestImportUseCase camaraItajubaContestImportUseCase;
+
+    @Mock
+    private PocosCaldasContestImportUseCase pocosCaldasContestImportUseCase;
 
     @Test
     @DisplayName("should execute greenhouse import and return execution counters")
@@ -159,6 +163,23 @@ class ImportingCrawlJobExecutionRunnerTest {
         CrawlExecutionEntity crawlExecution = buildExecution(crawlJob);
         when(workdayJobImportUseCase.execute(any(), any(), any()))
                 .thenReturn(List.of(JobPostingEntity.builder().externalId("JR10397592").build()));
+
+        ImportingCrawlJobExecutionRunner runner = newRunner();
+
+        CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
+
+        assertThat(outcome.pagesVisited()).isEqualTo(1);
+        assertThat(outcome.itemsFound()).isEqualTo(1);
+        verify(workdayJobImportUseCase).execute(any(), any(), any());
+    }
+
+    @Test
+    @DisplayName("should execute Alcoa Workday import and return execution counters")
+    void shouldExecuteAlcoaWorkdayImportAndReturnExecutionCounters() {
+        CrawlJobEntity crawlJob = buildPrivateJob("alcoa_pocos_caldas_workday");
+        CrawlExecutionEntity crawlExecution = buildExecution(crawlJob);
+        when(workdayJobImportUseCase.execute(any(), any(), any()))
+                .thenReturn(List.of(JobPostingEntity.builder().externalId("Req-36617").build()));
 
         ImportingCrawlJobExecutionRunner runner = newRunner();
 
@@ -301,6 +322,23 @@ class ImportingCrawlJobExecutionRunnerTest {
         verify(camaraItajubaContestImportUseCase).execute(any(), any(), any());
     }
 
+    @Test
+    @DisplayName("should execute Poços de Caldas PDF import for municipal public contest jobs")
+    void shouldExecutePocosDeCaldasPdfImportForMunicipalPublicContestJobs() {
+        CrawlJobEntity crawlJob = buildStaticPublicJob("municipal_pocos_caldas");
+        CrawlExecutionEntity crawlExecution = buildExecution(crawlJob);
+        when(pocosCaldasContestImportUseCase.execute(any(), any(), any()))
+                .thenReturn(List.of(PublicContestPostingEntity.builder().externalId("municipal_pocos_caldas:processo-seletivo-001-2025").build()));
+
+        ImportingCrawlJobExecutionRunner runner = newRunner();
+
+        CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
+
+        assertThat(outcome.pagesVisited()).isEqualTo(1);
+        assertThat(outcome.itemsFound()).isEqualTo(1);
+        verify(pocosCaldasContestImportUseCase).execute(any(), any(), any());
+    }
+
     private ImportingCrawlJobExecutionRunner newRunner() {
         return new ImportingCrawlJobExecutionRunner(
                 indeedJobImportUseCase,
@@ -315,7 +353,8 @@ class ImportingCrawlJobExecutionRunnerTest {
                 munhozContestImportUseCase,
                 campinasContestImportUseCase,
                 camaraSantaRitaContestImportUseCase,
-                camaraItajubaContestImportUseCase
+                camaraItajubaContestImportUseCase,
+                pocosCaldasContestImportUseCase
         );
     }
 

@@ -75,4 +75,31 @@ class WorkdayJobNormalizerTest {
         assertThat(posting.getTechStackTags()).isEqualTo("SAP");
         assertThat(posting.getPublishedAt()).isEqualTo(LocalDate.of(2026, 3, 9));
     }
+
+    @Test
+    @DisplayName("should map Alcoa Workday posting into canonical private-sector entity")
+    void shouldMapAlcoaWorkdayPostingIntoCanonicalPrivateSectorEntity() {
+        WorkdayJobNormalizer normalizer = new WorkdayJobNormalizer(
+                new ObjectMapper(),
+                Clock.fixed(Instant.parse("2026-04-09T12:00:00Z"), ZoneOffset.UTC)
+        );
+
+        JobPostingEntity posting = normalizer.normalize(
+                "alcoa_pocos_caldas_workday",
+                new WorkdayJobPostingResponse(
+                        "Operadora(or) de Refinaria A",
+                        "/job/Brazil-MG-Poos-de-Caldas/Operadora-or--de-Refinaria-A_Req-36617",
+                        "Brazil, MG, Poços de Caldas",
+                        "Posted 6 Days Ago",
+                        List.of("Req-36617")
+                )
+        );
+
+        assertThat(posting.getExternalId()).isEqualTo("Req-36617");
+        assertThat(posting.getCanonicalUrl())
+                .isEqualTo("https://alcoa.wd5.myworkdayjobs.com/en-US/Careers/job/Brazil-MG-Poos-de-Caldas/Operadora-or--de-Refinaria-A_Req-36617");
+        assertThat(posting.getCompany()).isEqualTo("Alcoa");
+        assertThat(posting.getLocation()).isEqualTo("Brazil, MG, Poços de Caldas");
+        assertThat(posting.getPublishedAt()).isEqualTo(LocalDate.of(2026, 4, 3));
+    }
 }

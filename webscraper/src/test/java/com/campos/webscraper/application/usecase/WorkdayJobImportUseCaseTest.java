@@ -96,6 +96,35 @@ class WorkdayJobImportUseCaseTest {
         verify(idempotentPersistenceService).persist(any());
     }
 
+    @Test
+    @DisplayName("should persist Alcoa Workday items when scrape succeeds")
+    void shouldPersistAlcoaWorkdayItemsWhenScrapeSucceeds() {
+        WorkdayJobImportUseCase useCase = new WorkdayJobImportUseCase(
+                jobPostingRepository,
+                strategy,
+                new JobPostingFingerprintCalculator(),
+                idempotentPersistenceService
+        );
+
+        when(strategy.scrape(any())).thenReturn(ScrapeResult.success(List.of(
+                JobPostingEntity.builder()
+                        .externalId("Req-36617")
+                        .canonicalUrl("https://alcoa.wd5.myworkdayjobs.com/en-US/Careers/job/Brazil-MG-Poos-de-Caldas/Operadora-or--de-Refinaria-A_Req-36617")
+                        .title("Operadora(or) de Refinaria A")
+                        .company("Alcoa")
+                        .location("Brazil, MG, Poços de Caldas")
+                        .remote(false)
+                        .publishedAt(LocalDate.parse("2026-04-03"))
+                        .payloadJson("{}")
+                        .createdAt(Instant.parse("2026-04-09T12:00:00Z"))
+                        .build()
+        ), "alcoa_pocos_caldas_workday"));
+
+        useCase.execute(buildAlcoaSite(), buildExecution(), buildAlcoaCommand());
+
+        verify(idempotentPersistenceService).persist(any());
+    }
+
     private static TargetSiteEntity buildSite() {
         return TargetSiteEntity.builder()
                 .id(51L)
@@ -128,6 +157,31 @@ class WorkdayJobImportUseCaseTest {
         return new ScrapeCommand(
                 "airbus_helibras_workday",
                 "https://ag.wd3.myworkdayjobs.com/wday/cxs/ag/Airbus/jobs",
+                ExtractionMode.API,
+                JobCategory.PRIVATE_SECTOR
+        );
+    }
+
+    private static TargetSiteEntity buildAlcoaSite() {
+        return TargetSiteEntity.builder()
+                .id(52L)
+                .siteCode("alcoa_pocos_caldas_workday")
+                .displayName("Alcoa Careers via Workday - Poços de Caldas")
+                .baseUrl("https://alcoa.wd5.myworkdayjobs.com/wday/cxs/alcoa/Careers/jobs")
+                .siteType(SiteType.TYPE_E)
+                .extractionMode(ExtractionMode.API)
+                .jobCategory(JobCategory.PRIVATE_SECTOR)
+                .legalStatus(LegalStatus.APPROVED)
+                .selectorBundleVersion("n/a")
+                .enabled(true)
+                .createdAt(Instant.parse("2026-04-09T00:00:00Z"))
+                .build();
+    }
+
+    private static ScrapeCommand buildAlcoaCommand() {
+        return new ScrapeCommand(
+                "alcoa_pocos_caldas_workday",
+                "https://alcoa.wd5.myworkdayjobs.com/wday/cxs/alcoa/Careers/jobs",
                 ExtractionMode.API,
                 JobCategory.PRIVATE_SECTOR
         );

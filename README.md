@@ -220,6 +220,33 @@ web-scraper-java/
   - página oficial `Careers` da Airbus apontando para o board
   - política pública de privacidade da Airbus
 - com isso, `Itajubá` passa a ser a terceira cidade híbrida integralmente fechada
+- `Poços de Caldas` passa a ser a próxima cidade do backlog híbrido, com:
+  - trilha pública oficial via edital PDF da Prefeitura;
+  - trilha privada oficial via `Alcoa` em `Workday`
+- a trilha pública oficial da cidade entrou como `municipal_pocos_caldas`, ancorada na
+  listagem institucional `Concursos Públicos` do `Descomplica Poços`, de onde o edital canônico
+  deve ser descoberto
+- a validação técnica da trilha pública fecha com extração do cronograma real do edital e
+  `operational-check` dedicado
+- a revisão legal da trilha pública foi concluída, mas a fonte permaneceu em
+  `PENDING_REVIEW/enabled=false` porque o edital revisado é o `001/2025`, já encerrado em
+  `2025-09-09`
+- a base auditada da trilha pública continua sendo:
+  - `robots.txt` público da prefeitura
+  - página institucional de LGPD
+  - listagem institucional oficial de concursos
+  - edital PDF oficial público e estável
+- a trilha privada `alcoa_pocos_caldas_workday` também entrou como fonte oficial da cidade,
+  usando o board `Workday` da Alcoa filtrado pelas vagas de `Poços de Caldas`
+- a validação técnica da trilha privada fecha com `operational-check` `SUCCEEDED` e vagas reais da
+  cidade
+- a revisão operacional/legal da trilha privada também foi fechada com promoção para
+  `APPROVED/enabled=true`, apoiada em:
+  - `robots.txt` do domínio `wd5`
+  - board oficial `Workday` da Alcoa
+  - política pública de privacidade da Alcoa
+- com isso, `Poços de Caldas` fica com a trilha privada fechada e a trilha pública tecnicamente
+  pronta, mas ainda pendente de um edital vigente para ativação
 - a prioridade alta do backlog híbrido agora é fechar as cidades por ordem de menor gap:
   - `Poços de Caldas`
   - `Extrema`

@@ -18,9 +18,9 @@ class TargetSiteOnboardingProfileCatalogTest {
     void shouldExposeCuratedOnboardingProfilesForSupportedSources() {
         assertThat(catalog.list())
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
-                .contains("greenhouse_bitso", "lever_ciandt", "lever_watchguard", "airbus_helibras_workday", "indeed-br", "dou-api", "pci_concursos",
+                .contains("greenhouse_bitso", "lever_ciandt", "lever_watchguard", "airbus_helibras_workday", "alcoa_pocos_caldas_workday", "indeed-br", "dou-api", "pci_concursos",
                         "municipal_inconfidentes", "municipal_pouso_alegre", "municipal_munhoz",
-                        "municipal_campinas", "camara_santa_rita_sapucai", "camara_itajuba");
+                        "municipal_campinas", "municipal_pocos_caldas", "camara_santa_rita_sapucai", "camara_itajuba");
     }
 
     @Test
@@ -41,12 +41,14 @@ class TargetSiteOnboardingProfileCatalogTest {
         TargetSiteOnboardingProfileTemplate lever = catalog.get("lever_ciandt");
         TargetSiteOnboardingProfileTemplate watchguard = catalog.get("lever_watchguard");
         TargetSiteOnboardingProfileTemplate workday = catalog.get("airbus_helibras_workday");
+        TargetSiteOnboardingProfileTemplate workdayAlcoa = catalog.get("alcoa_pocos_caldas_workday");
         TargetSiteOnboardingProfileTemplate dou = catalog.get("dou-api");
         TargetSiteOnboardingProfileTemplate pci = catalog.get("pci_concursos");
         TargetSiteOnboardingProfileTemplate inconfidentes = catalog.get("municipal_inconfidentes");
         TargetSiteOnboardingProfileTemplate pousoAlegre = catalog.get("municipal_pouso_alegre");
         TargetSiteOnboardingProfileTemplate munhoz = catalog.get("municipal_munhoz");
         TargetSiteOnboardingProfileTemplate campinas = catalog.get("municipal_campinas");
+        TargetSiteOnboardingProfileTemplate pocosCaldas = catalog.get("municipal_pocos_caldas");
         TargetSiteOnboardingProfileTemplate camaraSantaRita = catalog.get("camara_santa_rita_sapucai");
         TargetSiteOnboardingProfileTemplate camaraItajuba = catalog.get("camara_itajuba");
 
@@ -78,6 +80,14 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(workday.jobsApiUrl()).isEqualTo("https://ag.wd3.myworkdayjobs.com/wday/cxs/ag/Airbus/jobs");
         assertThat(workday.targetSite().getLegalStatus().name()).isEqualTo("APPROVED");
         assertThat(workday.targetSite().isEnabled()).isTrue();
+
+        assertThat(workdayAlcoa.sourceFamily()).isEqualTo("WORKDAY");
+        assertThat(workdayAlcoa.targetSite().getSiteCode()).isEqualTo("alcoa_pocos_caldas_workday");
+        assertThat(workdayAlcoa.targetSite().getDisplayName()).isEqualTo("Alcoa Careers via Workday - Poços de Caldas");
+        assertThat(workdayAlcoa.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.API_OFICIAL);
+        assertThat(workdayAlcoa.jobsApiUrl()).isEqualTo("https://alcoa.wd5.myworkdayjobs.com/wday/cxs/alcoa/Careers/jobs");
+        assertThat(workdayAlcoa.targetSite().getLegalStatus().name()).isEqualTo("APPROVED");
+        assertThat(workdayAlcoa.targetSite().isEnabled()).isTrue();
 
         assertThat(dou.sourceFamily()).isEqualTo("DOU");
         assertThat(dou.targetSite().getSiteCode()).isEqualTo("dou-api");
@@ -115,6 +125,15 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(campinas.targetSite().isEnabled()).isTrue();
         assertThat(campinas.jobsApiUrl()).contains("portal-api.campinas.sp.gov.br/jsonapi/node/site");
         assertThat(campinas.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.API_OFICIAL);
+
+        assertThat(pocosCaldas.sourceFamily()).isEqualTo("MUNICIPAL_PDF");
+        assertThat(pocosCaldas.targetSite().getSiteCode()).isEqualTo("municipal_pocos_caldas");
+        assertThat(pocosCaldas.targetSite().getSelectorBundleVersion()).isEqualTo("pocos_caldas_pdf_v1");
+        assertThat(pocosCaldas.targetSite().getLegalStatus().name()).isEqualTo("PENDING_REVIEW");
+        assertThat(pocosCaldas.targetSite().isEnabled()).isFalse();
+        assertThat(pocosCaldas.jobsApiUrl())
+                .isEqualTo("https://descomplica.pocosdecaldas.mg.gov.br/info.php?c=609");
+        assertThat(pocosCaldas.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.DADOS_PUBLICOS);
 
         assertThat(camaraSantaRita.sourceFamily()).isEqualTo("LEGISLATIVE_HTML");
         assertThat(camaraSantaRita.targetSite().getSiteCode()).isEqualTo("camara_santa_rita_sapucai");
@@ -158,6 +177,12 @@ class TargetSiteOnboardingProfileCatalogTest {
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
                 .isEqualTo("airbus_helibras_workday");
 
+        assertThat(catalog.findBySiteCode("alcoa_pocos_caldas_workday"))
+                .isPresent()
+                .get()
+                .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
+                .isEqualTo("alcoa_pocos_caldas_workday");
+
         assertThat(catalog.findBySiteCode("municipal_inconfidentes"))
                 .isPresent()
                 .get()
@@ -181,6 +206,12 @@ class TargetSiteOnboardingProfileCatalogTest {
                 .get()
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
                 .isEqualTo("municipal_campinas");
+
+        assertThat(catalog.findBySiteCode("municipal_pocos_caldas"))
+                .isPresent()
+                .get()
+                .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
+                .isEqualTo("municipal_pocos_caldas");
 
         assertThat(catalog.findBySiteCode("camara_santa_rita_sapucai"))
                 .isPresent()

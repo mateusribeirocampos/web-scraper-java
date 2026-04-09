@@ -57,4 +57,46 @@ public final class WorkdayBoardOnboardingProfiles {
                 checklist
         );
     }
+
+    public static WorkdayBoardOnboardingProfile alcoaPocosCaldas() {
+        String apiUrl = "https://alcoa.wd5.myworkdayjobs.com/wday/cxs/alcoa/Careers/jobs";
+
+        TargetSiteEntity targetSite = TargetSiteEntity.builder()
+                .siteCode("alcoa_pocos_caldas_workday")
+                .displayName("Alcoa Careers via Workday - Poços de Caldas")
+                .baseUrl(apiUrl)
+                .siteType(SiteType.TYPE_E)
+                .extractionMode(ExtractionMode.API)
+                .jobCategory(JobCategory.PRIVATE_SECTOR)
+                .legalStatus(LegalStatus.APPROVED)
+                .selectorBundleVersion("n/a")
+                .enabled(true)
+                .createdAt(Instant.parse("2026-04-09T00:00:00Z"))
+                .build();
+
+        SiteOnboardingChecklist checklist = new SiteOnboardingChecklist(
+                "https://alcoa.wd5.myworkdayjobs.com/robots.txt",
+                true,
+                true,
+                "https://www.alcoa.com/global/en/general/privacy",
+                true,
+                true,
+                true,
+                apiUrl,
+                true,
+                "Trilha privada de Poços de Caldas mapeada no board oficial da Alcoa com vagas reais na cidade.",
+                "Workday public jobs API: filtered POST with conservative pagination",
+                OnboardingLegalCategory.API_OFICIAL,
+                "platform-team@local",
+                "PUBLIC_ANONYMOUS",
+                "Board Workday Alcoa revisado em 2026-04-09; robots do domínio wd5 permitem a trilha /Careers/, a página oficial de careers da Alcoa remete ao fluxo de vagas e a política pública de privacidade foi revisada."
+        );
+
+        return new WorkdayBoardOnboardingProfile(
+                "Careers",
+                apiUrl,
+                targetSite,
+                checklist
+        );
+    }
 }

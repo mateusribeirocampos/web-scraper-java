@@ -318,6 +318,88 @@ class TargetSiteOnboardingValidatorTest {
     }
 
     @Test
+    @DisplayName("should approve municipal PDF source when official public evidence is reviewed")
+    void shouldApproveMunicipalPdfSourceWhenOfficialPublicEvidenceIsReviewed() {
+        TargetSiteEntity municipalPdf = TargetSiteEntity.builder()
+                .siteCode("municipal_pdf_source")
+                .displayName("Prefeitura Municipal - Processo Seletivo Simplificado")
+                .baseUrl("https://municipio.example.gov.br/edital-001-2026.pdf")
+                .siteType(SiteType.TYPE_A)
+                .extractionMode(ExtractionMode.STATIC_HTML)
+                .jobCategory(JobCategory.PUBLIC_CONTEST)
+                .legalStatus(LegalStatus.PENDING_REVIEW)
+                .selectorBundleVersion("municipal_pdf_v1")
+                .enabled(false)
+                .createdAt(Instant.parse("2026-04-09T00:00:00Z"))
+                .build();
+
+        SiteOnboardingChecklist checklist = new SiteOnboardingChecklist(
+                "https://municipio.example.gov.br/robots.txt",
+                true,
+                true,
+                "https://municipio.example.gov.br/lgpd",
+                true,
+                true,
+                true,
+                "",
+                true,
+                "Fonte oficial municipal com edital PDF público estável.",
+                "1 request every 10 seconds",
+                OnboardingLegalCategory.DADOS_PUBLICOS,
+                "platform-team@local",
+                "PUBLIC_ANONYMOUS",
+                "Portal oficial revisado com robots permissivo, LGPD pública e edital PDF oficial público."
+        );
+
+        TargetSiteOnboardingDecision decision = validator.assess(municipalPdf, checklist);
+
+        assertThat(decision.productionReady()).isTrue();
+        assertThat(decision.targetSite().getLegalStatus()).isEqualTo(LegalStatus.APPROVED);
+        assertThat(decision.targetSite().isEnabled()).isTrue();
+    }
+
+    @Test
+    @DisplayName("should approve Alcoa Workday source when official API and privacy evidence are reviewed")
+    void shouldApproveAlcoaWorkdaySourceWhenOfficialApiAndPrivacyEvidenceAreReviewed() {
+        TargetSiteEntity alcoa = TargetSiteEntity.builder()
+                .siteCode("alcoa_pocos_caldas_workday")
+                .displayName("Alcoa Careers via Workday - Poços de Caldas")
+                .baseUrl("https://alcoa.wd5.myworkdayjobs.com/wday/cxs/alcoa/Careers/jobs")
+                .siteType(SiteType.TYPE_E)
+                .extractionMode(ExtractionMode.API)
+                .jobCategory(JobCategory.PRIVATE_SECTOR)
+                .legalStatus(LegalStatus.PENDING_REVIEW)
+                .selectorBundleVersion("n/a")
+                .enabled(false)
+                .createdAt(Instant.parse("2026-04-09T00:00:00Z"))
+                .build();
+
+        SiteOnboardingChecklist checklist = new SiteOnboardingChecklist(
+                "https://alcoa.wd5.myworkdayjobs.com/robots.txt",
+                true,
+                true,
+                "https://www.alcoa.com/global/en/general/privacy",
+                true,
+                true,
+                true,
+                "https://alcoa.wd5.myworkdayjobs.com/wday/cxs/alcoa/Careers/jobs",
+                true,
+                "Board oficial da Alcoa com vagas reais em Poços de Caldas.",
+                "Workday public jobs API: filtered POST with conservative pagination",
+                OnboardingLegalCategory.API_OFICIAL,
+                "platform-team@local",
+                "PUBLIC_ANONYMOUS",
+                "Workday Alcoa revisado com robots permitindo /Careers/ e política pública de privacidade."
+        );
+
+        TargetSiteOnboardingDecision decision = validator.assess(alcoa, checklist);
+
+        assertThat(decision.productionReady()).isTrue();
+        assertThat(decision.targetSite().getLegalStatus()).isEqualTo(LegalStatus.APPROVED);
+        assertThat(decision.targetSite().isEnabled()).isTrue();
+    }
+
+    @Test
     @DisplayName("should approve CI&T Lever source when official API and privacy evidence are reviewed")
     void shouldApproveCiandtLeverSourceWhenOfficialApiAndPrivacyEvidenceAreReviewed() {
         TargetSiteEntity ciandt = TargetSiteEntity.builder()

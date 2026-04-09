@@ -19,6 +19,7 @@ public class TargetSiteOnboardingProfileCatalog {
         TargetSiteOnboardingProfileTemplate leverCiandt = fromLeverProfile(LeverBoardOnboardingProfiles.ciandt());
         TargetSiteOnboardingProfileTemplate leverWatchguard = fromLeverProfile(LeverBoardOnboardingProfiles.watchguard());
         TargetSiteOnboardingProfileTemplate workdayAirbusHelibras = fromWorkdayProfile(WorkdayBoardOnboardingProfiles.airbusHelibras());
+        TargetSiteOnboardingProfileTemplate workdayAlcoaPocosCaldas = fromWorkdayProfile(WorkdayBoardOnboardingProfiles.alcoaPocosCaldas());
         TargetSiteOnboardingProfileTemplate indeedBr = CoreSourceOnboardingProfiles.indeedBr();
         TargetSiteOnboardingProfileTemplate douApi = CoreSourceOnboardingProfiles.douApi();
         TargetSiteOnboardingProfileTemplate pciConcursos = CoreSourceOnboardingProfiles.pciConcursos();
@@ -26,6 +27,7 @@ public class TargetSiteOnboardingProfileCatalog {
         TargetSiteOnboardingProfileTemplate municipalPousoAlegre = CoreSourceOnboardingProfiles.municipalPousoAlegre();
         TargetSiteOnboardingProfileTemplate municipalMunhoz = CoreSourceOnboardingProfiles.municipalMunhoz();
         TargetSiteOnboardingProfileTemplate municipalCampinas = CoreSourceOnboardingProfiles.municipalCampinas();
+        TargetSiteOnboardingProfileTemplate municipalPocosCaldas = CoreSourceOnboardingProfiles.municipalPocosCaldas();
         TargetSiteOnboardingProfileTemplate camaraSantaRitaSapucai = CoreSourceOnboardingProfiles.camaraSantaRitaSapucai();
         TargetSiteOnboardingProfileTemplate camaraItajuba = CoreSourceOnboardingProfiles.camaraItajuba();
         this.templatesByKey = Map.ofEntries(
@@ -33,6 +35,7 @@ public class TargetSiteOnboardingProfileCatalog {
                 Map.entry(leverCiandt.profileKey(), leverCiandt),
                 Map.entry(leverWatchguard.profileKey(), leverWatchguard),
                 Map.entry(workdayAirbusHelibras.profileKey(), workdayAirbusHelibras),
+                Map.entry(workdayAlcoaPocosCaldas.profileKey(), workdayAlcoaPocosCaldas),
                 Map.entry(indeedBr.profileKey(), indeedBr),
                 Map.entry(douApi.profileKey(), douApi),
                 Map.entry(pciConcursos.profileKey(), pciConcursos),
@@ -40,6 +43,7 @@ public class TargetSiteOnboardingProfileCatalog {
                 Map.entry(municipalPousoAlegre.profileKey(), municipalPousoAlegre),
                 Map.entry(municipalMunhoz.profileKey(), municipalMunhoz),
                 Map.entry(municipalCampinas.profileKey(), municipalCampinas),
+                Map.entry(municipalPocosCaldas.profileKey(), municipalPocosCaldas),
                 Map.entry(camaraSantaRitaSapucai.profileKey(), camaraSantaRitaSapucai),
                 Map.entry(camaraItajuba.profileKey(), camaraItajuba)
         );

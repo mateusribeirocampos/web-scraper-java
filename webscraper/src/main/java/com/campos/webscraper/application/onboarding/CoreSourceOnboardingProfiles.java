@@ -366,4 +366,43 @@ public final class CoreSourceOnboardingProfiles {
         );
     }
 
+    public static TargetSiteOnboardingProfileTemplate municipalPocosCaldas() {
+        String listingUrl = "https://descomplica.pocosdecaldas.mg.gov.br/info.php?c=609";
+        return new TargetSiteOnboardingProfileTemplate(
+                "municipal_pocos_caldas",
+                "MUNICIPAL_PDF",
+                "pocos_caldas",
+                listingUrl,
+                TargetSiteEntity.builder()
+                        .siteCode("municipal_pocos_caldas")
+                        .displayName("Prefeitura de Poços de Caldas - Processo Seletivo Simplificado")
+                        .baseUrl(listingUrl)
+                        .siteType(SiteType.TYPE_A)
+                        .extractionMode(ExtractionMode.STATIC_HTML)
+                        .jobCategory(JobCategory.PUBLIC_CONTEST)
+                        .legalStatus(LegalStatus.PENDING_REVIEW)
+                        .selectorBundleVersion("pocos_caldas_pdf_v1")
+                        .enabled(false)
+                        .createdAt(Instant.parse("2026-04-09T00:00:00Z"))
+                        .build(),
+                new SiteOnboardingChecklist(
+                        "https://pocosdecaldas.mg.gov.br/robots.txt",
+                        true,
+                        true,
+                        "https://pocosdecaldas.mg.gov.br/lgpd-lei-geral-de-protecao-de-dados/",
+                        true,
+                        true,
+                        false,
+                        listingUrl,
+                        true,
+                        "Fonte oficial municipal de Poços de Caldas ancorada na listagem institucional de concursos públicos, com descoberta automática do edital PDF canônico.",
+                        "1 request every 10 seconds",
+                        OnboardingLegalCategory.DADOS_PUBLICOS,
+                        "platform-team@local",
+                        "PUBLIC_ANONYMOUS",
+                        "Portal oficial revisado em 2026-04-09; robots.txt permite acesso público, a página institucional LGPD está acessível e a listagem 'Concursos Públicos' do Descomplica Poços permanece como âncora oficial para descoberta de editais. O edital PDF 001/2025 segue como evidência pública auditada da rodada, mas a vigência operacional da fonte ainda não foi revalidada para um edital corrente."
+                )
+        );
+    }
+
 }

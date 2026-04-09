@@ -571,6 +571,84 @@ Status atual:
   - reconciliação persistida para ambientes existentes via `V015__approve_airbus_helibras_workday.sql`
   - `Itajubá` passa a ser a terceira cidade híbrida integralmente fechada
 
+#### Story 13.3.18 — Poços de Caldas híbrido: abertura e mapeamento
+- Abrir `Poços de Caldas` como a próxima cidade do backlog híbrido depois de `Itajubá`.
+- Definir as trilhas iniciais com menor atrito técnico:
+  - pública: edital PDF oficial da Prefeitura de Poços de Caldas
+  - privada: board `Workday` da Alcoa com vagas reais em `Poços de Caldas`
+
+Status atual:
+- trilha pública mapeada no edital oficial:
+  - `https://pocosdecaldas.mg.gov.br/wp-content/uploads/2025/09/EDITAL-DE-PROCESSO-SELETIVO-001-2025.pdf`
+- trilha privada mapeada no board oficial:
+  - `https://alcoa.wd5.myworkdayjobs.com/wday/cxs/alcoa/Careers/jobs`
+- a página HTML institucional da notícia foi rebaixada como ponto de ingestão porque respondeu
+  `403`, enquanto o PDF oficial permanece estável e acessível
+- ordem decidida:
+  1. trilha pública oficial via PDF
+  2. trilha privada `Alcoa` via `Workday`
+
+#### Story 13.3.19 — Poços de Caldas pública via edital PDF oficial
+- Implementar a trilha pública oficial da cidade usando o edital PDF municipal como fonte
+  canônica.
+- Escopo:
+  - parser PDF do edital
+  - normalizer canônico do processo seletivo
+  - strategy
+  - import use case
+  - catálogo operacional
+  - runner
+
+Resultado consolidado:
+- `municipal_pocos_caldas` implementada
+- parser extrai:
+  - número do edital
+  - janela real de inscrições
+  - identidade estável do concurso
+- validação técnica concluída na suíte focada e no runtime da aplicação
+
+#### Story 13.3.20 — Poços de Caldas pública: ativação operacional/legal
+- Revisar a base pública oficial da Prefeitura de Poços de Caldas e decidir a promoção da fonte
+  `municipal_pocos_caldas`.
+
+Resultado consolidado:
+- `municipal_pocos_caldas` mantida em `PENDING_REVIEW/enabled=false`
+- evidências revisadas:
+  - `https://pocosdecaldas.mg.gov.br/robots.txt`
+  - `https://pocosdecaldas.mg.gov.br/lgpd-lei-geral-de-protecao-de-dados/`
+  - `https://descomplica.pocosdecaldas.mg.gov.br/info.php?c=609`
+  - `https://pocosdecaldas.mg.gov.br/wp-content/uploads/2025/09/EDITAL-DE-PROCESSO-SELETIVO-001-2025.pdf`
+- decisão operacional:
+  - a trilha pública fica ancorada na listagem oficial de concursos para permitir descoberta
+    futura de editais canônicos
+  - o PDF oficial `001/2025` segue como evidência pública auditada da rodada
+  - a fonte segue tecnicamente pronta, mas sem ativação até existir edital vigente
+
+#### Story 13.3.21 — Poços de Caldas privada via Alcoa Workday
+- Implementar a trilha privada de `Poços de Caldas` usando o board oficial `Workday` da Alcoa.
+- Escopo:
+  - extensão da família `WORKDAY`
+  - facet de localização para `Poços de Caldas`
+  - normalização e persistência idempotente das vagas privadas
+  - wiring no runner e no catálogo operacional
+
+Resultado consolidado:
+- `alcoa_pocos_caldas_workday` implementada
+- validação técnica em runtime real fechada com `operational-check` `SUCCEEDED`
+- vagas reais de `Poços de Caldas` confirmadas no board oficial
+
+#### Story 13.3.22 — Poços de Caldas privada: ativação operacional/legal
+- Revisar a base legal/operacional da trilha privada `alcoa_pocos_caldas_workday`.
+- Evidência revisada:
+  - `https://alcoa.wd5.myworkdayjobs.com/robots.txt`
+  - `https://alcoa.wd5.myworkdayjobs.com/wday/cxs/alcoa/Careers/jobs`
+  - `https://www.alcoa.com/global/en/general/privacy`
+
+Resultado consolidado:
+- `alcoa_pocos_caldas_workday` promovida para `APPROVED/enabled=true`
+- reconciliação persistida para ambientes existentes via `V017__approve_alcoa_pocos_caldas_workday.sql`
+- `Poços de Caldas` fica com a trilha privada fechada e a pública pendente de edital vigente
+
 ---
 
 ### Iteration 7 — Baseline de resiliência

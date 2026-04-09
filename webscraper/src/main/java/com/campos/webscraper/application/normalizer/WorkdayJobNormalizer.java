@@ -27,10 +27,12 @@ import java.util.regex.Pattern;
 public class WorkdayJobNormalizer {
 
     private static final Map<String, String> BOARD_ROOTS = Map.of(
-            "airbus_helibras_workday", "https://ag.wd3.myworkdayjobs.com/en-US/Airbus"
+            "airbus_helibras_workday", "https://ag.wd3.myworkdayjobs.com/en-US/Airbus",
+            "alcoa_pocos_caldas_workday", "https://alcoa.wd5.myworkdayjobs.com/en-US/Careers"
     );
     private static final Map<String, String> BOARD_COMPANY_ALIASES = Map.of(
-            "airbus_helibras_workday", "Helibras / Airbus"
+            "airbus_helibras_workday", "Helibras / Airbus",
+            "alcoa_pocos_caldas_workday", "Alcoa"
     );
 
     private static final Pattern INTERN_PATTERN = Pattern.compile("\\b(intern|internship|estagio|estagiario)\\b");

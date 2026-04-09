@@ -115,4 +115,9 @@ Exemplos:
 | 13.3.14 — Itajubá pública via Câmara HTML | [STORY-13.3.14-itajuba-camara-public-html.md](STORY-13.3.14-itajuba-camara-public-html.md) | ✅ Concluída |
 | 13.3.15 — Itajubá pública: ativação operacional/legal da Câmara | [STORY-13.3.15-itajuba-camara-activation-review.md](STORY-13.3.15-itajuba-camara-activation-review.md) | ✅ Concluída |
 | 13.3.16 — Itajubá privada via Airbus/Helibras Workday | [STORY-13.3.16-itajuba-airbus-workday.md](STORY-13.3.16-itajuba-airbus-workday.md) | ✅ Concluída |
-| 13.3.17 — Itajubá privada: ativação operacional/legal da trilha Airbus Workday | [STORY-13.3.17-itajuba-airbus-activation-review.md](STORY-13.3.17-itajuba-airbus-activation-review.md) | 🚧 Em andamento |
+| 13.3.17 — Itajubá privada: ativação operacional/legal da trilha Airbus Workday | [STORY-13.3.17-itajuba-airbus-activation-review.md](STORY-13.3.17-itajuba-airbus-activation-review.md) | ✅ Concluída |
+| 13.3.18 — Poços de Caldas híbrido: abertura e mapeamento | [STORY-13.3.18-pocos-hybrid-opening.md](STORY-13.3.18-pocos-hybrid-opening.md) | ✅ Concluída |
+| 13.3.19 — Poços de Caldas pública via edital PDF oficial | [STORY-13.3.19-pocos-public-pdf.md](STORY-13.3.19-pocos-public-pdf.md) | ✅ Concluída |
+| 13.3.20 — Poços de Caldas pública: ativação operacional/legal | [STORY-13.3.20-pocos-public-activation-review.md](STORY-13.3.20-pocos-public-activation-review.md) | ✅ Concluída |
+| 13.3.21 — Poços de Caldas privada via Alcoa Workday | [STORY-13.3.21-pocos-alcoa-workday.md](STORY-13.3.21-pocos-alcoa-workday.md) | ✅ Concluída |
+| 13.3.22 — Poços de Caldas privada: ativação operacional/legal | [STORY-13.3.22-pocos-alcoa-activation-review.md](STORY-13.3.22-pocos-alcoa-activation-review.md) | ✅ Concluída |

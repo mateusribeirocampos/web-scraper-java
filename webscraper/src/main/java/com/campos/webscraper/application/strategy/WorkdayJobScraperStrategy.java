@@ -23,6 +23,7 @@ import java.util.Objects;
 public class WorkdayJobScraperStrategy implements JobScraperStrategy<JobPostingEntity> {
 
     private static final String ITAJUBA_LOCATION_FACET_ID = "f5811cef9cb501d280d0106a4c0af747";
+    private static final String POCOS_DE_CALDAS_LOCATION_FACET_ID = "78940cc24df4014699db7549cd0cb5c2";
 
     private final WorkdayJobBoardClient workdayJobBoardClient;
     private final WorkdayJobNormalizer normalizer;
@@ -64,6 +65,9 @@ public class WorkdayJobScraperStrategy implements JobScraperStrategy<JobPostingE
     private String resolveLocationFacetId(String siteCode) {
         if ("airbus_helibras_workday".equals(siteCode)) {
             return ITAJUBA_LOCATION_FACET_ID;
+        }
+        if ("alcoa_pocos_caldas_workday".equals(siteCode)) {
+            return POCOS_DE_CALDAS_LOCATION_FACET_ID;
         }
         throw new IllegalStateException("No Workday location facet configured for site: " + siteCode);
     }

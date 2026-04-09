@@ -82,6 +82,25 @@ class GetTargetSiteActivationAssistanceUseCaseTest {
                 );
     }
 
+    @Test
+    @DisplayName("should keep Poços de Caldas activation assistance pending while current edital is not revalidated")
+    void shouldKeepPocosDeCaldasActivationAssistancePendingWhileCurrentEditalIsNotRevalidated() {
+        when(targetSiteRepository.findById(30L)).thenReturn(Optional.of(municipalPocosCaldas()));
+
+        GetTargetSiteActivationAssistanceUseCase useCase = new GetTargetSiteActivationAssistanceUseCase(
+                targetSiteRepository,
+                catalog,
+                validator
+        );
+
+        TargetSiteActivationAssistance assistance = useCase.execute(30L);
+
+        assertThat(assistance.profileKey()).isEqualTo("municipal_pocos_caldas");
+        assertThat(assistance.assistanceSource()).isEqualTo(ActivationAssistanceSource.CURATED_PROFILE);
+        assertThat(assistance.productionReadyIfActivatedNow()).isFalse();
+        assertThat(assistance.blockingReasonsIfActivatedNow()).contains("official API not checked");
+    }
+
     private static TargetSiteEntity greenhouseBitso() {
         return TargetSiteEntity.builder()
                 .id(7L)
@@ -113,6 +132,23 @@ class GetTargetSiteActivationAssistanceUseCaseTest {
                 .enabled(false)
                 .createdAt(Instant.parse("2026-03-24T18:00:00Z"))
                 .updatedAt(Instant.parse("2026-03-24T18:30:00Z"))
+                .build();
+    }
+
+    private static TargetSiteEntity municipalPocosCaldas() {
+        return TargetSiteEntity.builder()
+                .id(30L)
+                .siteCode("municipal_pocos_caldas")
+                .displayName("Prefeitura de Poços de Caldas - Processo Seletivo Simplificado")
+                .baseUrl("https://descomplica.pocosdecaldas.mg.gov.br/info.php?c=609")
+                .siteType(SiteType.TYPE_A)
+                .extractionMode(ExtractionMode.STATIC_HTML)
+                .jobCategory(JobCategory.PUBLIC_CONTEST)
+                .legalStatus(LegalStatus.PENDING_REVIEW)
+                .selectorBundleVersion("pocos_caldas_pdf_v1")
+                .enabled(false)
+                .createdAt(Instant.parse("2026-04-09T00:00:00Z"))
+                .updatedAt(Instant.parse("2026-04-09T00:30:00Z"))
                 .build();
     }
 }
