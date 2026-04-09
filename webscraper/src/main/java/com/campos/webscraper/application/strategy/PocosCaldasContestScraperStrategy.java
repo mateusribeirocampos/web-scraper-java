@@ -16,6 +16,7 @@ import com.campos.webscraper.infrastructure.parser.PocosCaldasContestPreviewItem
 import com.campos.webscraper.infrastructure.pdf.PdfTextExtractor;
 import com.campos.webscraper.shared.FetchRequest;
 import com.campos.webscraper.shared.FetchedPage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -34,6 +35,7 @@ public class PocosCaldasContestScraperStrategy implements JobScraperStrategy<Pub
     private final PocosCaldasContestNormalizer normalizer;
     private final JobFetcher jobFetcher;
 
+    @Autowired
     public PocosCaldasContestScraperStrategy(
             PdfTextExtractor pdfTextExtractor,
             PocosCaldasContestPdfParser parser,
