@@ -36,7 +36,7 @@ class GreenhouseJobScraperStrategyTest {
         TargetSiteEntity site = TargetSiteEntity.builder()
                 .siteCode("greenhouse_bitso")
                 .displayName("Bitso Careers via Greenhouse")
-                .baseUrl("https://boards.greenhouse.io/bitso")
+                .baseUrl("https://boards-api.greenhouse.io/v1/boards/bitso/jobs?content=true")
                 .siteType(SiteType.TYPE_E)
                 .extractionMode(ExtractionMode.API)
                 .jobCategory(JobCategory.PRIVATE_SECTOR)
