@@ -2,6 +2,7 @@ package com.campos.webscraper.domain.repository;
 
 import com.campos.webscraper.domain.model.CrawlJobEntity;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public interface CrawlJobRepository extends JpaRepository<CrawlJobEntity, Long> {
 
     /** Returns all crawl jobs for a given target site (ordered by scheduled_at DESC by DB index). */
+    @EntityGraph(attributePaths = "targetSite")
     List<CrawlJobEntity> findByTargetSite(TargetSiteEntity targetSite);
 
     /** Returns the canonical scheduler-managed crawl job for a target site, when present. */

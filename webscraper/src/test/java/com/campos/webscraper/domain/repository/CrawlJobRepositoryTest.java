@@ -46,6 +46,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("CrawlJobRepository + CrawlExecutionRepository integration")
 class CrawlJobRepositoryTest {
 
+    private static final Instant FIXED_NOW = Instant.parse("2026-04-09T18:06:25Z");
+    private static final Instant FIXED_FINISH = Instant.parse("2026-04-09T18:07:10Z");
+
     @Container
     @ServiceConnection
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
@@ -78,7 +81,7 @@ class CrawlJobRepositoryTest {
                         .legalStatus(LegalStatus.APPROVED)
                         .selectorBundleVersion("n/a")
                         .enabled(true)
-                        .createdAt(Instant.now())
+                        .createdAt(FIXED_NOW)
                         .build()
         );
     }
@@ -90,7 +93,7 @@ class CrawlJobRepositoryTest {
         @Test
         @DisplayName("should persist and retrieve a CrawlJob linked to a TargetSite")
         void shouldPersistCrawlJob() {
-            Instant now = Instant.now();
+            Instant now = FIXED_NOW;
             CrawlJobEntity job = CrawlJobEntity.builder()
                     .targetSite(savedSite)
                     .scheduledAt(now)
@@ -107,7 +110,7 @@ class CrawlJobRepositoryTest {
         @Test
         @DisplayName("should find CrawlJobs by TargetSite")
         void shouldFindByTargetSite() {
-            Instant now = Instant.now();
+            Instant now = FIXED_NOW;
             crawlJobRepository.save(CrawlJobEntity.builder()
                     .targetSite(savedSite)
                     .scheduledAt(now)
@@ -128,7 +131,7 @@ class CrawlJobRepositoryTest {
         @Test
         @DisplayName("should persist a CrawlExecution with PENDING status")
         void shouldPersistCrawlExecution() {
-            Instant now = Instant.now();
+            Instant now = FIXED_NOW;
             CrawlJobEntity job = crawlJobRepository.save(
                     CrawlJobEntity.builder()
                             .targetSite(savedSite)
@@ -154,7 +157,7 @@ class CrawlJobRepositoryTest {
         @Test
         @DisplayName("should find CrawlExecutions by status")
         void shouldFindByStatus() {
-            Instant now = Instant.now();
+            Instant now = FIXED_NOW;
             CrawlJobEntity job = crawlJobRepository.save(
                     CrawlJobEntity.builder()
                             .targetSite(savedSite)
@@ -180,8 +183,8 @@ class CrawlJobRepositoryTest {
         @Test
         @DisplayName("should persist SUCCEEDED execution with metrics")
         void shouldPersistSucceededWithMetrics() {
-            Instant start = Instant.now();
-            Instant finish = start.plusSeconds(45);
+            Instant start = FIXED_NOW;
+            Instant finish = FIXED_FINISH;
 
             CrawlJobEntity job = crawlJobRepository.save(
                     CrawlJobEntity.builder()
@@ -216,7 +219,7 @@ class CrawlJobRepositoryTest {
         @Test
         @DisplayName("should persist FAILED execution with error message")
         void shouldPersistFailedWithErrorMessage() {
-            Instant now = Instant.now();
+            Instant now = FIXED_NOW;
             CrawlJobEntity job = crawlJobRepository.save(
                     CrawlJobEntity.builder()
                             .targetSite(savedSite)
@@ -247,7 +250,7 @@ class CrawlJobRepositoryTest {
         @Test
         @DisplayName("should find executions by CrawlJob")
         void shouldFindByCrawlJob() {
-            Instant now = Instant.now();
+            Instant now = FIXED_NOW;
             CrawlJobEntity job = crawlJobRepository.save(
                     CrawlJobEntity.builder()
                             .targetSite(savedSite)

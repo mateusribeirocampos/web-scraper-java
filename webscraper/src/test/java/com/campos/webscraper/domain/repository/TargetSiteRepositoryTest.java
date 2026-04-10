@@ -54,6 +54,12 @@ class TargetSiteRepositoryTest {
     @Autowired
     private TargetSiteRepository repository;
 
+    @Autowired
+    private CrawlJobRepository crawlJobRepository;
+
+    @Autowired
+    private CrawlExecutionRepository crawlExecutionRepository;
+
     // =========================================================================
     // Helpers
     // =========================================================================
@@ -78,6 +84,8 @@ class TargetSiteRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        crawlExecutionRepository.deleteAll();
+        crawlJobRepository.deleteAll();
         repository.deleteAll();
     }
 
