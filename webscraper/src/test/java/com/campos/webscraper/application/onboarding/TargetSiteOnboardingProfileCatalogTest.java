@@ -18,9 +18,9 @@ class TargetSiteOnboardingProfileCatalogTest {
     void shouldExposeCuratedOnboardingProfilesForSupportedSources() {
         assertThat(catalog.list())
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
-                .contains("greenhouse_bitso", "lever_ciandt", "lever_watchguard", "airbus_helibras_workday", "alcoa_pocos_caldas_workday", "indeed-br", "dou-api", "pci_concursos",
+                .contains("greenhouse_bitso", "gupy_specialdog_extrema", "lever_ciandt", "lever_watchguard", "airbus_helibras_workday", "alcoa_pocos_caldas_workday", "indeed-br", "dou-api", "pci_concursos",
                         "municipal_inconfidentes", "municipal_pouso_alegre", "municipal_munhoz",
-                        "municipal_campinas", "municipal_pocos_caldas", "camara_santa_rita_sapucai", "camara_itajuba");
+                        "municipal_campinas", "municipal_pocos_caldas", "municipal_extrema", "camara_santa_rita_sapucai", "camara_itajuba");
     }
 
     @Test
@@ -38,6 +38,7 @@ class TargetSiteOnboardingProfileCatalogTest {
     @DisplayName("should expose multiple onboarding families with consistent legal categories")
     void shouldExposeMultipleOnboardingFamiliesWithConsistentLegalCategories() {
         TargetSiteOnboardingProfileTemplate indeed = catalog.get("indeed-br");
+        TargetSiteOnboardingProfileTemplate gupy = catalog.get("gupy_specialdog_extrema");
         TargetSiteOnboardingProfileTemplate lever = catalog.get("lever_ciandt");
         TargetSiteOnboardingProfileTemplate watchguard = catalog.get("lever_watchguard");
         TargetSiteOnboardingProfileTemplate workday = catalog.get("airbus_helibras_workday");
@@ -49,6 +50,7 @@ class TargetSiteOnboardingProfileCatalogTest {
         TargetSiteOnboardingProfileTemplate munhoz = catalog.get("municipal_munhoz");
         TargetSiteOnboardingProfileTemplate campinas = catalog.get("municipal_campinas");
         TargetSiteOnboardingProfileTemplate pocosCaldas = catalog.get("municipal_pocos_caldas");
+        TargetSiteOnboardingProfileTemplate extrema = catalog.get("municipal_extrema");
         TargetSiteOnboardingProfileTemplate camaraSantaRita = catalog.get("camara_santa_rita_sapucai");
         TargetSiteOnboardingProfileTemplate camaraItajuba = catalog.get("camara_itajuba");
 
@@ -57,6 +59,14 @@ class TargetSiteOnboardingProfileCatalogTest {
         assertThat(indeed.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.API_OFICIAL);
         assertThat(indeed.jobsApiUrl()).isEqualTo("https://to.indeed.com");
         assertThat(indeed.checklist().officialApiEndpointUrl()).isEqualTo("https://to.indeed.com");
+
+        assertThat(gupy.sourceFamily()).isEqualTo("GUPY");
+        assertThat(gupy.targetSite().getSiteCode()).isEqualTo("gupy_specialdog_extrema");
+        assertThat(gupy.targetSite().getDisplayName()).isEqualTo("Special Dog Company Careers via Gupy - Extrema");
+        assertThat(gupy.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.API_OFICIAL);
+        assertThat(gupy.jobsApiUrl()).isEqualTo("https://portal.api.gupy.io/api/v1/jobs?careerPageName=Special%20Dog%20Company&city=Extrema");
+        assertThat(gupy.targetSite().getLegalStatus().name()).isEqualTo("APPROVED");
+        assertThat(gupy.targetSite().isEnabled()).isTrue();
 
         assertThat(lever.sourceFamily()).isEqualTo("LEVER");
         assertThat(lever.targetSite().getSiteCode()).isEqualTo("lever_ciandt");
@@ -135,6 +145,14 @@ class TargetSiteOnboardingProfileCatalogTest {
                 .isEqualTo("https://descomplica.pocosdecaldas.mg.gov.br/info.php?c=609");
         assertThat(pocosCaldas.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.DADOS_PUBLICOS);
 
+        assertThat(extrema.sourceFamily()).isEqualTo("MUNICIPAL_HTML");
+        assertThat(extrema.targetSite().getSiteCode()).isEqualTo("municipal_extrema");
+        assertThat(extrema.targetSite().getSelectorBundleVersion()).isEqualTo("extrema_html_v1");
+        assertThat(extrema.targetSite().getLegalStatus().name()).isEqualTo("APPROVED");
+        assertThat(extrema.targetSite().isEnabled()).isTrue();
+        assertThat(extrema.jobsApiUrl()).isEqualTo("https://www.extrema.mg.gov.br/secretarias/educacao");
+        assertThat(extrema.checklist().legalCategory()).isEqualTo(OnboardingLegalCategory.DADOS_PUBLICOS);
+
         assertThat(camaraSantaRita.sourceFamily()).isEqualTo("LEGISLATIVE_HTML");
         assertThat(camaraSantaRita.targetSite().getSiteCode()).isEqualTo("camara_santa_rita_sapucai");
         assertThat(camaraSantaRita.targetSite().getSelectorBundleVersion()).isEqualTo("camara_santa_rita_html_v1");
@@ -158,6 +176,12 @@ class TargetSiteOnboardingProfileCatalogTest {
                 .get()
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
                 .isEqualTo("greenhouse_bitso");
+
+        assertThat(catalog.findBySiteCode("gupy_specialdog_extrema"))
+                .isPresent()
+                .get()
+                .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
+                .isEqualTo("gupy_specialdog_extrema");
 
         assertThat(catalog.findBySiteCode("lever_ciandt"))
                 .isPresent()
@@ -212,6 +236,12 @@ class TargetSiteOnboardingProfileCatalogTest {
                 .get()
                 .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
                 .isEqualTo("municipal_pocos_caldas");
+
+        assertThat(catalog.findBySiteCode("municipal_extrema"))
+                .isPresent()
+                .get()
+                .extracting(TargetSiteOnboardingProfileTemplate::profileKey)
+                .isEqualTo("municipal_extrema");
 
         assertThat(catalog.findBySiteCode("camara_santa_rita_sapucai"))
                 .isPresent()

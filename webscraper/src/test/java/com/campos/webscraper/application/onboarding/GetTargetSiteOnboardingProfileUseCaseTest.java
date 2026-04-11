@@ -24,4 +24,15 @@ class GetTargetSiteOnboardingProfileUseCaseTest {
         assertThat(response.boardToken()).isEqualTo("Airbus");
         assertThat(response.sourceIdentifier()).isEqualTo("Airbus");
     }
+
+    @Test
+    @DisplayName("should expose board token for Gupy onboarding profiles")
+    void shouldExposeBoardTokenForGupyOnboardingProfiles() {
+        TargetSiteOnboardingProfileResponse response = useCase.execute("gupy_specialdog_extrema");
+
+        assertThat(response.profileKey()).isEqualTo("gupy_specialdog_extrema");
+        assertThat(response.sourceFamily()).isEqualTo("GUPY");
+        assertThat(response.boardToken()).isEqualTo("Special Dog Company");
+        assertThat(response.sourceIdentifier()).isEqualTo("Special Dog Company");
+    }
 }

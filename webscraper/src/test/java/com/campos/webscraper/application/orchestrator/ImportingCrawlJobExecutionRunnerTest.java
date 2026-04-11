@@ -13,6 +13,7 @@ import com.campos.webscraper.application.usecase.MunhozContestImportUseCase;
 import com.campos.webscraper.application.usecase.CampinasContestImportUseCase;
 import com.campos.webscraper.application.usecase.CamaraSantaRitaContestImportUseCase;
 import com.campos.webscraper.application.usecase.CamaraItajubaContestImportUseCase;
+import com.campos.webscraper.application.usecase.ExtremaContestImportUseCase;
 import com.campos.webscraper.application.usecase.PocosCaldasContestImportUseCase;
 import com.campos.webscraper.domain.enums.CrawlExecutionStatus;
 import com.campos.webscraper.domain.enums.ExtractionMode;
@@ -87,6 +88,9 @@ class ImportingCrawlJobExecutionRunnerTest {
 
     @Mock
     private PocosCaldasContestImportUseCase pocosCaldasContestImportUseCase;
+
+    @Mock
+    private ExtremaContestImportUseCase extremaContestImportUseCase;
 
     @Test
     @DisplayName("should execute greenhouse import and return execution counters")
@@ -272,6 +276,23 @@ class ImportingCrawlJobExecutionRunnerTest {
     }
 
     @Test
+    @DisplayName("should execute Extrema import for municipal static public contest jobs")
+    void shouldExecuteExtremaImportForMunicipalStaticPublicContestJobs() {
+        CrawlJobEntity crawlJob = buildStaticPublicJob("municipal_extrema");
+        CrawlExecutionEntity crawlExecution = buildExecution(crawlJob);
+        when(extremaContestImportUseCase.execute(any(), any(), any()))
+                .thenReturn(List.of(PublicContestPostingEntity.builder().externalId("extrema-1").build()));
+
+        ImportingCrawlJobExecutionRunner runner = newRunner();
+
+        CrawlExecutionOutcome outcome = runner.run(crawlJob, crawlExecution);
+
+        assertThat(outcome.pagesVisited()).isEqualTo(1);
+        assertThat(outcome.itemsFound()).isEqualTo(1);
+        verify(extremaContestImportUseCase).execute(any(), any(), any());
+    }
+
+    @Test
     @DisplayName("should execute Campinas import for municipal official public contest api jobs")
     void shouldExecuteCampinasImportForMunicipalOfficialPublicContestApiJobs() {
         CrawlJobEntity crawlJob = buildPublicJob("municipal_campinas");
@@ -354,7 +375,8 @@ class ImportingCrawlJobExecutionRunnerTest {
                 campinasContestImportUseCase,
                 camaraSantaRitaContestImportUseCase,
                 camaraItajubaContestImportUseCase,
-                pocosCaldasContestImportUseCase
+                pocosCaldasContestImportUseCase,
+                extremaContestImportUseCase
         );
     }
 

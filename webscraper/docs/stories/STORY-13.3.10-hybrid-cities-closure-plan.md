@@ -2,7 +2,7 @@
 
 ## Status
 
-Ready for implementation planning
+Completed
 
 ## Objective
 
@@ -86,29 +86,22 @@ Gaps remanescentes:
 
 ### 5. Extrema
 
-Cidade com maior número de lacunas no momento.
+Cidade final do backlog híbrido, agora fechada com duas trilhas oficiais executáveis.
 
 Gaps remanescentes:
 
-- abrir a story de entrada da cidade;
-- mapear trilha privada;
-- mapear trilha pública;
-- escolher a primeira implementação executável;
-- implementar as trilhas necessárias;
-- validar runtime real;
-- revisar compliance/ativação;
-- encerrar a cidade no backlog.
+- nenhum após as `13.3.23` a `13.3.26`.
 
 ## Execution Rule
 
 - nenhuma cidade nova deve começar antes da cidade anterior ter sua decisão final registrada;
-- `Campinas` fica encerrada como a primeira cidade híbrida completa;
-- o foco imediato passa a ser `Itajubá`;
-- `Poços de Caldas` e `Extrema` só avançam quando as cidades anteriores estiverem
-  documental e operacionalmente resolvidas.
+- `Campinas` ficou encerrada como a primeira cidade híbrida completa;
+- `Santa Rita do Sapucaí`, `Itajubá` e `Extrema` também foram fechadas dentro da ordem definida;
+- `Poços de Caldas` ficou fechada com trilha privada aprovada e trilha pública conscientemente
+  retida até edital vigente.
 
 ## Exit Criteria
 
 - ordem oficial de fechamento das cidades registrada;
 - gaps por cidade explicitados;
-- próxima task imediatamente executável definida sem ambiguidade.
+- backlog híbrido municipal encerrado ao final da última cidade.

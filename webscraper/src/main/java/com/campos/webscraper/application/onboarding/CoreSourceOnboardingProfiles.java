@@ -405,4 +405,43 @@ public final class CoreSourceOnboardingProfiles {
         );
     }
 
+    public static TargetSiteOnboardingProfileTemplate municipalExtrema() {
+        String listingUrl = "https://www.extrema.mg.gov.br/secretarias/educacao";
+        return new TargetSiteOnboardingProfileTemplate(
+                "municipal_extrema",
+                "MUNICIPAL_HTML",
+                "extrema",
+                listingUrl,
+                TargetSiteEntity.builder()
+                        .siteCode("municipal_extrema")
+                        .displayName("Prefeitura de Extrema - Educação")
+                        .baseUrl(listingUrl)
+                        .siteType(SiteType.TYPE_A)
+                        .extractionMode(ExtractionMode.STATIC_HTML)
+                        .jobCategory(JobCategory.PUBLIC_CONTEST)
+                        .legalStatus(LegalStatus.APPROVED)
+                        .selectorBundleVersion("extrema_html_v1")
+                        .enabled(true)
+                        .createdAt(Instant.parse("2026-04-10T00:00:00Z"))
+                        .build(),
+                new SiteOnboardingChecklist(
+                        "https://www.extrema.mg.gov.br/robots.txt",
+                        true,
+                        true,
+                        "https://www.extrema.mg.gov.br/politica-de-privacidade",
+                        true,
+                        true,
+                        false,
+                        "",
+                        true,
+                        "Fonte oficial municipal da Secretaria de Educação com listagem pública e páginas de detalhe contendo edital canônico em PDF.",
+                        "1 request every 10 seconds",
+                        OnboardingLegalCategory.DADOS_PUBLICOS,
+                        "platform-team@local",
+                        "PUBLIC_ANONYMOUS",
+                        "Portal oficial de Educação revisado em 2026-04-10; a listagem /secretarias/educacao aponta para a página do processo seletivo com edital canônico e anexos públicos, e a política de privacidade municipal foi revisada."
+                )
+        );
+    }
+
 }

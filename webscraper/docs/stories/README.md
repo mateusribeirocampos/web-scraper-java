@@ -108,7 +108,7 @@ Exemplos:
 | 13.3.7 — Santa Rita do Sapucaí pública via Câmara HTML | [STORY-13.3.7-santa-rita-camara-public-html.md](STORY-13.3.7-santa-rita-camara-public-html.md) | ✅ Concluída |
 | 13.3.8 — Santa Rita do Sapucaí pública: ativação operacional/legal da Câmara | [STORY-13.3.8-santa-rita-camara-activation-review.md](STORY-13.3.8-santa-rita-camara-activation-review.md) | ✅ Concluída |
 | 13.3.9 — Itajubá híbrido: abertura privada + pública | [STORY-13.3.9-itajuba-hybrid-opening.md](STORY-13.3.9-itajuba-hybrid-opening.md) | ✅ Concluída |
-| 13.3.10 — Plano de fechamento das cidades híbridas | [STORY-13.3.10-hybrid-cities-closure-plan.md](STORY-13.3.10-hybrid-cities-closure-plan.md) | 🚧 Aberta |
+| 13.3.10 — Plano de fechamento das cidades híbridas | [STORY-13.3.10-hybrid-cities-closure-plan.md](STORY-13.3.10-hybrid-cities-closure-plan.md) | ✅ Concluída |
 | 13.3.11 — Campinas privada: ativação da trilha CI&T Lever | [STORY-13.3.11-campinas-ciandt-activation-review.md](STORY-13.3.11-campinas-ciandt-activation-review.md) | ✅ Concluída |
 | 13.3.12 — Santa Rita privada: revisão operacional/legal da trilha WatchGuard via Lever | [STORY-13.3.12-santa-rita-watchguard-activation-review.md](STORY-13.3.12-santa-rita-watchguard-activation-review.md) | ✅ Concluída |
 | 13.3.13 — Itajubá híbrido: mapeamento das trilhas e ordem de execução | [STORY-13.3.13-itajuba-source-mapping.md](STORY-13.3.13-itajuba-source-mapping.md) | ✅ Concluída |
@@ -121,3 +121,7 @@ Exemplos:
 | 13.3.20 — Poços de Caldas pública: ativação operacional/legal | [STORY-13.3.20-pocos-public-activation-review.md](STORY-13.3.20-pocos-public-activation-review.md) | ✅ Concluída |
 | 13.3.21 — Poços de Caldas privada via Alcoa Workday | [STORY-13.3.21-pocos-alcoa-workday.md](STORY-13.3.21-pocos-alcoa-workday.md) | ✅ Concluída |
 | 13.3.22 — Poços de Caldas privada: ativação operacional/legal | [STORY-13.3.22-pocos-alcoa-activation-review.md](STORY-13.3.22-pocos-alcoa-activation-review.md) | ✅ Concluída |
+| 13.3.23 — Extrema híbrido: abertura e mapeamento | [STORY-13.3.23-extrema-hybrid-opening.md](STORY-13.3.23-extrema-hybrid-opening.md) | ✅ Concluída |
+| 13.3.24 — Extrema pública via portal de Educação + edital PDF | [STORY-13.3.24-extrema-public-education-html.md](STORY-13.3.24-extrema-public-education-html.md) | ✅ Concluída |
+| 13.3.25 — Extrema privada via Special Dog Company Gupy | [STORY-13.3.25-extrema-specialdog-gupy.md](STORY-13.3.25-extrema-specialdog-gupy.md) | ✅ Concluída |
+| 13.3.26 — Extrema: fechamento operacional/legal da cidade | [STORY-13.3.26-extrema-city-closure.md](STORY-13.3.26-extrema-city-closure.md) | ✅ Concluída |

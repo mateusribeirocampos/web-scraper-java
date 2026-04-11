@@ -649,6 +649,52 @@ Resultado consolidado:
 - reconciliação persistida para ambientes existentes via `V017__approve_alcoa_pocos_caldas_workday.sql`
 - `Poços de Caldas` fica com a trilha privada fechada e a pública pendente de edital vigente
 
+#### Story 13.3.23 — Extrema híbrido: abertura e mapeamento
+- Abrir `Extrema` como a última cidade do backlog híbrido.
+- Mapear duas trilhas executáveis:
+  - pública: portal da Secretaria de Educação da Prefeitura de Extrema
+  - privada: board `Gupy` da `Special Dog Company` com vagas em `Extrema`
+- Registrar a ordem de implementação da cidade.
+
+Status atual:
+- `Extrema` passa a ser a última cidade do backlog híbrido
+- a ordem definida para a cidade é:
+  - primeiro a trilha pública oficial da Educação
+  - depois a trilha privada `Gupy` da `Special Dog Company`
+
+#### Story 13.3.24 — Extrema pública via portal de Educação + edital PDF
+- Implementar a trilha pública municipal de `Extrema` a partir da listagem oficial da Secretaria de
+  Educação, com descoberta do edital canônico na página de detalhe.
+- Reaproveitar o stack municipal HTML + enrichment PDF já estabilizado no projeto.
+
+Status atual:
+- `municipal_extrema` implementada como `STATIC_HTML` + enrichment PDF
+- validação real fechada com `operational-check` `SUCCEEDED`, `crawlExecutionId=128` e
+  `itemsFound=1`
+
+#### Story 13.3.25 — Extrema privada via Special Dog Company Gupy
+- Implementar a trilha privada de `Extrema` usando a API pública da `Gupy`.
+- Introduzir o slice curado da `Special Dog Company`, isolando o board correto por
+  `careerPageName`.
+
+Status atual:
+- `gupy_specialdog_extrema` implementada como fonte `GUPY`
+- cliente `Gupy` ganhou filtro local por identidade do board
+- validação real fechada com `operational-check` `SUCCEEDED`, `crawlExecutionId=129` e
+  `itemsFound=1`
+
+#### Story 13.3.26 — Extrema: fechamento operacional/legal da cidade
+- Fechar a revisão operacional/legal das trilhas pública e privada de `Extrema`.
+- Promover as duas fontes para `APPROVED/enabled=true` com reconciliação persistida.
+- Encerrar a última cidade do backlog híbrido.
+
+Status atual:
+- `municipal_extrema` promovida para `APPROVED/enabled=true`
+- `gupy_specialdog_extrema` promovida para `APPROVED/enabled=true`
+- migrations `V018` e `V019` adicionadas para bootstrap/reconciliação de ambientes já existentes
+- `Extrema` passa a ser a quinta cidade híbrida fechada
+- backlog híbrido municipal fica integralmente encerrado
+
 ---
 
 ### Iteration 7 — Baseline de resiliência

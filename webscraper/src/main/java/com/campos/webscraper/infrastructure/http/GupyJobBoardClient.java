@@ -11,9 +11,11 @@ import okhttp3.ResponseBody;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * HTTP client for the public Gupy Portal API.
@@ -71,7 +73,54 @@ public class GupyJobBoardClient {
             }
         }
 
-        return all;
+        return filterByBoardIdentity(baseUrl, all);
+    }
+
+    private List<GupyJobListingResponse> filterByBoardIdentity(String baseUrl, List<GupyJobListingResponse> items) {
+        HttpUrl parsed = HttpUrl.parse(baseUrl);
+        if (parsed == null) {
+            return items;
+        }
+
+        String expectedCareerPageName = Optional.ofNullable(parsed.queryParameter("careerPageName"))
+                .map(String::strip)
+                .filter(value -> !value.isBlank())
+                .orElse(null);
+        String expectedCity = Optional.ofNullable(parsed.queryParameter("city"))
+                .map(String::strip)
+                .filter(value -> !value.isBlank())
+                .orElse(null);
+
+        return items.stream()
+                .filter(item -> matchesCareerPageName(item, expectedCareerPageName))
+                .filter(item -> matchesCity(item, expectedCity))
+                .toList();
+    }
+
+    private boolean matchesCareerPageName(GupyJobListingResponse item, String expectedCareerPageName) {
+        if (expectedCareerPageName == null) {
+            return true;
+        }
+        return expectedCareerPageName.equalsIgnoreCase(
+                item.careerPageName() == null ? "" : item.careerPageName().strip());
+    }
+
+    private boolean matchesCity(GupyJobListingResponse item, String expectedCity) {
+        if (expectedCity == null) {
+            return true;
+        }
+        return normalizeFacet(expectedCity).equals(normalizeFacet(item.city()));
+    }
+
+    private String normalizeFacet(String value) {
+        if (value == null) {
+            return "";
+        }
+        String normalized = Normalizer.normalize(value, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}+", "")
+                .toLowerCase()
+                .trim();
+        return normalized.replaceAll("[^a-z0-9]+", " ").trim();
     }
 
     private GupyJobPageResponse fetchPage(String baseUrl, int offset) {

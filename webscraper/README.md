@@ -132,9 +132,20 @@ Regra atual de testes:
   `APPROVED/enabled=true`
 - com isso, `Poços de Caldas` ainda não está fechada: a trilha privada foi aprovada, mas a
   pública segue pendente até existir edital vigente
-- a prioridade alta agora é fechar as cidades do backlog híbrido nesta ordem:
-  - `Poços de Caldas`
-  - `Extrema`
+- `Extrema` entra como a última cidade do backlog híbrido:
+  - pública oficial via portal da Secretaria de Educação
+  - privada oficial via `Special Dog Company` em `Gupy`
+- a trilha pública `municipal_extrema` foi implementada com descoberta do edital canônico a partir
+  da listagem pública da Secretaria de Educação e validada em runtime real com `itemsFound=1`
+- a revisão operacional/legal da trilha pública foi fechada com promoção para
+  `APPROVED/enabled=true`
+- a trilha privada `gupy_specialdog_extrema` foi implementada reaproveitando a família `GUPY`,
+  com filtro local por `careerPageName` para isolar o board oficial da `Special Dog Company`
+- a validação real da trilha privada também fechou com `itemsFound=1`
+- a revisão operacional/legal da trilha privada foi fechada com promoção para
+  `APPROVED/enabled=true`
+- com isso, `Extrema` fecha a última cidade do backlog híbrido e o plano municipal/híbrido atual
+  fica integralmente coberto
 
 ## Validacao Manual Oficial
 

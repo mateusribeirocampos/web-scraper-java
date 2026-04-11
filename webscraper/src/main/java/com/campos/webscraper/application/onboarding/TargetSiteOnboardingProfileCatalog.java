@@ -16,6 +16,7 @@ public class TargetSiteOnboardingProfileCatalog {
 
     public TargetSiteOnboardingProfileCatalog() {
         TargetSiteOnboardingProfileTemplate greenhouseBitso = fromGreenhouseProfile(GreenhouseBoardOnboardingProfiles.bitso());
+        TargetSiteOnboardingProfileTemplate gupySpecialDogExtrema = fromGupyProfile(GupyBoardOnboardingProfiles.specialDogExtrema());
         TargetSiteOnboardingProfileTemplate leverCiandt = fromLeverProfile(LeverBoardOnboardingProfiles.ciandt());
         TargetSiteOnboardingProfileTemplate leverWatchguard = fromLeverProfile(LeverBoardOnboardingProfiles.watchguard());
         TargetSiteOnboardingProfileTemplate workdayAirbusHelibras = fromWorkdayProfile(WorkdayBoardOnboardingProfiles.airbusHelibras());
@@ -28,10 +29,12 @@ public class TargetSiteOnboardingProfileCatalog {
         TargetSiteOnboardingProfileTemplate municipalMunhoz = CoreSourceOnboardingProfiles.municipalMunhoz();
         TargetSiteOnboardingProfileTemplate municipalCampinas = CoreSourceOnboardingProfiles.municipalCampinas();
         TargetSiteOnboardingProfileTemplate municipalPocosCaldas = CoreSourceOnboardingProfiles.municipalPocosCaldas();
+        TargetSiteOnboardingProfileTemplate municipalExtrema = CoreSourceOnboardingProfiles.municipalExtrema();
         TargetSiteOnboardingProfileTemplate camaraSantaRitaSapucai = CoreSourceOnboardingProfiles.camaraSantaRitaSapucai();
         TargetSiteOnboardingProfileTemplate camaraItajuba = CoreSourceOnboardingProfiles.camaraItajuba();
         this.templatesByKey = Map.ofEntries(
                 Map.entry(greenhouseBitso.profileKey(), greenhouseBitso),
+                Map.entry(gupySpecialDogExtrema.profileKey(), gupySpecialDogExtrema),
                 Map.entry(leverCiandt.profileKey(), leverCiandt),
                 Map.entry(leverWatchguard.profileKey(), leverWatchguard),
                 Map.entry(workdayAirbusHelibras.profileKey(), workdayAirbusHelibras),
@@ -44,6 +47,7 @@ public class TargetSiteOnboardingProfileCatalog {
                 Map.entry(municipalMunhoz.profileKey(), municipalMunhoz),
                 Map.entry(municipalCampinas.profileKey(), municipalCampinas),
                 Map.entry(municipalPocosCaldas.profileKey(), municipalPocosCaldas),
+                Map.entry(municipalExtrema.profileKey(), municipalExtrema),
                 Map.entry(camaraSantaRitaSapucai.profileKey(), camaraSantaRitaSapucai),
                 Map.entry(camaraItajuba.profileKey(), camaraItajuba)
         );
@@ -95,6 +99,17 @@ public class TargetSiteOnboardingProfileCatalog {
         return new TargetSiteOnboardingProfileTemplate(
                 profile.targetSite().getSiteCode(),
                 "WORKDAY",
+                profile.boardToken(),
+                profile.jobsApiUrl(),
+                profile.targetSite(),
+                profile.checklist()
+        );
+    }
+
+    private static TargetSiteOnboardingProfileTemplate fromGupyProfile(GupyBoardOnboardingProfile profile) {
+        return new TargetSiteOnboardingProfileTemplate(
+                profile.targetSite().getSiteCode(),
+                "GUPY",
                 profile.boardToken(),
                 profile.jobsApiUrl(),
                 profile.targetSite(),

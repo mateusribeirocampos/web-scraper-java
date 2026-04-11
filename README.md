@@ -247,9 +247,29 @@ web-scraper-java/
   - política pública de privacidade da Alcoa
 - com isso, `Poços de Caldas` fica com a trilha privada fechada e a trilha pública tecnicamente
   pronta, mas ainda pendente de um edital vigente para ativação
-- a prioridade alta do backlog híbrido agora é fechar as cidades por ordem de menor gap:
-  - `Poços de Caldas`
-  - `Extrema`
+- `Extrema` passa a ser a última cidade do backlog híbrido, com:
+  - trilha pública oficial via portal da Secretaria de Educação;
+  - trilha privada oficial via `Gupy` da `Special Dog Company`
+- a trilha pública oficial entrou como `municipal_extrema`, usando a listagem pública da
+  Secretaria de Educação e descoberta do edital canônico na página de detalhe do processo seletivo
+- a validação real da trilha pública fechou com `operational-check` `SUCCEEDED`,
+  `crawlExecutionId=128` e `itemsFound=1`
+- a revisão operacional/legal da trilha pública foi fechada com promoção para
+  `APPROVED/enabled=true`, apoiada em:
+  - `https://www.extrema.mg.gov.br/robots.txt`
+  - `https://www.extrema.mg.gov.br/secretarias/educacao`
+  - `https://www.extrema.mg.gov.br/politica-de-privacidade`
+- a trilha privada `gupy_specialdog_extrema` também entrou como fonte oficial da cidade,
+  usando a API pública da `Gupy` com filtro local por `careerPageName=Special Dog Company`
+- a validação real da trilha privada fechou com `operational-check` `SUCCEEDED`,
+  `crawlExecutionId=129` e `itemsFound=1`
+- a revisão operacional/legal da trilha privada também foi fechada com promoção para
+  `APPROVED/enabled=true`, apoiada em:
+  - `https://specialdogcompany.gupy.io/robots.txt`
+  - `https://specialdogcompany.gupy.io`
+  - `https://www.specialdog.com.br/privacidade`
+- com isso, `Extrema` passa a ser a quinta cidade híbrida fechada e o backlog híbrido municipal
+  fica integralmente encerrado
 
 ## Endpoints Disponiveis
 
