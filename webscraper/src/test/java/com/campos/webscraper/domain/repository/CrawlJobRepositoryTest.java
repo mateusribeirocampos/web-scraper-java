@@ -1,5 +1,6 @@
 package com.campos.webscraper.domain.repository;
 
+import com.campos.webscraper.TestcontainersConfiguration;
 import com.campos.webscraper.domain.enums.CrawlExecutionStatus;
 import com.campos.webscraper.domain.enums.ExtractionMode;
 import com.campos.webscraper.domain.enums.JobCategory;
@@ -11,16 +12,11 @@ import com.campos.webscraper.domain.model.TargetSiteEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Instant;
 import java.util.List;
@@ -34,24 +30,16 @@ import static org.assertj.core.api.Assertions.assertThat;
  * TDD RED: written before the repositories and migration V002 exist.
  * Requires Docker to run (Testcontainers with PostgreSQL).
  */
-@Tag("integration")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@Testcontainers
-@TestPropertySource(properties = {
-        "spring.flyway.enabled=true",
-        "spring.flyway.locations=classpath:db/migration",
-        "spring.jpa.hibernate.ddl-auto=none"
-})
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@RepositoryPersistenceTest
 @DisplayName("CrawlJobRepository + CrawlExecutionRepository integration")
-class CrawlJobRepositoryTest {
+class CrawlJobRepositoryTest extends AbstractRepositoryIntegrationTest {
 
     private static final Instant FIXED_NOW = Instant.parse("2026-04-09T18:06:25Z");
     private static final Instant FIXED_FINISH = Instant.parse("2026-04-09T18:07:10Z");
 
     @Container
     @ServiceConnection
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
+    static PostgreSQLContainer<?> postgres = TestcontainersConfiguration.newPostgresContainer();
 
     @Autowired
     private CrawlJobRepository crawlJobRepository;
@@ -66,9 +54,7 @@ class CrawlJobRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        crawlExecutionRepository.deleteAll();
-        crawlJobRepository.deleteAll();
-        targetSiteRepository.deleteAll();
+        resetCrawlPersistence();
 
         savedSite = targetSiteRepository.save(
                 TargetSiteEntity.builder()

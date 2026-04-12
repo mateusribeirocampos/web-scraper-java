@@ -169,6 +169,18 @@ Atualização de priorização híbrida em 2026-04-06:
 - antes de avançar demais no backlog, o próximo checkpoint operacional deve incluir uma rodada
   ponta a ponta com a aplicação cobrindo as trilhas privadas e públicas já entregues.
 
+Atualização pós-fechamento das cidades em 2026-04-11:
+
+- o eixo geográfico do backlog híbrido foi encerrado com `Campinas`, `Santa Rita do Sapucaí`,
+  `Itajubá`, `Poços de Caldas` e `Extrema`;
+- o próximo front principal deixa de ser abertura de cidades e passa a ser sustentação da
+  plataforma;
+- ordem de prioridade definida para o novo ciclo:
+  1. fortalecer a suíte `integration` e reduzir flakiness residual;
+  2. consolidar o onboarding/activation como produto interno;
+  3. ampliar famílias de fontes, não cidades;
+  4. melhorar observabilidade operacional e qualidade de dados.
+
 ---
 
 ## Detailed Tasks by Iteration
@@ -218,6 +230,55 @@ Atualização de priorização híbrida em 2026-04-06:
 - Adicionar migration V004.
 - Implementar `JobPostingFingerprintCalculator`.
 - **TDD:** entity mapping test + repository test + dedup rule test primeiro.
+
+---
+
+### Iteration 14 — Sustentação pós-cidades
+
+#### Story 14.1 — Stabilize integration suite and remove residual flakiness
+- Revisar o job `integration` do GitHub Actions e a suíte atual marcada com `@Tag("integration")`.
+- Catalogar classes com maior risco residual:
+  - repositories JPA com ordem de limpeza frágil;
+  - testes de aplicação com timestamps/lazy loading;
+  - dependências implícitas de Docker/Testcontainers.
+- Entregar uma primeira fatia executável com:
+  - baseline documental da suíte `integration`;
+  - critérios claros para distinguir flakiness de falha funcional;
+  - plano imediato de estabilização.
+- **TDD:** quando houver correção de teste, reproduzir a falha antes e deixar cobertura/fixture
+  explícita para o cenário.
+
+Status atual:
+- `ci.yaml` já está dividido entre `unit-fast` e `integration`
+- a suíte `@Tag("integration")` atual cobre:
+  - contexto da aplicação
+  - repositories JPA
+  - import use cases ponta a ponta
+- fragilidades principais já mapeadas:
+  - drift de imagem `postgres` entre `TestcontainersConfiguration` e testes concretos
+  - cleanup manual espalhado com `deleteAll()` em ordem de FK
+  - uso amplo de `@SpringBootTest` em testes de persistência
+  - pontos residuais com timestamps não totalmente fixos
+- primeira correção concreta definida:
+  - unificar a infraestrutura Testcontainers em uma baseline determinística (`postgres:16`)
+  - remover `postgres:latest` do baseline de integração
+
+#### Story 14.2 — Onboarding/activation as internal product
+- Consolidar `profile -> bootstrap -> smoke-run -> activation-assistance -> activation` como uma
+  trilha operacional fechada.
+- Reduzir checklist manual onde a evidência puder ser derivada pela aplicação.
+- Reforçar cobertura de `activation-assistance` e `operational-check`.
+
+#### Story 14.3 — Expand source families instead of cities
+- Priorizar evolução de famílias reutilizáveis (`Gupy`, `Workday`, próxima ATS pública) em vez de
+  expansão geográfica.
+- Cada nova família deve nascer já com regra clara de onboarding, runtime validation e cobertura
+  de catálogo.
+
+#### Story 14.4 — Operational observability and data quality
+- Subir o nível de métricas por `source family`, `city` e `siteCode`.
+- Detectar fontes `UP` com `itemsFound=0`, stale sources e degradação de qualidade em
+  `publishedAt`, `contestStatus` e `canonicalUrl`.
 
 #### Story 2.4 — Implementar `PublicContestPostingEntity`
 - Criar entidade com `contestName`, `organizer`, `registrationEndDate`, `numberOfVacancies`,

@@ -1,5 +1,6 @@
 package com.campos.webscraper.domain.repository;
 
+import com.campos.webscraper.TestcontainersConfiguration;
 import com.campos.webscraper.domain.enums.ExtractionMode;
 import com.campos.webscraper.domain.enums.JobCategory;
 import com.campos.webscraper.domain.enums.LegalStatus;
@@ -7,15 +8,11 @@ import com.campos.webscraper.domain.enums.SiteType;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Instant;
 import java.util.List;
@@ -30,26 +27,15 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * <p>Usa Testcontainers com PostgreSQL real para garantir que o mapeamento JPA
  * e a migration V001 estão corretos.
  *
- * <p>Nota: Spring Boot 4.x removeu @DataJpaTest e @AutoConfigureTestDatabase.
- * Usamos @SpringBootTest(webEnvironment = NONE) com @ServiceConnection para
- * obter um contexto JPA completo com PostgreSQL real via Testcontainers.
- *
  * <p>Ciclo TDD: estes testes foram escritos ANTES das classes de produção (fase RED).
  */
-@Tag("integration")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@Testcontainers
-@TestPropertySource(properties = {
-        "spring.flyway.enabled=true",
-        "spring.flyway.locations=classpath:db/migration",
-        "spring.jpa.hibernate.ddl-auto=none"
-})
+@RepositoryPersistenceTest
 @DisplayName("TargetSiteRepository — integração com PostgreSQL via Testcontainers")
-class TargetSiteRepositoryTest {
+class TargetSiteRepositoryTest extends AbstractRepositoryIntegrationTest {
 
     @Container
     @ServiceConnection
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
+    static PostgreSQLContainer<?> postgres = TestcontainersConfiguration.newPostgresContainer();
 
     @Autowired
     private TargetSiteRepository repository;
@@ -84,9 +70,7 @@ class TargetSiteRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        crawlExecutionRepository.deleteAll();
-        crawlJobRepository.deleteAll();
-        repository.deleteAll();
+        resetCrawlPersistence();
     }
 
     // =========================================================================

@@ -1,5 +1,6 @@
 package com.campos.webscraper.application.usecase;
 
+import com.campos.webscraper.TestcontainersConfiguration;
 import com.campos.webscraper.application.normalizer.GreenhouseJobNormalizer;
 import com.campos.webscraper.application.strategy.GreenhouseJobScraperStrategy;
 import com.campos.webscraper.shared.JobPostingFingerprintCalculator;
@@ -59,7 +60,7 @@ class GreenhouseJobImportUseCaseTest {
 
     @Container
     @ServiceConnection
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
+    static PostgreSQLContainer<?> postgres = TestcontainersConfiguration.newPostgresContainer();
 
     @Autowired
     private TargetSiteRepository targetSiteRepository;

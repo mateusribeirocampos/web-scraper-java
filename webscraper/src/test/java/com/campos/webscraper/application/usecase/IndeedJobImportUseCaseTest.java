@@ -1,5 +1,6 @@
 package com.campos.webscraper.application.usecase;
 
+import com.campos.webscraper.TestcontainersConfiguration;
 import com.campos.webscraper.application.normalizer.IndeedJobNormalizer;
 import com.campos.webscraper.application.strategy.IndeedApiJobScraperStrategy;
 import com.campos.webscraper.application.usecase.IdempotentJobPostingPersistenceService;
@@ -58,7 +59,7 @@ class IndeedJobImportUseCaseTest {
 
     @Container
     @ServiceConnection
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
+    static PostgreSQLContainer<?> postgres = TestcontainersConfiguration.newPostgresContainer();
 
     @Autowired
     private TargetSiteRepository targetSiteRepository;

@@ -125,3 +125,4 @@ Exemplos:
 | 13.3.24 — Extrema pública via portal de Educação + edital PDF | [STORY-13.3.24-extrema-public-education-html.md](STORY-13.3.24-extrema-public-education-html.md) | ✅ Concluída |
 | 13.3.25 — Extrema privada via Special Dog Company Gupy | [STORY-13.3.25-extrema-specialdog-gupy.md](STORY-13.3.25-extrema-specialdog-gupy.md) | ✅ Concluída |
 | 13.3.26 — Extrema: fechamento operacional/legal da cidade | [STORY-13.3.26-extrema-city-closure.md](STORY-13.3.26-extrema-city-closure.md) | ✅ Concluída |
+| 14.1 — Integration stability baseline | [STORY-14.1-integration-stability-baseline.md](STORY-14.1-integration-stability-baseline.md) | 🚧 Aberta |

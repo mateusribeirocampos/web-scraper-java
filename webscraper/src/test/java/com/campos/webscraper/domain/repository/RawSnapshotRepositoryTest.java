@@ -1,18 +1,15 @@
 package com.campos.webscraper.domain.repository;
 
+import com.campos.webscraper.TestcontainersConfiguration;
 import com.campos.webscraper.domain.model.RawSnapshotEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Instant;
 import java.util.List;
@@ -24,27 +21,20 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * Locks the delivered raw-snapshot persistence baseline against the real Flyway migration.
  */
-@Tag("integration")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@Testcontainers
-@TestPropertySource(properties = {
-        "spring.flyway.enabled=true",
-        "spring.flyway.locations=classpath:db/migration",
-        "spring.jpa.hibernate.ddl-auto=none"
-})
+@RepositoryPersistenceTest
 @DisplayName("RawSnapshotRepository integration")
-class RawSnapshotRepositoryTest {
+class RawSnapshotRepositoryTest extends AbstractRepositoryIntegrationTest {
 
     @Container
     @ServiceConnection
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
+    static PostgreSQLContainer<?> postgres = TestcontainersConfiguration.newPostgresContainer();
 
     @Autowired
     private RawSnapshotRepository rawSnapshotRepository;
 
     @BeforeEach
     void setUp() {
-        rawSnapshotRepository.deleteAll();
+        resetRawSnapshots();
     }
 
     @Nested

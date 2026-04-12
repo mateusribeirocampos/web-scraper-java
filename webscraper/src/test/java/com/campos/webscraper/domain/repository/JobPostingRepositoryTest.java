@@ -1,5 +1,6 @@
 package com.campos.webscraper.domain.repository;
 
+import com.campos.webscraper.TestcontainersConfiguration;
 import com.campos.webscraper.domain.enums.CrawlExecutionStatus;
 import com.campos.webscraper.domain.enums.DedupStatus;
 import com.campos.webscraper.domain.enums.ExtractionMode;
@@ -14,16 +15,11 @@ import com.campos.webscraper.domain.model.JobPostingEntity;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -37,21 +33,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * TDD RED: written before repository, entity and migration V004 exist.
  */
-@Tag("integration")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@Testcontainers
-@TestPropertySource(properties = {
-        "spring.flyway.enabled=true",
-        "spring.flyway.locations=classpath:db/migration",
-        "spring.jpa.hibernate.ddl-auto=none"
-})
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@RepositoryPersistenceTest
 @DisplayName("JobPostingRepository integration")
-class JobPostingRepositoryTest {
+class JobPostingRepositoryTest extends AbstractRepositoryIntegrationTest {
 
     @Container
     @ServiceConnection
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
+    static PostgreSQLContainer<?> postgres = TestcontainersConfiguration.newPostgresContainer();
 
     @Autowired
     private JobPostingRepository jobPostingRepository;
@@ -70,10 +58,7 @@ class JobPostingRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        jobPostingRepository.deleteAll();
-        crawlExecutionRepository.deleteAll();
-        crawlJobRepository.deleteAll();
-        targetSiteRepository.deleteAll();
+        resetJobPostingPersistence();
 
         Instant now = Instant.parse("2026-03-12T10:15:30Z");
 

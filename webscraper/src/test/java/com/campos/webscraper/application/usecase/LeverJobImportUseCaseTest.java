@@ -1,5 +1,6 @@
 package com.campos.webscraper.application.usecase;
 
+import com.campos.webscraper.TestcontainersConfiguration;
 import com.campos.webscraper.application.normalizer.LeverJobNormalizer;
 import com.campos.webscraper.application.strategy.LeverJobScraperStrategy;
 import com.campos.webscraper.domain.enums.CrawlExecutionStatus;
@@ -56,7 +57,7 @@ class LeverJobImportUseCaseTest {
 
     @Container
     @ServiceConnection
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
+    static PostgreSQLContainer<?> postgres = TestcontainersConfiguration.newPostgresContainer();
 
     @Autowired
     private TargetSiteRepository targetSiteRepository;

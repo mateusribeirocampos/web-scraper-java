@@ -1,5 +1,6 @@
 package com.campos.webscraper.application.usecase;
 
+import com.campos.webscraper.TestcontainersConfiguration;
 import com.campos.webscraper.application.normalizer.DouContestNormalizer;
 import com.campos.webscraper.application.strategy.DouApiContestScraperStrategy;
 import com.campos.webscraper.domain.enums.DedupStatus;
@@ -57,7 +58,7 @@ class DouContestImportUseCaseTest {
 
     @Container
     @ServiceConnection
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
+    static PostgreSQLContainer<?> postgres = TestcontainersConfiguration.newPostgresContainer();
 
     @Autowired
     private TargetSiteRepository targetSiteRepository;

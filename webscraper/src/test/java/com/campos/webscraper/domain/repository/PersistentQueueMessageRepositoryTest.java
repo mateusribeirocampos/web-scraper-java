@@ -1,47 +1,35 @@
 package com.campos.webscraper.domain.repository;
 
+import com.campos.webscraper.TestcontainersConfiguration;
 import com.campos.webscraper.application.queue.CrawlJobQueueName;
 import com.campos.webscraper.domain.enums.QueueMessageStatus;
 import com.campos.webscraper.domain.model.PersistentQueueMessageEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Tag("integration")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@Testcontainers
-@TestPropertySource(properties = {
-        "spring.flyway.enabled=true",
-        "spring.flyway.locations=classpath:db/migration",
-        "spring.jpa.hibernate.ddl-auto=none"
-})
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@RepositoryPersistenceTest
 @DisplayName("PersistentQueueMessageRepository integration")
-class PersistentQueueMessageRepositoryTest {
+class PersistentQueueMessageRepositoryTest extends AbstractRepositoryIntegrationTest {
 
     @Container
     @ServiceConnection
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
+    static PostgreSQLContainer<?> postgres = TestcontainersConfiguration.newPostgresContainer();
 
     @Autowired
     private PersistentQueueMessageRepository persistentQueueMessageRepository;
 
     @BeforeEach
     void setUp() {
-        persistentQueueMessageRepository.deleteAll();
+        resetPersistentQueueMessages();
     }
 
     @Test

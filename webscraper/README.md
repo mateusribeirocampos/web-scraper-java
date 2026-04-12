@@ -146,6 +146,15 @@ Regra atual de testes:
   `APPROVED/enabled=true`
 - com isso, `Extrema` fecha a última cidade do backlog híbrido e o plano municipal/híbrido atual
   fica integralmente coberto
+- encerrado o eixo de cidades, o próximo front principal do projeto passa a ser:
+  1. `integration` e flakiness residual
+  2. onboarding/activation
+  3. famílias de fonte
+  4. observabilidade e data quality
+- a primeira story executável desse novo ciclo é a `14.1`, dedicada à baseline de estabilidade da
+  suíte `integration`
+- o primeiro alvo concreto da `14.1` já ficou definido:
+  - padronizar o baseline Testcontainers e remover drift entre `postgres:latest` e `postgres:16`
 
 ## Validacao Manual Oficial
 

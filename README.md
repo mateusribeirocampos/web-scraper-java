@@ -270,6 +270,15 @@ web-scraper-java/
   - `https://www.specialdog.com.br/privacidade`
 - com isso, `Extrema` passa a ser a quinta cidade híbrida fechada e o backlog híbrido municipal
   fica integralmente encerrado
+- com o eixo de cidades encerrado, o próximo front principal do projeto passa a ser:
+  1. fortalecer a suíte `integration` e reduzir flakiness residual
+  2. consolidar o onboarding/activation como produto interno
+  3. ampliar famílias de fontes, não cidades
+  4. melhorar observabilidade operacional e qualidade de dados
+- a primeira story executável desse novo ciclo é a `14.1`, focada em baseline e estabilização da
+  suíte `integration`
+- o mapeamento inicial da `14.1` já identificou como primeiro alvo concreto a padronização do
+  baseline Testcontainers, removendo drift entre `postgres:latest` e `postgres:16`
 
 ## Endpoints Disponiveis
 

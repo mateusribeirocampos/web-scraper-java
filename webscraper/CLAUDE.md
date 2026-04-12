@@ -210,6 +210,14 @@ Para testes unitários rápidos (sem Docker), use H2 em memória.
 
 ---
 
+## Regras de commit
+
+- **Nunca** assinar commits com GPG (`--gpg-sign` ou `commit.gpgsign=true`).
+- **Nunca** adicionar linha `Co-Authored-By: Claude` ou qualquer atribuição automática de ferramenta.
+- Commits simples: `git commit -m "mensagem"` — sem flags de assinatura.
+
+---
+
 ## O que Claude NÃO deve fazer neste projeto
 
 - **Não** criar starters Spring Boot que não existem (ex.: `spring-boot-starter-flyway`).
@@ -221,6 +229,7 @@ Para testes unitários rápidos (sem Docker), use H2 em memória.
 - **Não** fazer scraping de sites classificados como SCRAPING_PROIBIDO (LinkedIn, Catho, Glassdoor).
 - **Não** hard-codar seletores CSS — sempre usar `SelectorBundle` versionado.
 - **Não** editar migrations Flyway já aplicadas.
+- **Não** assinar commits — nem GPG, nem `Co-Authored-By` de ferramenta.
 
 ---
 
