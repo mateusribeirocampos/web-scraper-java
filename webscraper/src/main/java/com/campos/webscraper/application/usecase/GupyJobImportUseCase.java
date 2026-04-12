@@ -6,6 +6,7 @@ import com.campos.webscraper.domain.enums.JobContractType;
 import com.campos.webscraper.domain.model.CrawlExecutionEntity;
 import com.campos.webscraper.domain.model.JobPostingEntity;
 import com.campos.webscraper.domain.model.ScrapeCommand;
+import com.campos.webscraper.domain.model.ScrapeResult;
 import com.campos.webscraper.domain.model.TargetSiteEntity;
 import com.campos.webscraper.domain.repository.JobPostingRepository;
 import com.campos.webscraper.shared.JobPostingFingerprintCalculator;
@@ -47,9 +48,12 @@ public class GupyJobImportUseCase {
         Objects.requireNonNull(crawlExecution, "crawlExecution must not be null");
         Objects.requireNonNull(command, "command must not be null");
 
-        List<JobPostingEntity> items = strategy.scrape(command).items();
+        ScrapeResult<JobPostingEntity> result = strategy.scrape(command);
+        if (!result.success()) {
+            throw new IllegalStateException("Gupy scrape failed: " + result.errorMessage());
+        }
 
-        List<JobPostingEntity> enriched = items.stream()
+        List<JobPostingEntity> enriched = result.items().stream()
                 .map(item -> enrich(item, targetSite, crawlExecution))
                 .toList();
 

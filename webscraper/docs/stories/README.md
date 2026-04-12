@@ -126,4 +126,5 @@ Exemplos:
 | 13.3.25 — Extrema privada via Special Dog Company Gupy | [STORY-13.3.25-extrema-specialdog-gupy.md](STORY-13.3.25-extrema-specialdog-gupy.md) | ✅ Concluída |
 | 13.3.26 — Extrema: fechamento operacional/legal da cidade | [STORY-13.3.26-extrema-city-closure.md](STORY-13.3.26-extrema-city-closure.md) | ✅ Concluída |
 | 14.1 — Integration stability baseline | [STORY-14.1-integration-stability-baseline.md](STORY-14.1-integration-stability-baseline.md) | ✅ Concluída |
-| 14.2 — Onboarding activation readiness signal | [STORY-14.2-onboarding-activation-readiness-signal.md](STORY-14.2-onboarding-activation-readiness-signal.md) | 🚧 Aberta |
+| 14.2 — Onboarding activation readiness signal | [STORY-14.2-onboarding-activation-readiness-signal.md](STORY-14.2-onboarding-activation-readiness-signal.md) | ✅ Concluída |
+| 14.3 — Gupy family runtime validation | [STORY-14.3-gupy-family-runtime-validation.md](STORY-14.3-gupy-family-runtime-validation.md) | 🚧 Aberta |
