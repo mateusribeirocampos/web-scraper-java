@@ -66,7 +66,9 @@ class OnboardingOperationalCheckControllerTest {
                 .andExpect(jsonPath("$.smokeRunRequested").value(true))
                 .andExpect(jsonPath("$.executionSummary.status").value("SUCCEEDED"))
                 .andExpect(jsonPath("$.recentPostingsCount").value(1))
-                .andExpect(jsonPath("$.recentPostingsSample[0].title").value("Java Backend Developer"));
+                .andExpect(jsonPath("$.recentPostingsSample[0].title").value("Java Backend Developer"))
+                .andExpect(jsonPath("$.activationReady").value(true))
+                .andExpect(jsonPath("$.activationBlockers").isEmpty());
 
         verify(runOnboardingOperationalCheckUseCase).execute("greenhouse_bitso", true, 60);
     }
@@ -101,7 +103,10 @@ class OnboardingOperationalCheckControllerTest {
                 .andExpect(jsonPath("$.profileKey").value("lever_watchguard"))
                 .andExpect(jsonPath("$.smokeRunRequested").value(true))
                 .andExpect(jsonPath("$.smokeRunStatus").value("BLOCKED_BY_COMPLIANCE"))
-                .andExpect(jsonPath("$.smokeRunDispatchStatus").doesNotExist());
+                .andExpect(jsonPath("$.smokeRunDispatchStatus").doesNotExist())
+                .andExpect(jsonPath("$.activationReady").value(false))
+                .andExpect(jsonPath("$.activationBlockers[0]")
+                        .value("smoke run was blocked by compliance — legal review still required"));
     }
 
     @Test

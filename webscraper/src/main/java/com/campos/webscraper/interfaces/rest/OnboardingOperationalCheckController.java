@@ -71,7 +71,9 @@ public class OnboardingOperationalCheckController {
                 result.recentPostingsCount(),
                 result.recentPostingsSample().stream()
                         .map(OnboardingOperationalCheckController::toPostingResponse)
-                        .toList()
+                        .toList(),
+                result.activationReady(),
+                result.activationBlockers()
         );
     }
 

@@ -17,6 +17,8 @@ public record OnboardingOperationalCheckResponse(
         Long smokeRunJobId,
         OnboardingOperationalCheckExecutionResponse executionSummary,
         int recentPostingsCount,
-        List<JobPostingSummaryResponse> recentPostingsSample
+        List<JobPostingSummaryResponse> recentPostingsSample,
+        boolean activationReady,
+        List<String> activationBlockers
 ) {
 }
