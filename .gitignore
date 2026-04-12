@@ -221,3 +221,7 @@ CONFIG-REFERENCE.md
 # Permitir source em target (Spring Boot padrão)
 !**/src/main/**/target/
 !**/src/test/**/target/
+
+# Arquivos locais de instrução — não versionados (apenas na raiz do repositório)
+/CLAUDE.md
+/SKILL.md
